@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\CreditCard;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CreditCard>
+ * @extends Factory<CreditCard>
  */
 class CreditCardFactory extends Factory
 {
@@ -17,7 +18,11 @@ class CreditCardFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'bank' => $this->faker->company,
+            'number' => $this->faker->creditCardNumber,
+            'expiration' => $this->faker->creditCardExpirationDateString,
+            'cvv' => $this->faker->numberBetween(100, 999),
+            'limit' => $this->faker->numberBetween(100, 10000),
         ];
     }
 }
