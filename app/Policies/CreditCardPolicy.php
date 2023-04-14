@@ -44,7 +44,7 @@ class CreditCardPolicy
      */
     public function delete(User $user, CreditCard $creditCard): bool
     {
-        //
+        return $creditCard->user_id === $user->id;
     }
 
     /**
