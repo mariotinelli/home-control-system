@@ -36,6 +36,7 @@ it('should be able edit a credit card', function () {
         'expiration' => '11/2025',
         'cvv' => '234',
         'limit' => 5000,
+        'remaining_limit' => $this->creditCard->remaining_limit,
     ]);
 
 });

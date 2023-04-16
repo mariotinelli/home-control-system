@@ -31,6 +31,7 @@ it('should be able to create a credit card', function () {
         'expiration' => '12/2030',
         'cvv' => '123',
         'limit' => 1000,
+        'remaining_limit' => 1000,
     ]);
 
 });
@@ -42,7 +43,6 @@ test('bank is required', function () {
         ->call('save')
         ->assertHasErrors(['creditCard.bank' => 'required'])
         ->assertNotEmitted('credit-card::created');
-//        ->assertSee(__('validation.required', ['attribute' => 'bank']));
 
 });
 

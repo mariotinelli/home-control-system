@@ -3,9 +3,15 @@
 namespace App\Http\Livewire\CreditCards;
 
 use App\Models\CreditCard;
+use App\Pipes\CreditCard\AssignCreditCardOwner;
+use App\Pipes\CreditCard\AssignCreditCardRemainingLimit;
+use App\Pipes\CreditCard\EmitCreditCardCreated;
+use App\Pipes\CreditCard\SaveCreditCard;
+use App\Pipes\CreditCards\AssignUser;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
@@ -28,10 +34,14 @@ class Create extends Component
     {
         $this->validate();
 
-        $this->creditCard->user_id = auth()->id();
-        $this->creditCard->save();
-
-        $this->emit('credit-card::created');
+        Pipeline::send($this->creditCard)
+            ->through([
+                AssignCreditCardOwner::class,
+                AssignCreditCardRemainingLimit::class,
+                SaveCreditCard::class,
+                (new EmitCreditCardCreated($this)),
+            ])
+            ->then(fn(CreditCard $creditCard) => $creditCard);
     }
 
     public function mount(): void

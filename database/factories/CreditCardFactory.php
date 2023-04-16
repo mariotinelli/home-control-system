@@ -22,7 +22,8 @@ class CreditCardFactory extends Factory
             'number' => $this->faker->creditCardNumber,
             'expiration' => $this->faker->creditCardExpirationDateString,
             'cvv' => $this->faker->numberBetween(100, 999),
-            'limit' => $this->faker->numberBetween(100, 10000),
+            'limit' => $limit = $this->faker->numberBetween(100, 10000),
+            'remaining_limit' => $limit,
         ];
     }
 }
