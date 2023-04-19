@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\BankAccounts;
 
 use App\Models\BankAccount;
+use App\Rules\UpdateBankAccountBalance;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -25,7 +26,7 @@ class Update extends Component
             'bankAccount.digit' => ['required', 'numeric', 'max_digits:1'],
             'bankAccount.agency_number' => ['required', 'numeric', 'min_digits:4', 'max_digits:4'],
             'bankAccount.agency_digit' => ['nullable', 'numeric', 'max_digits:1'],
-            'bankAccount.balance' => ['required', 'numeric', 'max_digits:10'],
+            'bankAccount.balance' => ['required', 'numeric', 'max_digits:10', new UpdateBankAccountBalance($this->bankAccount)],
         ];
     }
 

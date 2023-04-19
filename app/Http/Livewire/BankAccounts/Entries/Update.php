@@ -34,6 +34,7 @@ class Update extends Component
         Pipeline::send($this->entry)
             ->through([
                 (new \App\Pipes\BankAccounts\Entries\SaveEntry()),
+                (new \App\Pipes\BankAccounts\Entries\ReverseBankAccountBalance($this->entry->bankAccount, $this->entry->getOriginal('value'))),
                 (new \App\Pipes\BankAccounts\Entries\CalculateBankAccountBalance($this->entry->bankAccount)),
                 (new \App\Pipes\BankAccounts\Entries\UpdateBankAccount($this->entry->bankAccount)),
                 (new \App\Pipes\BankAccounts\Entries\EmitEntryUpdated($this)),

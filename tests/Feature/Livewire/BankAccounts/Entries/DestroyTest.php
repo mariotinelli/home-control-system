@@ -80,6 +80,11 @@ it('should be to delete a entry only bank account owner', function () {
         'date' => $this->entry->date->format('Y-m-d'),
     ]);
 
+    assertDatabaseHas('bank_accounts', [
+        'id' => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance,
+    ]);
+
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
         ->call('save')
         ->assertEmitted('bank-account::entry::deleted');

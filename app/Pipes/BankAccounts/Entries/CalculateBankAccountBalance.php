@@ -16,7 +16,7 @@ class CalculateBankAccountBalance
 
     public function handle(BankAccountEntry $entry, Closure $next)
     {
-        $this->bankAccount->balance += $this->bankAccount->entries()->sum('value');
+        $this->bankAccount->balance += $entry->value;
 
         return $next($entry);
     }

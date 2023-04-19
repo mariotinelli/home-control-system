@@ -68,6 +68,11 @@ it('should be create a new entry in bank account only bank account owner', funct
         'date' => now()->format('Y-m-d'),
     ]);
 
+    assertDatabaseHas('bank_accounts', [
+        'id' => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance + 100,
+    ]);
+
 });
 
 test('value is required', function () {

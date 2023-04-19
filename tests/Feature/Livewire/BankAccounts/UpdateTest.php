@@ -80,7 +80,60 @@ it('should be able to update a bank account only bank account owner', function (
 
 });
 
-todo('should be able to update a bank account only when not exists entrances and exits of values');
+it('should be not able to update a balance when exists entries', function () {
+
+    $this->bankAccount->entries()->create([
+        'value' => 1000,
+        'description' => 'Entrance 1',
+        'date' => now()
+    ]);
+
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.balance', 2000)
+        ->call('save')
+        ->assertForbidden();
+
+    assertDatabaseHas('bank_accounts', [
+        'user_id' => $this->user->id,
+        'bank_name' => $this->bankAccount->bank_name,
+        'type' => $this->bankAccount->type,
+        'agency_number' => $this->bankAccount->agency_number,
+        'number' => $this->bankAccount->number,
+        'digit' => $this->bankAccount->digit,
+        'balance' => $this->bankAccount->balance
+    ]);
+
+});
+
+it('should be able to update a bank account only when not exists withdraws of values', function () {
+
+    $this->bankAccount->withdrawals()->create([
+        'value' => 1000,
+        'description' => 'Withdraw 1',
+        'date' => now()
+    ]);
+
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.bank_name', 'Bank name Update')
+        ->set('bankAccount.type', 'Corrente Update')
+        ->set('bankAccount.agency_number', 4321)
+        ->set('bankAccount.number', '654321')
+        ->set('bankAccount.digit', 2)
+        ->set('bankAccount.balance', 2000)
+        ->call('save')
+        ->assertForbidden();
+
+    assertDatabaseHas('bank_accounts', [
+        'user_id' => $this->user->id,
+        'bank_name' => $this->bankAccount->bank_name,
+        'type' => $this->bankAccount->type,
+        'agency_number' => $this->bankAccount->agency_number,
+        'number' => $this->bankAccount->number,
+        'digit' => $this->bankAccount->digit,
+        'balance' => $this->bankAccount->balance
+    ]);
+
+});
 
 test('bank name is required', function () {
 

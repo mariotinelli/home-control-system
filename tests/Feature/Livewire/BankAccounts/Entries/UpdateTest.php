@@ -60,7 +60,7 @@ it('should be to update a entry', function () {
 
     assertDatabaseHas('bank_accounts', [
         'id' => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance + 200,
+        'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
     ]);
 
 });
@@ -75,6 +75,18 @@ it('should be to update a entry only bank account owner', function () {
 
     actingAs($this->user);
 
+    assertDatabaseHas('bank_account_entries', [
+        'bank_account_id' => $this->bankAccount->id,
+        'value' => $this->entry->value,
+        'description' => $this->entry->description,
+        'date' => $this->entry->date->format('Y-m-d'),
+    ]);
+
+    assertDatabaseHas('bank_accounts', [
+        'id' => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance,
+    ]);
+
     livewire(Entries\Update::class, ['entry' => $this->entry])
         ->set('entry.value', 200)
         ->set('entry.description', 'Test Update')
@@ -87,6 +99,11 @@ it('should be to update a entry only bank account owner', function () {
         'value' => 200,
         'description' => 'Test Update',
         'date' => now()->format('Y-m-d'),
+    ]);
+
+    assertDatabaseHas('bank_accounts', [
+        'id' => $this->bankAccount->id,
+        'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
     ]);
 
 });

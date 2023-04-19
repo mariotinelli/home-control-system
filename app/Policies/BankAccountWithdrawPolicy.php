@@ -3,9 +3,10 @@
 namespace App\Policies;
 
 use App\Models\BankAccount;
+use App\Models\BankAccountWithdraw;
 use App\Models\User;
 
-class BankAccountPolicy
+class BankAccountWithdrawPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -18,7 +19,7 @@ class BankAccountPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, BankAccount $bankAccount): bool
+    public function view(User $user, BankAccountWithdraw $bankAccountWithdraw): bool
     {
         //
     }
@@ -26,33 +27,31 @@ class BankAccountPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, BankAccount $bankAccount): bool
     {
-        //
+        return $user->id === $bankAccount->user_id;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, BankAccount $bankAccount): bool
+    public function update(User $user, BankAccountWithdraw $bankAccountWithdraw): bool
     {
-        return ($user->id === $bankAccount->user_id)
-            && ($bankAccount->entries()->count() === 0 && $bankAccount->withdrawals()->count() === 0);
+        return $user->id === $bankAccountWithdraw->bankAccount->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, BankAccount $bankAccount): bool
+    public function delete(User $user, BankAccountWithdraw $bankAccountWithdraw): bool
     {
-        return ($user->id === $bankAccount->user_id)
-            && ($bankAccount->entries()->count() === 0 && $bankAccount->withdrawals()->count() === 0);
+        return $user->id === $bankAccountWithdraw->bankAccount->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, BankAccount $bankAccount): bool
+    public function restore(User $user, BankAccountWithdraw $bankAccountWithdraw): bool
     {
         //
     }
@@ -60,7 +59,7 @@ class BankAccountPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, BankAccount $bankAccount): bool
+    public function forceDelete(User $user, BankAccountWithdraw $bankAccountWithdraw): bool
     {
         //
     }

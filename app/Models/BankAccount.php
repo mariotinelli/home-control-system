@@ -14,4 +14,9 @@ class BankAccount extends Model
     {
         return $this->hasMany(BankAccountEntry::class);
     }
+
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(BankAccountWithdraw::class);
+    }
 }
