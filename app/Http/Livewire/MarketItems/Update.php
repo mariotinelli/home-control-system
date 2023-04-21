@@ -18,7 +18,6 @@ class Update extends Component
             'marketItem.market_item_category_id' => ['required', 'integer', 'exists:market_item_categories,id'],
             'marketItem.type_weight' => ['required', 'string', 'in:' . implode(',', TypeOfWeightEnum::getValues())],
             'marketItem.weight' => ['required', 'numeric', 'min:1', 'max:100000'],
-            'marketItem.price' => ['required', 'numeric', 'min:1', 'max:100000'],
         ];
     }
 

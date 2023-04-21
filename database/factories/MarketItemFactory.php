@@ -18,7 +18,6 @@ class MarketItemFactory extends Factory
             'market_item_category_id' => MarketItemCategory::factory(),
             'type_weight' => $this->faker->randomElement(TypeOfWeightEnum::getValues()),
             'weight' => $this->faker->numberBetween(1, 100),
-            'price' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

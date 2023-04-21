@@ -32,7 +32,6 @@ it('should be able to create market item', function () {
         ->set('marketItem.market_item_category_id', $this->marketItemCategory->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
-        ->set('marketItem.price', 100)
         ->call('save');
 
     // Assert
@@ -44,7 +43,6 @@ it('should be able to create market item', function () {
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight' => TypeOfWeightEnum::GRAM,
         'weight' => 10,
-        'price' => 100,
     ]);
 
 });
@@ -66,7 +64,6 @@ it('unique name for market item, but ignore if market item category is different
         ->set('marketItem.market_item_category_id', $marketItemCategory2->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
-        ->set('marketItem.price', 100)
         ->call('save');
 
     // Assert
@@ -78,7 +75,6 @@ it('unique name for market item, but ignore if market item category is different
         ->set('marketItem.market_item_category_id', $this->marketItemCategory->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
-        ->set('marketItem.price', 100)
         ->call('save');
 
     // Assert 2
@@ -90,7 +86,6 @@ it('unique name for market item, but ignore if market item category is different
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight' => TypeOfWeightEnum::GRAM,
         'weight' => 10,
-        'price' => 100,
     ]);
 
 });
@@ -251,50 +246,3 @@ test('weight is max 100000', function () {
 
 });
 
-test('price is required', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.price', '')
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'required']);
-
-});
-
-test('price is numeric', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.price', 'abc')
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'numeric']);
-
-});
-
-test('price is min 1', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.price', 0)
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'min']);
-
-});
-
-test('price is max 100000', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.price', 1000000)
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'max']);
-
-});

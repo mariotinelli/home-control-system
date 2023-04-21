@@ -14,4 +14,9 @@ class MarketItem extends Model
     {
         return $this->belongsTo(MarketItemCategory::class);
     }
+
+    public function marketStock(): BelongsTo
+    {
+        return $this->belongsTo(MarketStock::class);
+    }
 }

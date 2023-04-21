@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignId('market_item_category_id')->constrained();
             $table->enum('type_weight', TypeOfWeightEnum::getValues());
             $table->decimal('weight', 10, 2);
-            $table->decimal('price', 10, 2);
 
             $table->timestamps();
         });

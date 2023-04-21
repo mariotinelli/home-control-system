@@ -36,7 +36,6 @@ it('should be able to update a market item', function () {
         ->set('marketItem.market_item_category_id', $this->marketItemCategory->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::KILOGRAM)
         ->set('marketItem.weight', 20)
-        ->set('marketItem.price', 200)
         ->call('save');
 
     // Assert
@@ -48,7 +47,6 @@ it('should be able to update a market item', function () {
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight' => TypeOfWeightEnum::KILOGRAM,
         'weight' => 20,
-        'price' => 200,
     ]);
 
 });
@@ -79,7 +77,6 @@ it('unique name for market item, but ignore if market item category is different
         ->set('marketItem.market_item_category_id', $this->marketItemCategory->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
-        ->set('marketItem.price', 100)
         ->call('save');
 
     // Assert 2
@@ -91,7 +88,6 @@ it('unique name for market item, but ignore if market item category is different
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight' => TypeOfWeightEnum::GRAM,
         'weight' => 10,
-        'price' => 100,
     ]);
 
 });
@@ -122,7 +118,6 @@ it('unique name for market item, but ignore if current market item name', functi
         ->set('marketItem.market_item_category_id', $marketItemCategory2->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::TON)
         ->set('marketItem.weight', 20)
-        ->set('marketItem.price', 200)
         ->call('save');
 
     // Assert 2
@@ -134,7 +129,6 @@ it('unique name for market item, but ignore if current market item name', functi
         'market_item_category_id' => $marketItemCategory2->id,
         'type_weight' => TypeOfWeightEnum::TON,
         'weight' => 20,
-        'price' => 200,
     ]);
 
 });
@@ -292,53 +286,5 @@ test('weight is max 100000', function () {
 
     // Assert
     $lw->assertHasErrors(['marketItem.weight' => 'max']);
-
-});
-
-test('price is required', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
-        ->set('marketItem.price', '')
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'required']);
-
-});
-
-test('price is numeric', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
-        ->set('marketItem.price', 'abc')
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'numeric']);
-
-});
-
-test('price is min 1', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
-        ->set('marketItem.price', 0)
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'min']);
-
-});
-
-test('price is max 100000', function () {
-
-    // Act
-    $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
-        ->set('marketItem.price', 1000000)
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['marketItem.price' => 'max']);
 
 });
