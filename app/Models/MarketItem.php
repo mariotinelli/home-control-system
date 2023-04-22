@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MarketItem extends Model
 {
@@ -15,8 +16,8 @@ class MarketItem extends Model
         return $this->belongsTo(MarketItemCategory::class);
     }
 
-    public function marketStock(): BelongsTo
+    public function marketStock(): HasOne
     {
-        return $this->belongsTo(MarketStock::class);
+        return $this->hasOne(MarketStock::class);
     }
 }

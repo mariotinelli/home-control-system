@@ -7,6 +7,7 @@ use App\Models\MarketItem;
 use App\Models\MarketItemCategory;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Livewire\livewire;
 
@@ -39,4 +40,22 @@ it('should be able to delete market item', function () {
     ]);
 });
 
-todo('should not be able to delete market item if it is used in market stock');
+it('should not be able to delete market item if it is used in market stock', function () {
+// Arrange
+    $this->marketItem->marketStock()->create([
+        'quantity' => 1,
+    ]);
+
+    // Act
+    $lw = livewire(MarketItems\Destroy::class, [
+        'marketItem' => $this->marketItem,
+    ])->call('save');
+
+    // Assert
+    $lw->assertHasErrors(['marketItem'])
+        ->assertEmitted('market-item::delete-failed');
+
+    assertDatabaseHas('market_items', [
+        'id' => $this->marketItem->id,
+    ]);
+});

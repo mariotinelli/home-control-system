@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Market extends Model
@@ -16,8 +15,4 @@ class Market extends Model
         return $this->hasMany(MarketStockEntry::class);
     }
 
-    public function marketStock(): BelongsTo
-    {
-        return $this->belongsTo(MarketStock::class);
-    }
 }

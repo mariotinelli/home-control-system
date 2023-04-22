@@ -12,8 +12,6 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->faker = \Faker\Factory::create();
-
     $this->user = User::factory()->createOne();
 
     $this->bankAccount = BankAccount::factory()->createOne([
@@ -279,7 +277,7 @@ test('digit should be a numeric', function () {
 test('digit should be have a max digits of 1', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.digit', $this->faker->randomNumber(2))
+        ->set('bankAccount.digit', (int)str_repeat('9', 2))
         ->call('save')
         ->assertHasErrors(['bankAccount.digit' => 'max_digits']);
 
@@ -306,7 +304,7 @@ test('balance should be a numeric', function () {
 test('balance should be have a max digits of 10 digits', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', 11111111111)
+        ->set('bankAccount.balance', (int)str_repeat('9', 11))
         ->call('save')
         ->assertHasErrors(['bankAccount.balance' => 'max_digits']);
 
@@ -333,7 +331,7 @@ test('agency number should be a numeric', function () {
 test('agency number should be have a min digits of 4', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.agency_number', $this->faker->randomNumber(3))
+        ->set('bankAccount.agency_number', (int)str_repeat('9', 3))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_number' => 'min_digits']);
 
@@ -342,7 +340,7 @@ test('agency number should be have a min digits of 4', function () {
 test('agency number should be have a max digits of 4', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.agency_number', $this->faker->randomNumber(5))
+        ->set('bankAccount.agency_number', (int)str_repeat('9', 5))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_number' => 'max_digits']);
 
@@ -369,7 +367,7 @@ test('agency digit should be a numeric', function () {
 test('agency digit should be have a max digits of 1', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.agency_digit', $this->faker->randomNumber(2))
+        ->set('bankAccount.agency_digit', (int)str_repeat('9', 2))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_digit' => 'max_digits']);
 

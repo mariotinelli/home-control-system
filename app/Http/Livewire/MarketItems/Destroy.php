@@ -12,6 +12,16 @@ class Destroy extends Component
 
     public function save(): void
     {
+
+        if ($this->marketItem->marketStock()->exists()) {
+
+            $this->addError('marketItem', 'Market item is used in market stock.');
+
+            $this->emit('market-item::delete-failed');
+
+            return;
+        }
+
         $this->marketItem->delete();
 
         $this->emit('market-item::deleted');
