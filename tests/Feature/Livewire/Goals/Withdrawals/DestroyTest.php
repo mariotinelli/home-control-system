@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature\Livewire\Investments\Withdrawals;
+namespace Tests\Feature\Livewire\Goals\Withdrawals;
 
-use App\Http\Livewire\Investments;
-use App\Models\Investment;
-use App\Models\InvestmentWithdraw;
+use App\Http\Livewire\Goals;
+use App\Models\Goal;
+use App\Models\GoalWithdraw;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
@@ -15,10 +15,10 @@ beforeEach(function () {
 
     $this->user = User::factory()->create();
 
-    $this->investment = Investment::factory()->create();
+    $this->goal = Goal::factory()->create();
 
-    $this->investmentWithdraw = InvestmentWithdraw::factory()->create([
-        'investment_id' => $this->investment->id,
+    $this->goalWithdraw = GoalWithdraw::factory()->create([
+        'goal_id' => $this->goal->id,
         'amount' => 100,
     ]);
 
@@ -26,23 +26,23 @@ beforeEach(function () {
 
 });
 
-it('should be to delete an investment withdraw', function () {
+it('should be to delete an goal withdraw', function () {
 
-    assertDatabaseCount('investment_withdrawals', 1);
+    assertDatabaseCount('goal_withdraws', 1);
 
     // Act
-    $lw = livewire(Investments\Withdrawals\Destroy::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+    $lw = livewire(Goals\Withdrawals\Destroy::class, [
+        'goal' => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw
     ])
         ->call('save');
 
     // Assert
     $lw->assertHasNoErrors()
-        ->assertEmitted('investment::withdraw::deleted');
+        ->assertEmitted('goal::withdraw::deleted');
 
-    assertDatabaseMissing('investment_withdrawals', [
-        'id' => $this->investmentWithdraw->id,
+    assertDatabaseMissing('goal_withdraws', [
+        'id' => $this->goalWithdraw->id,
     ]);
 
 });
