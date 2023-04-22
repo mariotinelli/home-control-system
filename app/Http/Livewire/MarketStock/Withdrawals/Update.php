@@ -36,19 +36,27 @@ class Update extends Component
     {
         $this->validate();
 
-        $this->marketStock->increment('quantity', $this->marketStockWithdraw->getOriginal('quantity'));
+        try {
 
-        if ($this->marketStock->id != $this->marketStockWithdraw->market_stock_id) {
+            $this->marketStock->increment('quantity', $this->marketStockWithdraw->getOriginal('quantity'));
 
-            $this->marketStock = MarketStock::find($this->marketStockWithdraw->market_stock_id);
+            if ($this->marketStock->id != $this->marketStockWithdraw->market_stock_id) {
+
+                $this->marketStock = MarketStock::find($this->marketStockWithdraw->market_stock_id);
+
+            }
+
+            $this->marketStock->decrement('quantity', $this->marketStockWithdraw->quantity);
+
+            $this->marketStockWithdraw->save();
+
+            $this->emit('market-stock::withdrawal::updated');
+
+        } catch (\Exception $e) {
+
+            \DB::rollBack();
 
         }
-
-        $this->marketStock->decrement('quantity', $this->marketStockWithdraw->quantity);
-
-        $this->marketStockWithdraw->save();
-
-        $this->emit('market-stock::withdrawal::updated');
 
     }
 
