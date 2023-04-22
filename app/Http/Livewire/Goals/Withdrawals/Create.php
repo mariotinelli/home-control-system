@@ -10,7 +10,6 @@ use Livewire\Component;
 class Create extends Component
 {
 
-
     public ?Goal $goal = null;
 
     public ?GoalWithdraw $goalWithdraw = null;
