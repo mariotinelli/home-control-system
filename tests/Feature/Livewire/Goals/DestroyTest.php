@@ -6,6 +6,7 @@ use App\Http\Livewire\Goals;
 use App\Models\Goal;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -32,10 +33,52 @@ it('should be able to delete a goal', function () {
 
 });
 
-todo('should be able to disable a goals if that has entries', function () {
+it('should be able to disable a goals if that has entries', function () {
+
+    assertDatabaseHas('goals', [
+        'id' => $this->goal->id,
+        'deleted_at' => null,
+    ]);
+
+    $this->goal->entries()->create([
+        'amount' => 100,
+        'date' => now(),
+    ]);
+
+    $lw = livewire(Goals\Destroy::class, ['goal' => $this->goal])
+        ->call('save');
+
+    $lw->assertHasNoErrors()
+        ->assertEmitted('goal::deleted');
+
+    assertDatabaseHas('goals', [
+        'id' => $this->goal->id,
+        'deleted_at' => now(),
+    ]);
 
 });
 
-todo('should be able to disable a goals if that has withdrawals', function () {
+it('should be able to disable a goals if that has withdrawals', function () {
+
+    assertDatabaseHas('goals', [
+        'id' => $this->goal->id,
+        'deleted_at' => null,
+    ]);
+
+    $this->goal->withdrawals()->create([
+        'amount' => 100,
+        'date' => now(),
+    ]);
+
+    $lw = livewire(Goals\Destroy::class, ['goal' => $this->goal])
+        ->call('save');
+
+    $lw->assertHasNoErrors()
+        ->assertEmitted('goal::deleted');
+
+    assertDatabaseHas('goals', [
+        'id' => $this->goal->id,
+        'deleted_at' => now(),
+    ]);
 
 });

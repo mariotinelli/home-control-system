@@ -13,6 +13,17 @@ class Destroy extends Component
 
     public function save(): void
     {
+
+        if ($this->goal->entries()->exists() || $this->goal->withdrawals()->exists()) {
+
+            $this->goal->delete();
+
+            $this->emit('goal::deleted');
+            
+            return;
+
+        }
+
         $this->goal->forceDelete();
 
         $this->emit('goal::deleted');
