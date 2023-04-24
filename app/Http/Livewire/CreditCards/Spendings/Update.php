@@ -4,15 +4,13 @@ namespace App\Http\Livewire\CreditCards\Spendings;
 
 use App\Models\Spending;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Update extends Component
 {
-
     use AuthorizesRequests;
 
     public ?Spending $spending = null;
@@ -20,7 +18,7 @@ class Update extends Component
     protected function rules(): array
     {
         return [
-            'spending.amount' => ['required', 'numeric', 'max_digits:10'],
+            'spending.amount'      => ['required', 'numeric', 'max_digits:10'],
             'spending.description' => ['required', 'string', 'max:255'],
         ];
     }
@@ -46,5 +44,4 @@ class Update extends Component
     {
         return view('livewire.credit-cards.spendings.update');
     }
-
 }

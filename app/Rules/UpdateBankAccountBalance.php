@@ -10,8 +10,7 @@ class UpdateBankAccountBalance implements ValidationRule
 {
     public function __construct(
         private readonly BankAccount $bankAccount
-    )
-    {
+    ) {
         //
     }
 

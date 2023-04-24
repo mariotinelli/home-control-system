@@ -17,7 +17,7 @@ class SpendingFactory extends Factory
     public function definition(): array
     {
         return [
-            'amount' => $this->faker->randomFloat(2, 0, 1000),
+            'amount'      => $this->faker->randomFloat(2, 0, 1000),
             'description' => $this->faker->sentence,
         ];
     }

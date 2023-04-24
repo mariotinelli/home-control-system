@@ -2,8 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Goal;
-use App\Models\GoalEntry;
+use App\Models\{Goal, GoalEntry};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GoalEntryFactory extends Factory
@@ -14,8 +13,8 @@ class GoalEntryFactory extends Factory
     {
         return [
             'goal_id' => Goal::factory(),
-            'amount' => $this->faker->numberBetween(1, 1000),
-            'date' => $this->faker->date(),
+            'amount'  => $this->faker->numberBetween(1, 1000),
+            'date'    => $this->faker->date(),
         ];
     }
 }

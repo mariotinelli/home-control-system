@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\CreditCards;
 
 use App\Http\Livewire\CreditCards;
-use App\Models\CreditCard;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{CreditCard, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {

@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\CreditCard;
-use App\Models\User;
+use App\Models\{CreditCard, User};
 
 class CreditCardPolicy
 {

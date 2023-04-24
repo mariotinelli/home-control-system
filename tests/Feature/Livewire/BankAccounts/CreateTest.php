@@ -3,12 +3,10 @@
 namespace Tests\Feature\Livewire\BankAccounts;
 
 use App\Http\Livewire\BankAccounts;
-use App\Models\BankAccount;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Livewire\livewire;
+use App\Models\{BankAccount, User};
 
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
+use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
@@ -31,13 +29,13 @@ it('should be able create a bank account', function () {
         ->assertEmitted('bank-account::created');
 
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => 'Bank name',
-        'type' => 'Corrente',
+        'user_id'       => $this->user->id,
+        'bank_name'     => 'Bank name',
+        'type'          => 'Corrente',
         'agency_number' => 1234,
-        'number' => '123456',
-        'digit' => 1,
-        'balance' => 1000
+        'number'        => '123456',
+        'digit'         => 1,
+        'balance'       => 1000,
     ]);
 
 });
@@ -118,7 +116,7 @@ test('number should be unique', function () {
 
     $newBankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
-        'number' => '123456'
+        'number'  => '123456',
     ]);
 
     livewire(BankAccounts\Create::class)
@@ -136,7 +134,6 @@ test('number should be have a min length of 5 characters', function () {
         ->assertHasErrors(['bankAccount.number' => 'min']);
 
 });
-
 
 test('number should be have a max length of 20 characters', function () {
 
@@ -168,7 +165,7 @@ test('digit should be a numeric', function () {
 test('digit should be have a max digits of 1', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.digit', (int)str_repeat('9', 2))
+        ->set('bankAccount.digit', (int) str_repeat('9', 2))
         ->call('save')
         ->assertHasErrors(['bankAccount.digit' => 'max_digits']);
 
@@ -222,7 +219,7 @@ test('agency number should be a numeric', function () {
 test('agency number should be have a min digits of 4', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.agency_number', (int)str_repeat('9', 3))
+        ->set('bankAccount.agency_number', (int) str_repeat('9', 3))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_number' => 'min_digits']);
 
@@ -231,7 +228,7 @@ test('agency number should be have a min digits of 4', function () {
 test('agency number should be have a max digits of 4', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.agency_number', (int)str_repeat('9', 5))
+        ->set('bankAccount.agency_number', (int) str_repeat('9', 5))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_number' => 'max_digits']);
 
@@ -258,7 +255,7 @@ test('agency digit should be a numeric', function () {
 test('agency digit should be have a max digits of 1', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.agency_digit', (int)str_repeat('9', 2))
+        ->set('bankAccount.agency_digit', (int) str_repeat('9', 2))
         ->call('save')
         ->assertHasErrors(['bankAccount.agency_digit' => 'max_digits']);
 

@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\CreditCards\Spendings;
 
 use App\Http\Livewire\CreditCards\Spendings;
-use App\Models\CreditCard;
-use App\Models\Spending;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{CreditCard, Spending, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -34,12 +32,12 @@ it('should be able to update a spending', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => $this->spending->amount,
-        'description' => $this->spending->description,
+        'amount'         => $this->spending->amount,
+        'description'    => $this->spending->description,
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->creditCard->remaining_limit,
     ]);
 
@@ -51,12 +49,12 @@ it('should be able to update a spending', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => 500,
-        'description' => 'Test Update',
+        'amount'         => 500,
+        'description'    => 'Test Update',
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->oldRemainingLimit - 500,
     ]);
 
@@ -72,12 +70,12 @@ it('only credit card owner should be able to update a spending', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => $this->spending->amount,
-        'description' => $this->spending->description,
+        'amount'         => $this->spending->amount,
+        'description'    => $this->spending->description,
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->creditCard->remaining_limit,
     ]);
 
@@ -91,12 +89,12 @@ it('only credit card owner should be able to update a spending', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => 500,
-        'description' => 'Test Update',
+        'amount'         => 500,
+        'description'    => 'Test Update',
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->oldRemainingLimit - 500,
     ]);
 

@@ -16,11 +16,11 @@ class MarketStockEntryFactory extends Factory
 
         return [
             'market_stock_id' => \App\Models\MarketStock::factory()->create([
-                'quantity' => $quantity
+                'quantity' => $quantity,
             ]),
             'market_id' => \App\Models\Market::factory(),
-            'price' => $this->faker->numberBetween(1, 100),
-            'quantity' => $quantity,
+            'price'     => $this->faker->numberBetween(1, 100),
+            'quantity'  => $quantity,
         ];
     }
 }

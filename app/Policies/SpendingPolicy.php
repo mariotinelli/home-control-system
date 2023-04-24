@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\CreditCard;
-use App\Models\Spending;
-use App\Models\User;
+use App\Models\{CreditCard, Spending, User};
 
 class SpendingPolicy
 {

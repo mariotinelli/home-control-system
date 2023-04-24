@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\BankAccount;
-use App\Models\BankAccountWithdraw;
-use App\Models\User;
+use App\Models\{BankAccount, BankAccountWithdraw, User};
 
 class BankAccountWithdrawPolicy
 {

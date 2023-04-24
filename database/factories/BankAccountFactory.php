@@ -17,12 +17,12 @@ class BankAccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'bank_name' => $this->faker->sentence,
-            'type' => $this->faker->randomElement(['Conta Corrente', 'Conta Poupança']),
-            'number' => $this->faker->randomNumber(8),
+            'bank_name'     => $this->faker->sentence,
+            'type'          => $this->faker->randomElement(['Conta Corrente', 'Conta Poupança']),
+            'number'        => $this->faker->randomNumber(8),
             'agency_number' => $this->faker->randomNumber(4),
-            'digit' => $this->faker->randomNumber(2),
-            'balance' => $this->faker->randomFloat(2, 0, 100000),
+            'digit'         => $this->faker->randomNumber(2),
+            'balance'       => $this->faker->randomFloat(2, 0, 100000),
         ];
     }
 }

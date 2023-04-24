@@ -8,7 +8,6 @@ use Livewire\Component;
 
 class Destroy extends Component
 {
-
     public ?MarketStock $marketStock = null;
 
     public function save(): void

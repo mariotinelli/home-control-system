@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\GoalWithdraw;
-use App\Models\User;
+use App\Models\{GoalWithdraw, User};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GoalWithdrawPolicy

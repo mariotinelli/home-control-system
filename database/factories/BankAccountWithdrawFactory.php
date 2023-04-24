@@ -17,10 +17,10 @@ class BankAccountWithdrawFactory extends Factory
     public function definition(): array
     {
         return [
-            'value' => $this->faker->randomFloat(2, 1, 1000),
+            'value'           => $this->faker->randomFloat(2, 1, 1000),
             'bank_account_id' => \App\Models\BankAccount::factory(),
-            'description' => $this->faker->sentence,
-            'date' => $this->faker->date(),
+            'description'     => $this->faker->sentence,
+            'date'            => $this->faker->date(),
         ];
     }
 }

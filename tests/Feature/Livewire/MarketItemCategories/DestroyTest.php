@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\MarketItemCategories;
 
 use App\Http\Livewire\MarketItemCategories;
-use App\Models\MarketItem;
-use App\Models\MarketItemCategory;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{MarketItem, MarketItemCategory, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {

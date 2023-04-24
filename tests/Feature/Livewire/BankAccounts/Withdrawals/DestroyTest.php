@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\BankAccounts\Withdrawals;
 
 use App\Http\Livewire\BankAccounts\Withdrawals;
-use App\Models\BankAccount;
-use App\Models\BankAccountWithdraw;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{BankAccount, BankAccountWithdraw, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -35,13 +32,13 @@ it('should be to delete a withdraw', function () {
 
     assertDatabaseHas('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->withdraw->value,
-        'description' => $this->withdraw->description,
-        'date' => $this->withdraw->date,
+        'value'           => $this->withdraw->value,
+        'description'     => $this->withdraw->description,
+        'date'            => $this->withdraw->date,
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance,
     ]);
 
@@ -51,13 +48,13 @@ it('should be to delete a withdraw', function () {
 
     assertDatabaseMissing('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->withdraw->value,
-        'description' => $this->withdraw->description,
-        'date' => $this->withdraw->date,
+        'value'           => $this->withdraw->value,
+        'description'     => $this->withdraw->description,
+        'date'            => $this->withdraw->date,
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance + $this->withdraw->value,
     ]);
 
@@ -75,9 +72,9 @@ it('should be to delete a withdraw only bank account owner', function () {
 
     assertDatabaseHas('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->withdraw->value,
-        'description' => $this->withdraw->description,
-        'date' => $this->withdraw->date,
+        'value'           => $this->withdraw->value,
+        'description'     => $this->withdraw->description,
+        'date'            => $this->withdraw->date,
     ]);
 
     livewire(Withdrawals\Destroy::class, ['withdraw' => $this->withdraw])
@@ -86,13 +83,13 @@ it('should be to delete a withdraw only bank account owner', function () {
 
     assertDatabaseMissing('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->withdraw->value,
-        'description' => $this->withdraw->description,
-        'date' => $this->withdraw->date,
+        'value'           => $this->withdraw->value,
+        'description'     => $this->withdraw->description,
+        'date'            => $this->withdraw->date,
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance + $this->withdraw->value,
     ]);
 

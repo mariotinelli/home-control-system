@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\CreditCards\Spendings;
 
 use App\Http\Livewire\CreditCards\Spendings;
-use App\Models\CreditCard;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{CreditCard, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -29,12 +28,12 @@ it('should be able create a spending', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => 100,
-        'description' => 'Test',
+        'amount'         => 100,
+        'description'    => 'Test',
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->creditCard->remaining_limit - 100,
     ]);
 
@@ -58,12 +57,12 @@ it('should be able create a spending in credit card only owner', function () {
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => 100,
-        'description' => 'Test',
+        'amount'         => 100,
+        'description'    => 'Test',
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
+        'id'              => $this->creditCard->id,
         'remaining_limit' => $this->creditCard->remaining_limit - 100,
     ]);
 });

@@ -4,8 +4,7 @@ namespace App\Http\Livewire\BankAccounts\Withdrawals;
 
 use App\Models\BankAccountWithdraw;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
@@ -18,9 +17,9 @@ class Update extends Component
     public function rules(): array
     {
         return [
-            'withdraw.value' => ['required', 'numeric', 'min:1', 'max_digits:10'],
+            'withdraw.value'       => ['required', 'numeric', 'min:1', 'max_digits:10'],
             'withdraw.description' => ['required', 'string', 'max:255'],
-            'withdraw.date' => ['required', 'date'],
+            'withdraw.date'        => ['required', 'date'],
         ];
     }
 

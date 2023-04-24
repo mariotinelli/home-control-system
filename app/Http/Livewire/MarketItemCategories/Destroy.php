@@ -9,7 +9,6 @@ use Livewire\Component;
 
 class Destroy extends Component
 {
-
     use AuthorizesRequests;
 
     public ?MarketItemCategory $marketItemCategory = null;

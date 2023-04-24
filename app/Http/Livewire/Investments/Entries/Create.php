@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Investments\Entries;
 
-use App\Models\Investment;
-use App\Models\InvestmentEntry;
+use App\Models\{Investment, InvestmentEntry};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?Investment $investment = null;
 
     public ?InvestmentEntry $investmentEntry = null;
@@ -18,7 +16,7 @@ class Create extends Component
     {
         return [
             'investmentEntry.amount' => ['required', 'numeric', 'min:1', 'max:1000'],
-            'investmentEntry.date' => ['required', 'date'],
+            'investmentEntry.date'   => ['required', 'date'],
         ];
     }
 

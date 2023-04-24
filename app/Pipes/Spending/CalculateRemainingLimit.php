@@ -2,17 +2,14 @@
 
 namespace App\Pipes\Spending;
 
-use App\Models\CreditCard;
-use App\Models\Spending;
+use App\Models\{CreditCard, Spending};
 use Closure;
 
 class CalculateRemainingLimit
 {
-
     public function __construct(
         private readonly CreditCard $creditCard
-    )
-    {
+    ) {
     }
 
     public function handle(Spending $spending, Closure $next)
@@ -21,5 +18,4 @@ class CalculateRemainingLimit
 
         return $next($spending);
     }
-
 }

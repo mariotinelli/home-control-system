@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
 use App\Http\Livewire\BankAccounts\Entries;
-use App\Models\BankAccount;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{BankAccount, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -32,13 +31,13 @@ it('should be create a new entry', function () {
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 100,
-        'description' => 'Test',
-        'date' => now()->format('Y-m-d'),
+        'value'           => 100,
+        'description'     => 'Test',
+        'date'            => now()->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance + 100,
     ]);
 
@@ -63,13 +62,13 @@ it('should be create a new entry in bank account only bank account owner', funct
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 100,
-        'description' => 'Test',
-        'date' => now()->format('Y-m-d'),
+        'value'           => 100,
+        'description'     => 'Test',
+        'date'            => now()->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance + 100,
     ]);
 

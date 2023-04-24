@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\BankAccount;
-use App\Models\BankAccountEntry;
-use App\Models\User;
+use App\Models\{BankAccount, BankAccountEntry, User};
 
 class BankAccountEntryPolicy
 {

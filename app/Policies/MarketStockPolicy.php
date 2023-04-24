@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\MarketStock;
-use App\Models\User;
+use App\Models\{MarketStock, User};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MarketStockPolicy

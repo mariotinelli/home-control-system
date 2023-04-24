@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Goals\Withdrawals;
 
-use App\Models\Goal;
-use App\Models\GoalWithdraw;
+use App\Models\{Goal, GoalWithdraw};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?Goal $goal = null;
 
     public ?GoalWithdraw $goalWithdraw = null;
@@ -18,7 +16,7 @@ class Create extends Component
     {
         return [
             'goalWithdraw.amount' => ['required', 'numeric', 'min:1', 'max:1000'],
-            'goalWithdraw.date' => ['required', 'date'],
+            'goalWithdraw.date'   => ['required', 'date'],
         ];
     }
 

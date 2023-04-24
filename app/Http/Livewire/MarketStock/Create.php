@@ -8,14 +8,13 @@ use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?MarketStock $marketStock = null;
 
     public function rules(): array
     {
         return [
             'marketStock.market_item_id' => ['required', 'exists:market_items,id', 'integer', 'unique:market_stocks,market_item_id'],
-            'marketStock.quantity' => ['required', 'integer', 'min:1'],
+            'marketStock.quantity'       => ['required', 'integer', 'min:1'],
         ];
     }
 

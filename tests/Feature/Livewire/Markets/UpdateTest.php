@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\Markets;
 
 use App\Http\Livewire\Markets;
-use App\Models\Market;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Market, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -14,7 +13,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 
     $this->market = Market::factory()->create([
-        'name' => 'Test Market'
+        'name' => 'Test Market',
     ]);
 
     actingAs($this->user);
@@ -33,7 +32,7 @@ it('should be to update market', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('markets', [
-        'name' => 'Test Market Update'
+        'name' => 'Test Market Update',
     ]);
 
 });
@@ -66,7 +65,7 @@ it('should not be able to update market with a name that already exists', functi
 
     // Arrange
     $market = Market::factory()->create([
-        'name' => 'Test Market Unique'
+        'name' => 'Test Market Unique',
     ]);
 
     // Act
@@ -102,5 +101,3 @@ test('name should be a string', function () {
     $lw->assertHasErrors(['market.name' => 'string']);
 
 });
-
-

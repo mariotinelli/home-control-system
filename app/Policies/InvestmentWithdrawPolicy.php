@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\InvestmentWithdraw;
-use App\Models\User;
+use App\Models\{InvestmentWithdraw, User};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InvestmentWithdrawPolicy

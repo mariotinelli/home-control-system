@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\MarketStock;
 
 use App\Http\Livewire\MarketStock;
-use App\Models\MarketItem;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{MarketItem, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -31,7 +30,7 @@ it('should be able to create a new market stock', function () {
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketItem->id,
-        'quantity' => 10,
+        'quantity'       => 10,
     ]);
 
 });
@@ -125,5 +124,3 @@ it('quantity must be greater than zero', function () {
     $lw->assertHasErrors(['marketStock.quantity' => 'min']);
 
 });
-
-

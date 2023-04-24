@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\Goals\Withdrawals;
 
 use App\Http\Livewire\Goals;
-use App\Models\Goal;
-use App\Models\GoalWithdraw;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Goal, GoalWithdraw, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -31,8 +28,8 @@ it('should be to update an goal withdraw', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.amount', 200)
         ->set('goalWithdraw.date', '2021-01-10')
@@ -43,10 +40,10 @@ it('should be to update an goal withdraw', function () {
         ->assertEmitted('goal::withdraw::updated');
 
     assertDatabaseHas('goal_withdraws', [
-        'id' => $this->goalWithdraw->id,
+        'id'      => $this->goalWithdraw->id,
         'goal_id' => $this->goal->id,
-        'amount' => 200,
-        'date' => '2021-01-10',
+        'amount'  => 200,
+        'date'    => '2021-01-10',
     ]);
 
 });
@@ -55,8 +52,8 @@ test('amount is required', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.amount', null)
         ->call('save');
@@ -70,8 +67,8 @@ test('amount is numeric', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.amount', 'abc')
         ->call('save');
@@ -85,8 +82,8 @@ test('amount is min 1', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.amount', 0)
         ->call('save');
@@ -100,8 +97,8 @@ test('amount is max 1000', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.amount', 1001)
         ->call('save');
@@ -115,8 +112,8 @@ test('date is required', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.date', null)
         ->call('save');
@@ -130,8 +127,8 @@ test('date is date', function () {
 
     // Act
     $lw = livewire(Goals\Withdrawals\Update::class, [
-        'goal' => $this->goal,
-        'goalWithdraw' => $this->goalWithdraw
+        'goal'         => $this->goal,
+        'goalWithdraw' => $this->goalWithdraw,
     ])
         ->set('goalWithdraw.date', 'abc')
         ->call('save');

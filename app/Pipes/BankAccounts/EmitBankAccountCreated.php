@@ -7,11 +7,9 @@ use Closure;
 
 class EmitBankAccountCreated
 {
-
     public function __construct(
         private readonly \App\Http\Livewire\BankAccounts\Create $component
-    )
-    {
+    ) {
     }
 
     public function handle(BankAccount $bankAccount, Closure $next)
@@ -20,5 +18,4 @@ class EmitBankAccountCreated
 
         return $next($bankAccount);
     }
-
 }

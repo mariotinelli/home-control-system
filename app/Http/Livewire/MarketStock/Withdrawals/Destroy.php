@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\MarketStock\Withdrawals;
 
-use App\Models\MarketStock;
-use App\Models\MarketStockWithdrawal;
+use App\Models\{MarketStock, MarketStockWithdrawal};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Destroy extends Component
 {
-
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockWithdrawal $marketStockWithdraw = null;

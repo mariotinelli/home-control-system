@@ -3,8 +3,8 @@
 namespace Tests\Feature\Livewire\Investments;
 
 use App\Http\Livewire\Investments;
-use App\Models\Investment;
-use App\Models\User;
+use App\Models\{Investment, User};
+
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
@@ -31,10 +31,10 @@ it('should be able to create a new investments', function () {
         ->assertEmitted('investment::created');
 
     assertDatabaseHas('investments', [
-        'name' => 'Test Investment',
+        'name'        => 'Test Investment',
         'description' => 'Test Description',
-        'owner' => 'Mário',
-        'start_date' => '2021-01-01',
+        'owner'       => 'Mário',
+        'start_date'  => '2021-01-01',
     ]);
 
 });
@@ -48,7 +48,6 @@ test('name is required', function () {
 
     // Assert
     $lw->assertHasErrors(['investment.name' => 'required']);
-
 
 });
 
@@ -66,7 +65,6 @@ test('name is unique', function () {
 
     // Assert
     $lw->assertHasErrors(['investment.name' => 'unique']);
-
 
 });
 
@@ -189,5 +187,3 @@ test('start_date is a date', function () {
     $lw->assertHasErrors(['investment.start_date' => 'date']);
 
 });
-
-

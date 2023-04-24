@@ -9,8 +9,7 @@ class EmitCreditCardCreated
 {
     public function __construct(
         private readonly \App\Http\Livewire\CreditCards\Create $component
-    )
-    {
+    ) {
     }
 
     public function handle(CreditCard $creditCard, Closure $next)
@@ -19,5 +18,4 @@ class EmitCreditCardCreated
 
         return $next($creditCard);
     }
-
 }

@@ -6,12 +6,10 @@ use App\Models\CreditCard;
 
 class ReverseRemainingLimit
 {
-
     public function __construct(
-        private readonly float      $reverseValue,
+        private readonly float $reverseValue,
         private readonly CreditCard $creditCard
-    )
-    {
+    ) {
     }
 
     public function handle(mixed $spending, \Closure $next): mixed

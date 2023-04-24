@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\Trips;
 
 use App\Http\Livewire\Trips;
-use App\Models\City;
-use App\Models\Trip;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{City, Trip, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -37,9 +35,9 @@ it('should be able to update a trip', function () {
         ->assertEmitted('trip::updated');
 
     assertDatabaseHas('trips', [
-        'id' => $this->trip->id,
-        'city_id' => 3,
-        'month' => '11/2023',
+        'id'          => $this->trip->id,
+        'city_id'     => 3,
+        'month'       => '11/2023',
         'description' => 'Test Description Update',
         'total_value' => 100,
     ]);

@@ -6,11 +6,9 @@ use App\Models\BankAccountEntry;
 
 class EmitEntryCreated
 {
-
     public function __construct(
         private readonly \App\Http\Livewire\BankAccounts\Entries\Create $component
-    )
-    {
+    ) {
     }
 
     public function handle(BankAccountEntry $entry, \Closure $next)
@@ -19,5 +17,4 @@ class EmitEntryCreated
 
         return $next($entry);
     }
-
 }

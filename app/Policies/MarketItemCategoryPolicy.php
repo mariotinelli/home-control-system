@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\MarketItemCategory;
-use App\Models\User;
+use App\Models\{MarketItemCategory, User};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MarketItemCategoryPolicy
@@ -29,7 +28,7 @@ class MarketItemCategoryPolicy
 
     public function delete(User $user, MarketItemCategory $marketItemCategory): bool
     {
-        return ($marketItemCategory->marketItems()->count() === 0);
+        return $marketItemCategory->marketItems()->count() === 0;
     }
 
     public function restore(User $user, MarketItemCategory $marketItemCategory): bool

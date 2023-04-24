@@ -9,16 +9,15 @@ use Livewire\Component;
 
 class Update extends Component
 {
-
     public ?Investment $investment = null;
 
     public function rules(): array
     {
         return [
-            'investment.name' => ['required', 'string', 'max:255', Rule::unique('investments', 'name')],
+            'investment.name'        => ['required', 'string', 'max:255', Rule::unique('investments', 'name')],
             'investment.description' => ['required', 'string', 'max:255'],
-            'investment.owner' => ['required', 'string', 'max:255'],
-            'investment.start_date' => ['required', 'date'],
+            'investment.owner'       => ['required', 'string', 'max:255'],
+            'investment.start_date'  => ['required', 'date'],
         ];
     }
 

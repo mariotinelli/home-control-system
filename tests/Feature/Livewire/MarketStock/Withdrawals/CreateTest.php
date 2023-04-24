@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\MarketStock\Entries;
 
 use App\Http\Livewire\MarketStock;
-use App\Models\Market;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{Market, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -43,13 +41,13 @@ it('should be create a new withdraw of the market stock', function () {
 
     assertDatabaseHas('market_stock_withdrawals', [
         'market_stock_id' => $this->marketStock->id,
-        'market_id' => $this->market->id,
-        'price' => 10,
-        'quantity' => 30,
+        'market_id'       => $this->market->id,
+        'price'           => 10,
+        'quantity'        => 30,
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => 70,
     ]);
 
@@ -73,13 +71,13 @@ it('should be not able to create a new withdraw if quantity greater than a marke
 
     assertDatabaseMissing('market_stock_withdrawals', [
         'market_stock_id' => $this->marketStock->id,
-        'market_id' => $this->market->id,
-        'price' => 10,
-        'quantity' => 101,
+        'market_id'       => $this->market->id,
+        'price'           => 10,
+        'quantity'        => 101,
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => 100,
     ]);
 
@@ -226,4 +224,3 @@ test('quantity must be greater than zero', function () {
     $lw->assertHasErrors(['marketStockEntry.quantity' => 'min']);
 
 });
-

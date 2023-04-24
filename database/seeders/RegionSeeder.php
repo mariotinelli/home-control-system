@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +19,7 @@ class RegionSeeder extends Seeder
             ['name' => 'Nordeste'],
             ['name' => 'Sudeste'],
             ['name' => 'Centro-Oeste'],
-            ['name' => 'Sul']
+            ['name' => 'Sul'],
         ]);
     }
 }

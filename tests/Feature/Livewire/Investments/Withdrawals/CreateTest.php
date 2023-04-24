@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\Investments\Withdrawals;
 
 use App\Http\Livewire\Investments;
-use App\Models\Investment;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Investment, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -36,8 +34,8 @@ it('should be create an investment withdraw', function () {
 
     assertDatabaseHas('investment_withdrawals', [
         'investment_id' => $this->investment->id,
-        'amount' => 100,
-        'date' => '2021-01-01',
+        'amount'        => 100,
+        'date'          => '2021-01-01',
     ]);
 
 });

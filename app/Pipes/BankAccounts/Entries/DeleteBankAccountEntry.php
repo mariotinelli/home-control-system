@@ -6,7 +6,6 @@ use App\Models\BankAccountEntry;
 
 class DeleteBankAccountEntry
 {
-
     public function __construct()
     {
     }

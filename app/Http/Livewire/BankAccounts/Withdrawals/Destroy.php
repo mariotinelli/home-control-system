@@ -4,8 +4,7 @@ namespace App\Http\Livewire\BankAccounts\Withdrawals;
 
 use App\Models\BankAccountWithdraw;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
@@ -27,7 +26,6 @@ class Destroy extends Component
 
         $this->emit('bank-account::withdraw::deleted');
     }
-
 
     public function render(): View|Factory|Application
     {

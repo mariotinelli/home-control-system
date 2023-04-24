@@ -2,11 +2,9 @@
 
 namespace App\Http\Livewire\BankAccounts\Entries;
 
-use App\Models\BankAccount;
-use App\Models\BankAccountEntry;
+use App\Models\{BankAccount, BankAccountEntry};
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
@@ -22,9 +20,9 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'entry.value' => ['required', 'numeric', 'min:1', 'max_digits:10'],
+            'entry.value'       => ['required', 'numeric', 'min:1', 'max_digits:10'],
             'entry.description' => ['required', 'string', 'max:255'],
-            'entry.date' => ['required', 'date'],
+            'entry.date'        => ['required', 'date'],
         ];
     }
 

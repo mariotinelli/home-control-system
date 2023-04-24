@@ -13,8 +13,7 @@ class Trip extends Model
     public function month()
     {
         return \Attribute::make(
-            get: fn() => Carbon::create($this->month)->format('m/Y'),
+            get: fn () => Carbon::create($this->month)->format('m/Y'),
         );
     }
-
 }

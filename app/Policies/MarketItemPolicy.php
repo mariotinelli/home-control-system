@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\MarketItem;
-use App\Models\User;
+use App\Models\{MarketItem, User};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MarketItemPolicy

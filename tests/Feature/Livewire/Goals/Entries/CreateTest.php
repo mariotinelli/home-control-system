@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\Goals\Entries;
 
 use App\Http\Livewire\Goals;
-use App\Models\Goal;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Goal, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -36,8 +34,8 @@ it('should be create an goal entry', function () {
 
     assertDatabaseHas('goal_entries', [
         'goal_id' => $this->goal->id,
-        'amount' => 100,
-        'date' => '2021-01-01',
+        'amount'  => 100,
+        'date'    => '2021-01-01',
     ]);
 
 });

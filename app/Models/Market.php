@@ -14,5 +14,4 @@ class Market extends Model
     {
         return $this->hasMany(MarketStockEntry::class);
     }
-
 }

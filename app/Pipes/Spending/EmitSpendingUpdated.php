@@ -9,8 +9,7 @@ class EmitSpendingUpdated
 {
     public function __construct(
         private readonly \App\Http\Livewire\CreditCards\Spendings\Update $component
-    )
-    {
+    ) {
     }
 
     public function handle(Spending $spending, Closure $next)
