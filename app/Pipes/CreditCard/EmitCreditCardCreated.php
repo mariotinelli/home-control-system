@@ -12,7 +12,7 @@ class EmitCreditCardCreated
     ) {
     }
 
-    public function handle(CreditCard $creditCard, Closure $next)
+    public function handle(CreditCard $creditCard, Closure $next): CreditCard
     {
         $this->component->emit('credit-card::created');
 

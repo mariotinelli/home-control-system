@@ -8,11 +8,11 @@ class ReverseBankAccountBalance
 {
     public function __construct(
         private readonly BankAccount $bankAccount,
-        private readonly float $oldEntryValue
+        private readonly float       $oldEntryValue
     ) {
     }
 
-    public function handle(BankAccountEntry $entry, \Closure $next)
+    public function handle(BankAccountEntry $entry, \Closure $next): BankAccountEntry
     {
         $this->bankAccount->balance -= $this->oldEntryValue;
 

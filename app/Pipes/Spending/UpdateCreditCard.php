@@ -12,7 +12,7 @@ class UpdateCreditCard
     ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $this->creditCard->save();
 

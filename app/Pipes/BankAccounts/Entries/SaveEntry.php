@@ -11,7 +11,7 @@ class SaveEntry
     {
     }
 
-    public function handle(BankAccountEntry $entry, Closure $next)
+    public function handle(BankAccountEntry $entry, Closure $next): BankAccountEntry
     {
         $entry->save();
 

@@ -21,7 +21,7 @@ it('should be able to create a new trip', function () {
     // Act
     $lw = livewire(Trips\Create::class)
         ->set('trip.city_id', 2)
-        ->set('trip.month', now()->format('m/Y'))
+        ->set('trip.month', '12/2020')
         ->set('trip.description', 'Test Description')
         ->set('trip.total_value', 1000)
         ->call('save');
@@ -32,7 +32,7 @@ it('should be able to create a new trip', function () {
 
     assertDatabaseHas('trips', [
         'city_id'     => 2,
-        'month'       => now()->format('m/Y'),
+        'month'       => '12/2020',
         'description' => 'Test Description',
         'total_value' => 1000,
     ]);

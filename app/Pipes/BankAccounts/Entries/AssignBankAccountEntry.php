@@ -12,7 +12,7 @@ class AssignBankAccountEntry
     ) {
     }
 
-    public function handle(BankAccountEntry $entry, Closure $next)
+    public function handle(BankAccountEntry $entry, Closure $next): BankAccountEntry
     {
         $entry->bank_account_id = $this->bankAccount->id;
 

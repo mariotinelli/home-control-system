@@ -12,7 +12,7 @@ class CalculateRemainingLimit
     ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $this->creditCard->remaining_limit = $this->creditCard->remaining_limit - $spending->amount;
 

@@ -10,7 +10,7 @@ class DeleteBankAccountEntry
     {
     }
 
-    public function handle(BankAccountEntry $entry, \Closure $next)
+    public function handle(BankAccountEntry $entry, \Closure $next): BankAccountEntry
     {
         $entry->delete();
 

@@ -7,7 +7,7 @@ use Closure;
 
 class DeleteSpending
 {
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $spending->delete();
 

@@ -12,7 +12,7 @@ class EmitSpendingDeleted
     ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $this->component->emit('credit-card::spending::deleted');
 

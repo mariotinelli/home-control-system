@@ -12,7 +12,7 @@ class AssignCreditCardSpeding
     ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $spending->credit_card_id = $this->creditCard->id;
 

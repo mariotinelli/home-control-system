@@ -12,7 +12,7 @@ class EmitBankAccountCreated
     ) {
     }
 
-    public function handle(BankAccount $bankAccount, Closure $next)
+    public function handle(BankAccount $bankAccount, Closure $next): BankAccount
     {
         $this->component->emit('bank-account::created');
 
