@@ -4,8 +4,7 @@ namespace App\Http\Livewire\CreditCards\Spendings;
 
 use App\Models\Spending;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;

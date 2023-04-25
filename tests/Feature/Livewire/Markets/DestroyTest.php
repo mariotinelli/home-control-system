@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\Markets;
 
 use App\Http\Livewire\Markets;
-use App\Models\Market;
-use App\Models\MarketStock;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{Market, MarketStock, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -43,8 +40,8 @@ it('should be not able to delete market if contains entries', function () {
     // Arrange
     $this->market->marketStockEntries()->create([
         'market_stock_id' => MarketStock::factory()->create()->id,
-        'price' => 100,
-        'quantity' => 1,
+        'price'           => 100,
+        'quantity'        => 1,
     ]);
 
     assertDatabaseHas('market_stock_entries', [

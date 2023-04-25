@@ -7,12 +7,10 @@ use Closure;
 
 class SaveSpending
 {
-
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $spending->save();
 
         return $next($spending);
     }
-
 }

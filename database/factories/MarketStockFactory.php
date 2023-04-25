@@ -2,8 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\MarketItem;
-use App\Models\MarketStock;
+use App\Models\{MarketItem, MarketStock};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MarketStockFactory extends Factory
@@ -14,7 +13,7 @@ class MarketStockFactory extends Factory
     {
         return [
             'market_item_id' => MarketItem::factory()->create()->id,
-            'quantity' => $this->faker->numberBetween(1, 100),
+            'quantity'       => $this->faker->numberBetween(1, 100),
         ];
     }
 }

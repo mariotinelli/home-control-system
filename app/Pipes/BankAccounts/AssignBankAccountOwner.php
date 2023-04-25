@@ -7,12 +7,10 @@ use Closure;
 
 class AssignBankAccountOwner
 {
-
-    public function handle(BankAccount $bankAccount, Closure $next)
+    public function handle(BankAccount $bankAccount, Closure $next): BankAccount
     {
         $bankAccount->user_id = auth()->id();
 
         return $next($bankAccount);
     }
-
 }

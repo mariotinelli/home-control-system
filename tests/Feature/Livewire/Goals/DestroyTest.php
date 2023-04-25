@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\Goals;
 
 use App\Http\Livewire\Goals;
-use App\Models\Goal;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Goal, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -36,13 +35,13 @@ it('should be able to delete a goal', function () {
 it('should be able to disable a goals if that has entries', function () {
 
     assertDatabaseHas('goals', [
-        'id' => $this->goal->id,
+        'id'         => $this->goal->id,
         'deleted_at' => null,
     ]);
 
     $this->goal->entries()->create([
         'amount' => 100,
-        'date' => now(),
+        'date'   => now(),
     ]);
 
     $lw = livewire(Goals\Destroy::class, ['goal' => $this->goal])
@@ -52,7 +51,7 @@ it('should be able to disable a goals if that has entries', function () {
         ->assertEmitted('goal::deleted');
 
     assertDatabaseHas('goals', [
-        'id' => $this->goal->id,
+        'id'         => $this->goal->id,
         'deleted_at' => now(),
     ]);
 
@@ -61,13 +60,13 @@ it('should be able to disable a goals if that has entries', function () {
 it('should be able to disable a goals if that has withdrawals', function () {
 
     assertDatabaseHas('goals', [
-        'id' => $this->goal->id,
+        'id'         => $this->goal->id,
         'deleted_at' => null,
     ]);
 
     $this->goal->withdrawals()->create([
         'amount' => 100,
-        'date' => now(),
+        'date'   => now(),
     ]);
 
     $lw = livewire(Goals\Destroy::class, ['goal' => $this->goal])
@@ -77,7 +76,7 @@ it('should be able to disable a goals if that has withdrawals', function () {
         ->assertEmitted('goal::deleted');
 
     assertDatabaseHas('goals', [
-        'id' => $this->goal->id,
+        'id'         => $this->goal->id,
         'deleted_at' => now(),
     ]);
 

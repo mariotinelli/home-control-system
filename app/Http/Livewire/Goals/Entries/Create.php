@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Goals\Entries;
 
-use App\Models\Goal;
-use App\Models\GoalEntry;
+use App\Models\{Goal, GoalEntry};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?Goal $goal = null;
 
     public ?GoalEntry $goalEntry = null;
@@ -18,7 +16,7 @@ class Create extends Component
     {
         return [
             'goalEntry.amount' => ['required', 'numeric', 'min:1', 'max:1000'],
-            'goalEntry.date' => ['required', 'date'],
+            'goalEntry.date'   => ['required', 'date'],
         ];
     }
 

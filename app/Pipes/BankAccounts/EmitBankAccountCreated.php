@@ -7,18 +7,15 @@ use Closure;
 
 class EmitBankAccountCreated
 {
-
     public function __construct(
         private readonly \App\Http\Livewire\BankAccounts\Create $component
-    )
-    {
+    ) {
     }
 
-    public function handle(BankAccount $bankAccount, Closure $next)
+    public function handle(BankAccount $bankAccount, Closure $next): BankAccount
     {
         $this->component->emit('bank-account::created');
 
         return $next($bankAccount);
     }
-
 }

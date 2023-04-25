@@ -12,10 +12,10 @@ class InvestmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence,
+            'name'        => $this->faker->sentence,
             'description' => $this->faker->text,
-            'owner' => $this->faker->name,
-            'start_date' => $this->faker->date(),
+            'owner'       => $this->faker->name,
+            'start_date'  => $this->faker->date(),
         ];
     }
 }

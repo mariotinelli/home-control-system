@@ -7,12 +7,10 @@ use Closure;
 
 class AssignCreditCardOwner
 {
-
-    public function handle(CreditCard $creditCard, Closure $next)
+    public function handle(CreditCard $creditCard, Closure $next): CreditCard
     {
         $creditCard->user_id = auth()->id();
 
         return $next($creditCard);
     }
-
 }

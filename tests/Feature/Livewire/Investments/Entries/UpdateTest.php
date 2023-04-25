@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\Investments\Entries;
 
 use App\Http\Livewire\Investments;
-use App\Models\Investment;
-use App\Models\InvestmentEntry;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Investment, InvestmentEntry, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -19,7 +16,7 @@ beforeEach(function () {
 
     $this->investmentEntry = InvestmentEntry::factory()->create([
         'investment_id' => $this->investment->id,
-        'amount' => 100,
+        'amount'        => 100,
     ]);
 
     actingAs($this->user);
@@ -32,8 +29,8 @@ it('should be to update an investment entry', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.amount', 200)
         ->set('investmentEntry.date', '2021-01-10')
@@ -45,8 +42,8 @@ it('should be to update an investment entry', function () {
 
     assertDatabaseHas('investment_entries', [
         'investment_id' => $this->investment->id,
-        'amount' => 200,
-        'date' => '2021-01-10',
+        'amount'        => 200,
+        'date'          => '2021-01-10',
     ]);
 
 });
@@ -55,8 +52,8 @@ test('amount is required', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.amount', null)
         ->call('save');
@@ -70,8 +67,8 @@ test('amount is numeric', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.amount', 'abc')
         ->call('save');
@@ -85,8 +82,8 @@ test('amount is min 1', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.amount', 0)
         ->call('save');
@@ -100,8 +97,8 @@ test('amount is max 1000', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.amount', 1001)
         ->call('save');
@@ -115,8 +112,8 @@ test('date is required', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.date', null)
         ->call('save');
@@ -130,8 +127,8 @@ test('date is date', function () {
 
     // Act
     $lw = livewire(Investments\Entries\Update::class, [
-        'investment' => $this->investment,
-        'investmentEntry' => $this->investmentEntry
+        'investment'      => $this->investment,
+        'investmentEntry' => $this->investmentEntry,
     ])
         ->set('investmentEntry.date', 'abc')
         ->call('save');

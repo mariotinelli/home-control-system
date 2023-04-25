@@ -12,9 +12,9 @@ class GoalFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence,
-            'to_reach' => $this->faker->numberBetween(1, 1000),
-            'owner' => $this->faker->name,
+            'name'        => $this->faker->sentence,
+            'to_reach'    => $this->faker->numberBetween(1, 1000),
+            'owner'       => $this->faker->name,
             'description' => $this->faker->text,
         ];
     }

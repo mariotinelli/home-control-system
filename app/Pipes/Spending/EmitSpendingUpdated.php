@@ -9,11 +9,10 @@ class EmitSpendingUpdated
 {
     public function __construct(
         private readonly \App\Http\Livewire\CreditCards\Spendings\Update $component
-    )
-    {
+    ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $this->component->emit('credit-card::spending::updated');
 

@@ -2,19 +2,17 @@
 
 namespace App\Pipes\BankAccounts\Entries;
 
-use App\Models\BankAccount;
-use App\Models\BankAccountEntry;
+use App\Models\{BankAccount, BankAccountEntry};
 use Closure;
 
 class CalculateBankAccountBalance
 {
     public function __construct(
         private readonly BankAccount $bankAccount
-    )
-    {
+    ) {
     }
 
-    public function handle(BankAccountEntry $entry, Closure $next)
+    public function handle(BankAccountEntry $entry, Closure $next): BankAccountEntry
     {
         $this->bankAccount->balance += $entry->value;
 

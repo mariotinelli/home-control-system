@@ -18,11 +18,11 @@ class CreditCardFactory extends Factory
     public function definition(): array
     {
         return [
-            'bank' => $this->faker->company,
-            'number' => $this->faker->creditCardNumber,
-            'expiration' => $this->faker->creditCardExpirationDateString,
-            'cvv' => $this->faker->numberBetween(100, 999),
-            'limit' => $limit = $this->faker->numberBetween(100, 10000),
+            'bank'            => $this->faker->company,
+            'number'          => $this->faker->creditCardNumber,
+            'expiration'      => $this->faker->creditCardExpirationDateString,
+            'cvv'             => $this->faker->numberBetween(100, 999),
+            'limit'           => $limit = $this->faker->numberBetween(100, 10000),
             'remaining_limit' => $limit,
         ];
     }

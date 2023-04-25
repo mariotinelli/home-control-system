@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\MarketStock\Withdrawals;
 
-use App\Models\MarketStock;
-use App\Models\MarketStockWithdrawal;
+use App\Models\{MarketStock, MarketStockWithdrawal};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockWithdrawal $marketStockWithdraw = null;
@@ -18,9 +16,9 @@ class Create extends Component
     {
         return [
             'marketStockWithdraw.market_stock_id' => ['required', 'integer', 'exists:market_stocks,id'],
-            'marketStockWithdraw.market_id' => ['required', 'integer', 'exists:markets,id'],
-            'marketStockWithdraw.price' => ['required', 'numeric', 'min:1'],
-            'marketStockWithdraw.quantity' => ['required', 'integer', 'min:1', 'max:' . $this->marketStock->quantity],
+            'marketStockWithdraw.market_id'       => ['required', 'integer', 'exists:markets,id'],
+            'marketStockWithdraw.price'           => ['required', 'numeric', 'min:1'],
+            'marketStockWithdraw.quantity'        => ['required', 'integer', 'min:1', 'max:' . $this->marketStock->quantity],
         ];
     }
 

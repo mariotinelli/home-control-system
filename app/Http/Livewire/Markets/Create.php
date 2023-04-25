@@ -8,7 +8,6 @@ use Livewire\Component;
 
 class Create extends Component
 {
-
     public function rules(): array
     {
         return [

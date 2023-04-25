@@ -18,9 +18,9 @@ class MarketStockWithdrawalFactory extends Factory
     {
         return [
             'market_stock_id' => \App\Models\MarketStock::factory(),
-            'market_id' => \App\Models\Market::factory(),
-            'quantity' => $this->faker->numberBetween(1, 100),
-            'price' => $this->faker->numberBetween(1, 100),
+            'market_id'       => \App\Models\Market::factory(),
+            'quantity'        => $this->faker->numberBetween(1, 100),
+            'price'           => $this->faker->numberBetween(1, 100),
         ];
     }
 }

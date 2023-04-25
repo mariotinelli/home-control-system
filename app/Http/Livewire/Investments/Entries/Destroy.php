@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Investments\Entries;
 
-use App\Models\Investment;
-use App\Models\InvestmentEntry;
+use App\Models\{Investment, InvestmentEntry};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Destroy extends Component
 {
-
     public ?Investment $investment = null;
 
     public ?InvestmentEntry $investmentEntry = null;

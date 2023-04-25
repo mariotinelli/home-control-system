@@ -6,12 +6,11 @@ use App\Models\BankAccountEntry;
 
 class DeleteBankAccountEntry
 {
-
     public function __construct()
     {
     }
 
-    public function handle(BankAccountEntry $entry, \Closure $next)
+    public function handle(BankAccountEntry $entry, \Closure $next): BankAccountEntry
     {
         $entry->delete();
 

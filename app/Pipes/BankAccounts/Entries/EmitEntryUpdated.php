@@ -8,12 +8,9 @@ use Closure;
 
 class EmitEntryUpdated
 {
-
-
     public function __construct(
         private readonly Update $component
-    )
-    {
+    ) {
     }
 
     public function handle(BankAccountEntry $entry, Closure $next): BankAccountEntry

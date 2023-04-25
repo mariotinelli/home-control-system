@@ -7,12 +7,10 @@ use Closure;
 
 class SaveCreditCard
 {
-
-    public function handle(CreditCard $creditCard, Closure $next)
+    public function handle(CreditCard $creditCard, Closure $next): CreditCard
     {
         $creditCard->save();
 
         return $next($creditCard);
     }
-
 }

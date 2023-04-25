@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\Goals\Entries;
 
 use App\Http\Livewire\Goals;
-use App\Models\Goal;
-use App\Models\GoalEntry;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Goal, GoalEntry, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -19,7 +16,7 @@ beforeEach(function () {
 
     $this->goalEntry = GoalEntry::factory()->create([
         'goal_id' => $this->goal->id,
-        'amount' => 100,
+        'amount'  => 100,
     ]);
 
     actingAs($this->user);
@@ -32,8 +29,8 @@ it('should be to update an goal entry', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.amount', 200)
         ->set('goalEntry.date', '2021-01-10')
@@ -45,8 +42,8 @@ it('should be to update an goal entry', function () {
 
     assertDatabaseHas('goal_entries', [
         'goal_id' => $this->goal->id,
-        'amount' => 200,
-        'date' => '2021-01-10',
+        'amount'  => 200,
+        'date'    => '2021-01-10',
     ]);
 
 });
@@ -55,8 +52,8 @@ test('amount is required', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.amount', null)
         ->call('save');
@@ -70,8 +67,8 @@ test('amount is numeric', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.amount', 'abc')
         ->call('save');
@@ -85,8 +82,8 @@ test('amount is min 1', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.amount', 0)
         ->call('save');
@@ -100,8 +97,8 @@ test('amount is max 1000', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.amount', 1001)
         ->call('save');
@@ -115,8 +112,8 @@ test('date is required', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.date', null)
         ->call('save');
@@ -130,8 +127,8 @@ test('date is date', function () {
 
     // Act
     $lw = livewire(Goals\Entries\Update::class, [
-        'goal' => $this->goal,
-        'goalEntry' => $this->goalEntry
+        'goal'      => $this->goal,
+        'goalEntry' => $this->goalEntry,
     ])
         ->set('goalEntry.date', 'abc')
         ->call('save');

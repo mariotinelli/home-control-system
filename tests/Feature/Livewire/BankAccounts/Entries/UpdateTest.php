@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
 use App\Http\Livewire\BankAccounts\Entries;
-use App\Models\BankAccount;
-use App\Models\BankAccountEntry;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{BankAccount, BankAccountEntry, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -34,13 +32,13 @@ it('should be to update a entry', function () {
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->entry->value,
-        'description' => $this->entry->description,
-        'date' => $this->entry->date->format('Y-m-d'),
+        'value'           => $this->entry->value,
+        'description'     => $this->entry->description,
+        'date'            => $this->entry->date->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance,
     ]);
 
@@ -53,13 +51,13 @@ it('should be to update a entry', function () {
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 200,
-        'description' => 'Test Update',
-        'date' => now()->format('Y-m-d'),
+        'value'           => 200,
+        'description'     => 'Test Update',
+        'date'            => now()->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
     ]);
 
@@ -77,13 +75,13 @@ it('should be to update a entry only bank account owner', function () {
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => $this->entry->value,
-        'description' => $this->entry->description,
-        'date' => $this->entry->date->format('Y-m-d'),
+        'value'           => $this->entry->value,
+        'description'     => $this->entry->description,
+        'date'            => $this->entry->date->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance,
     ]);
 
@@ -96,13 +94,13 @@ it('should be to update a entry only bank account owner', function () {
 
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 200,
-        'description' => 'Test Update',
-        'date' => now()->format('Y-m-d'),
+        'value'           => 200,
+        'description'     => 'Test Update',
+        'date'            => now()->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
     ]);
 

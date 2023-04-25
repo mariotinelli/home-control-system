@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\BankAccounts\Withdrawals;
 
 use App\Http\Livewire\BankAccounts\Withdrawals;
-use App\Models\BankAccount;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{BankAccount, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -23,7 +22,7 @@ beforeEach(function () {
 
 test('should be able to create a withdraw', function () {
 
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount,])
+    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
         ->set('withdraw.value', 100)
         ->set('withdraw.description', 'Test')
         ->set('withdraw.date', '2021-01-01')
@@ -32,13 +31,13 @@ test('should be able to create a withdraw', function () {
 
     assertDatabaseHas('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 100,
-        'description' => 'Test',
-        'date' => '2021-01-01',
+        'value'           => 100,
+        'description'     => 'Test',
+        'date'            => '2021-01-01',
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance - 100,
     ]);
 
@@ -63,13 +62,13 @@ it('should be create a new withdraw in bank account only bank account owner', fu
 
     assertDatabaseHas('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value' => 100,
-        'description' => 'Test',
-        'date' => now()->format('Y-m-d'),
+        'value'           => 100,
+        'description'     => 'Test',
+        'date'            => now()->format('Y-m-d'),
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance - 100,
     ]);
 
@@ -160,4 +159,3 @@ test('date should be a date', function () {
         ->assertHasErrors(['withdraw.date' => 'date']);
 
 });
-

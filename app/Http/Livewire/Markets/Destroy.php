@@ -21,7 +21,7 @@ class Destroy extends Component
 
             return;
         }
-        
+
         $this->market->delete();
 
         $this->emit('market::deleted');

@@ -8,15 +8,14 @@ use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?Goal $goal = null;
 
     public function rules(): array
     {
         return [
-            'goal.name' => ['required', 'string', 'max:255'],
-            'goal.to_reach' => ['required', 'numeric', 'min:1'],
-            'goal.owner' => ['required', 'string', 'max:255'],
+            'goal.name'        => ['required', 'string', 'max:255'],
+            'goal.to_reach'    => ['required', 'numeric', 'min:1'],
+            'goal.owner'       => ['required', 'string', 'max:255'],
             'goal.description' => ['required', 'string', 'max:255'],
         ];
     }

@@ -3,8 +3,8 @@
 namespace Tests\Feature\Livewire\CreditCards;
 
 use App\Http\Livewire\CreditCards;
-use App\Models\CreditCard;
-use App\Models\User;
+use App\Models\{CreditCard, User};
+
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Livewire\livewire;
 
@@ -30,12 +30,12 @@ it('should be able edit a credit card', function () {
         ->assertEmitted('credit-card::updated');
 
     assertDatabaseHas('credit_cards', [
-        'user_id' => $this->user->id,
-        'bank' => 'Test Update',
-        'number' => '2547896321456987',
-        'expiration' => '11/2025',
-        'cvv' => '234',
-        'limit' => 5000,
+        'user_id'         => $this->user->id,
+        'bank'            => 'Test Update',
+        'number'          => '2547896321456987',
+        'expiration'      => '11/2025',
+        'cvv'             => '234',
+        'limit'           => 5000,
         'remaining_limit' => $this->creditCard->remaining_limit,
     ]);
 
@@ -61,12 +61,12 @@ it('should be able to edit a credit card only the card owner', function () {
         ->assertEmitted('credit-card::updated');
 
     assertDatabaseHas('credit_cards', [
-        'user_id' => $this->user->id,
-        'bank' => 'Test Update',
-        'number' => '2547896321456987',
+        'user_id'    => $this->user->id,
+        'bank'       => 'Test Update',
+        'number'     => '2547896321456987',
         'expiration' => '11/2025',
-        'cvv' => '234',
-        'limit' => 5000,
+        'cvv'        => '234',
+        'limit'      => 5000,
     ]);
 });
 

@@ -18,7 +18,6 @@ class Update extends Component
 
     public ?Market $market = null;
 
-
     public function save(): void
     {
         $this->validate();

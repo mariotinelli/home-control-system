@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire\Investments\Entries;
 
-use App\Models\Investment;
-use App\Models\InvestmentEntry;
+use App\Models\{Investment, InvestmentEntry};
 use DB;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -12,7 +11,6 @@ use Livewire\Component;
 
 class Update extends Component
 {
-
     use AuthorizesRequests;
 
     public ?Investment $investment = null;
@@ -23,7 +21,7 @@ class Update extends Component
     {
         return [
             'investmentEntry.amount' => ['required', 'numeric', 'min:1', 'max:1000'],
-            'investmentEntry.date' => ['required', 'date'],
+            'investmentEntry.date'   => ['required', 'date'],
         ];
     }
 
@@ -50,7 +48,6 @@ class Update extends Component
         }
 
     }
-
 
     public function render(): View
     {

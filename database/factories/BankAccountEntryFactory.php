@@ -17,9 +17,9 @@ class BankAccountEntryFactory extends Factory
     public function definition(): array
     {
         return [
-            'value' => $this->faker->randomFloat(2, 1, 1000),
+            'value'       => $this->faker->randomFloat(2, 1, 1000),
             'description' => $this->faker->sentence,
-            'date' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'date'        => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

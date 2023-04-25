@@ -8,7 +8,6 @@ use Livewire\Component;
 
 class Destroy extends Component
 {
-
     public ?Goal $goal = null;
 
     public function save(): void
@@ -19,7 +18,7 @@ class Destroy extends Component
             $this->goal->delete();
 
             $this->emit('goal::deleted');
-            
+
             return;
 
         }

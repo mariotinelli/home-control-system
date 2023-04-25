@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\Trips;
 
 use App\Http\Livewire\Trips;
-use App\Models\Trip;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseMissing;
+use App\Models\{Trip, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {

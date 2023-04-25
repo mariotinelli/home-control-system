@@ -4,10 +4,11 @@ namespace App\Enums;
 
 class TypeOfWeightEnum
 {
+    public const GRAM = 'gramas';
 
-    const GRAM = 'gramas';
-    const KILOGRAM = 'quilogramas';
-    const TON = 'toneladas';
+    public const KILOGRAM = 'quilogramas';
+
+    public const TON = 'toneladas';
 
     public static function getValues(): array
     {
@@ -17,5 +18,4 @@ class TypeOfWeightEnum
             self::TON,
         ];
     }
-
 }

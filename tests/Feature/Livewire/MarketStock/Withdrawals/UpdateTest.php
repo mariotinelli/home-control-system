@@ -3,11 +3,9 @@
 namespace Tests\Feature\Livewire\MarketStock\Entries;
 
 use App\Http\Livewire\MarketStock;
-use App\Models\Market;
-use App\Models\MarketStockWithdrawal;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Market, MarketStockWithdrawal, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -20,7 +18,7 @@ beforeEach(function () {
 
     $this->marketStockWithdraw = MarketStockWithdrawal::factory()->create([
         'market_stock_id' => $this->marketStock->id,
-        'quantity' => 20,
+        'quantity'        => 20,
     ]);
 
     $this->marketStock->decrement('quantity', $this->marketStockWithdraw->quantity);
@@ -40,7 +38,7 @@ it('should be update a withdraw of the market stock', function () {
     // Act
     $lw = livewire(MarketStock\Withdrawals\Update::class, [
         'marketStockWithdraw' => $this->marketStockWithdraw,
-        'marketStock' => $this->marketStock
+        'marketStock'         => $this->marketStock,
     ])
         ->set('marketStockWithdraw.market_id', $market2->id)
         ->set('marketStockWithdraw.price', 10)
@@ -53,13 +51,13 @@ it('should be update a withdraw of the market stock', function () {
 
     assertDatabaseHas('market_stock_withdrawals', [
         'market_stock_id' => $this->marketStock->id,
-        'market_id' => $market2->id,
-        'price' => 10,
-        'quantity' => 50,
+        'market_id'       => $market2->id,
+        'price'           => 10,
+        'quantity'        => 50,
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => (80 + 20) - 50,
     ]);
 
@@ -78,7 +76,7 @@ it('should be able to change market stock that withdraw', function () {
     // Act
     $lw = livewire(MarketStock\Withdrawals\Update::class, [
         'marketStockWithdraw' => $this->marketStockWithdraw,
-        'marketStock' => $this->marketStock
+        'marketStock'         => $this->marketStock,
     ])
         ->set('marketStockWithdraw.market_stock_id', $marketStock2->id)
         ->set('marketStockWithdraw.price', 10)
@@ -90,18 +88,18 @@ it('should be able to change market stock that withdraw', function () {
         ->assertEmitted('market-stock::withdrawal::updated');
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => (80 + 20),
     ]);
 
     assertDatabaseHas('market_stock_withdrawals', [
         'market_stock_id' => $marketStock2->id,
-        'price' => 10,
-        'quantity' => 50,
+        'price'           => 10,
+        'quantity'        => 50,
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $marketStock2->id,
+        'id'       => $marketStock2->id,
         'quantity' => (100 - 50),
     ]);
 
@@ -115,7 +113,7 @@ it('should be not able to update quantity of the withdraw to greater than market
     // Act
     $lw = livewire(MarketStock\Withdrawals\Update::class, [
         'marketStockWithdraw' => $this->marketStockWithdraw,
-        'marketStock' => $this->marketStock
+        'marketStock'         => $this->marketStock,
     ])
         ->set('marketStockWithdraw.price', 10)
         ->set('marketStockWithdraw.quantity', 101)
@@ -126,12 +124,12 @@ it('should be not able to update quantity of the withdraw to greater than market
 
     assertDatabaseHas('market_stock_withdrawals', [
         'market_stock_id' => $this->marketStock->id,
-        'quantity' => 20,
+        'quantity'        => 20,
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
-        'quantity' => $this->marketStock->quantity
+        'id'       => $this->marketStock->id,
+        'quantity' => $this->marketStock->quantity,
     ]);
 
 });
@@ -149,7 +147,7 @@ it('should be not able to change market stock that withdraw to quantity greater 
     // Act
     $lw = livewire(MarketStock\Withdrawals\Update::class, [
         'marketStockWithdraw' => $this->marketStockWithdraw,
-        'marketStock' => $this->marketStock
+        'marketStock'         => $this->marketStock,
     ])
         ->set('marketStockWithdraw.market_stock_id', $marketStock2->id)
         ->set('marketStockWithdraw.price', 10)
@@ -160,13 +158,13 @@ it('should be not able to change market stock that withdraw to quantity greater 
     $lw->assertHasErrors(['marketStockWithdraw.quantity']);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => (100 - 20),
     ]);
 
     assertDatabaseHas('market_stock_withdrawals', [
         'market_stock_id' => $this->marketStock->id,
-        'quantity' => 20,
+        'quantity'        => 20,
     ]);
 
 });
@@ -312,4 +310,3 @@ test('quantity must be greater than zero', function () {
     $lw->assertHasErrors(['marketStockEntry.quantity' => 'min']);
 
 });
-

@@ -7,12 +7,10 @@ use Closure;
 
 class SaveBankAccount
 {
-
-    public function handle(BankAccount $bankAccount, Closure $next)
+    public function handle(BankAccount $bankAccount, Closure $next): BankAccount
     {
         $bankAccount->save();
 
         return $next($bankAccount);
     }
-
 }

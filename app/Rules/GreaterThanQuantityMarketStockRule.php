@@ -2,19 +2,16 @@
 
 namespace App\Rules;
 
-use App\Models\MarketStock;
-use App\Models\MarketStockWithdrawal;
+use App\Models\{MarketStock, MarketStockWithdrawal};
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class GreaterThanQuantityMarketStockRule implements ValidationRule
 {
-
     public function __construct(
-        protected MarketStock           $marketStock,
+        protected MarketStock $marketStock,
         protected MarketStockWithdrawal $marketStockWithdraw,
-    )
-    {
+    ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -37,7 +34,6 @@ class GreaterThanQuantityMarketStockRule implements ValidationRule
             }
 
         }
-
 
     }
 }

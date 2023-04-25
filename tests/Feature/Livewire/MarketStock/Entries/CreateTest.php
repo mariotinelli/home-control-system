@@ -3,10 +3,9 @@
 namespace Tests\Feature\Livewire\MarketStock\Entries;
 
 use App\Http\Livewire\MarketStock;
-use App\Models\Market;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Market, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -39,9 +38,9 @@ it('should be add new entry of the market item in to market stock', function () 
 
     assertDatabaseHas('market_stock_entries', [
         'market_stock_id' => $this->marketStock->id,
-        'market_id' => $this->market->id,
-        'price' => 10,
-        'quantity' => 10,
+        'market_id'       => $this->market->id,
+        'price'           => 10,
+        'quantity'        => 10,
     ]);
 
     assertDatabaseHas('market_stocks', [
@@ -191,4 +190,3 @@ test('quantity must be greater than zero', function () {
     $lw->assertHasErrors(['marketStockEntry.quantity' => 'min']);
 
 });
-

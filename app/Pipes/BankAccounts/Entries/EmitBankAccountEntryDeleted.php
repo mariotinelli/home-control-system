@@ -6,14 +6,12 @@ use App\Models\BankAccountEntry;
 
 class EmitBankAccountEntryDeleted
 {
-
     public function __construct(
         private readonly \App\Http\Livewire\BankAccounts\Entries\Destroy $component
-    )
-    {
+    ) {
     }
 
-    public function handle(BankAccountEntry $entry, \Closure $next)
+    public function handle(BankAccountEntry $entry, \Closure $next): BankAccountEntry
     {
         $this->component->emit('bank-account::entry::deleted');
 

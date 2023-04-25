@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\MarketStock\Entries;
 
-use App\Models\MarketStock;
-use App\Models\MarketStockEntry;
+use App\Models\{MarketStock, MarketStockEntry};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Update extends Component
 {
-
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockEntry $marketStockEntry = null;
@@ -18,16 +16,15 @@ class Update extends Component
     {
         return [
             'marketStockEntry.market_stock_id' => ['required', 'integer', 'exists:market_stocks,id'],
-            'marketStockEntry.market_id' => ['required', 'integer', 'exists:markets,id'],
-            'marketStockEntry.price' => ['required', 'numeric', 'min:1'],
-            'marketStockEntry.quantity' => ['required', 'integer', 'min:1'],
+            'marketStockEntry.market_id'       => ['required', 'integer', 'exists:markets,id'],
+            'marketStockEntry.price'           => ['required', 'numeric', 'min:1'],
+            'marketStockEntry.quantity'        => ['required', 'integer', 'min:1'],
         ];
     }
 
     public function save(): void
     {
         $this->validate();
-
 
         \DB::beginTransaction();
 

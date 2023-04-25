@@ -2,11 +2,9 @@
 
 namespace App\Http\Livewire\CreditCards\Spendings;
 
-use App\Models\CreditCard;
-use App\Models\Spending;
+use App\Models\{CreditCard, Spending};
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
@@ -22,7 +20,7 @@ class Create extends Component
     public function getRules(): array
     {
         return [
-            'spending.amount' => ['required', 'numeric', 'max_digits:10'],
+            'spending.amount'      => ['required', 'numeric', 'max_digits:10'],
             'spending.description' => ['required', 'string', 'max:255'],
         ];
     }

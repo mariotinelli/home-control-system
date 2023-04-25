@@ -3,12 +3,9 @@
 namespace Tests\Feature\Livewire\Investments\Withdrawals;
 
 use App\Http\Livewire\Investments;
-use App\Models\Investment;
-use App\Models\InvestmentWithdraw;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{Investment, InvestmentWithdraw, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseCount, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -31,8 +28,8 @@ it('should be to update an investment withdraw', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.amount', 200)
         ->set('investmentWithdraw.date', '2021-01-10')
@@ -44,8 +41,8 @@ it('should be to update an investment withdraw', function () {
 
     assertDatabaseHas('investment_withdrawals', [
         'investment_id' => $this->investment->id,
-        'amount' => 200,
-        'date' => '2021-01-10',
+        'amount'        => 200,
+        'date'          => '2021-01-10',
     ]);
 
 });
@@ -54,8 +51,8 @@ test('amount is required', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.amount', null)
         ->call('save');
@@ -69,8 +66,8 @@ test('amount is numeric', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.amount', 'abc')
         ->call('save');
@@ -84,8 +81,8 @@ test('amount is min 1', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.amount', 0)
         ->call('save');
@@ -99,8 +96,8 @@ test('amount is max 1000', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.amount', 1001)
         ->call('save');
@@ -114,8 +111,8 @@ test('date is required', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.date', null)
         ->call('save');
@@ -129,8 +126,8 @@ test('date is date', function () {
 
     // Act
     $lw = livewire(Investments\Withdrawals\Update::class, [
-        'investment' => $this->investment,
-        'investmentWithdraw' => $this->investmentWithdraw
+        'investment'         => $this->investment,
+        'investmentWithdraw' => $this->investmentWithdraw,
     ])
         ->set('investmentWithdraw.date', 'abc')
         ->call('save');

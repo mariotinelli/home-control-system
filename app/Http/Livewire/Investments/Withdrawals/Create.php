@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Investments\Withdrawals;
 
-use App\Models\Investment;
-use App\Models\InvestmentWithdraw;
+use App\Models\{Investment, InvestmentWithdraw};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class Create extends Component
 {
-
     public ?InvestmentWithdraw $investmentWithdraw = null;
 
     public ?Investment $investment = null;
@@ -18,7 +16,7 @@ class Create extends Component
     {
         return [
             'investmentWithdraw.amount' => ['required', 'numeric', 'min:1', 'max:1000'],
-            'investmentWithdraw.date' => ['required', 'date'],
+            'investmentWithdraw.date'   => ['required', 'date'],
         ];
     }
 

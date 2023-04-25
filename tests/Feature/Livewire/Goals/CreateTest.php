@@ -4,8 +4,8 @@ namespace Tests\Feature\Livewire\Goals;
 
 use App\Http\Livewire\Goals;
 use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -28,11 +28,10 @@ it('should be able to create a new goal', function () {
     $lw->assertHasNoErrors()
         ->assertEmitted('goal::created');
 
-
     assertDatabaseHas('goals', [
-        'name' => 'Test Goal',
-        'to_reach' => 100,
-        'owner' => 'Mario',
+        'name'        => 'Test Goal',
+        'to_reach'    => 100,
+        'owner'       => 'Mario',
         'description' => 'Test Description',
     ]);
 
@@ -145,7 +144,3 @@ test('description should be max 255 characters', function () {
         ->assertHasErrors(['goal.description' => 'max']);
 
 });
-
-
-
-

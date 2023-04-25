@@ -4,11 +4,9 @@ namespace Tests\Feature\Livewire\MarketItems;
 
 use App\Enums\TypeOfWeightEnum;
 use App\Http\Livewire\MarketItems;
-use App\Models\MarketItem;
-use App\Models\MarketItemCategory;
-use App\Models\User;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\assertDatabaseHas;
+use App\Models\{MarketItem, MarketItemCategory, User};
+
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -27,7 +25,6 @@ beforeEach(function () {
 
 });
 
-
 it('should be able to update a market item', function () {
 
     // Act
@@ -43,10 +40,10 @@ it('should be able to update a market item', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'name' => 'Test Market Item Update',
+        'name'                    => 'Test Market Item Update',
         'market_item_category_id' => $this->marketItemCategory->id,
-        'type_weight' => TypeOfWeightEnum::KILOGRAM,
-        'weight' => 20,
+        'type_weight'             => TypeOfWeightEnum::KILOGRAM,
+        'weight'                  => 20,
     ]);
 
 });
@@ -84,10 +81,10 @@ it('unique name for market item, but ignore if market item category is different
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'name' => $marketItem2->name,
+        'name'                    => $marketItem2->name,
         'market_item_category_id' => $this->marketItemCategory->id,
-        'type_weight' => TypeOfWeightEnum::GRAM,
-        'weight' => 10,
+        'type_weight'             => TypeOfWeightEnum::GRAM,
+        'weight'                  => 10,
     ]);
 
 });
@@ -125,10 +122,10 @@ it('unique name for market item, but ignore if current market item name', functi
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'name' => $this->marketItem->name,
+        'name'                    => $this->marketItem->name,
         'market_item_category_id' => $marketItemCategory2->id,
-        'type_weight' => TypeOfWeightEnum::TON,
-        'weight' => 20,
+        'type_weight'             => TypeOfWeightEnum::TON,
+        'weight'                  => 20,
     ]);
 
 });

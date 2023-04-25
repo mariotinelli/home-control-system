@@ -7,14 +7,12 @@ use Closure;
 
 class EmitSpendingDeleted
 {
-
     public function __construct(
         private readonly \App\Http\Livewire\CreditCards\Spendings\Destroy $component
-    )
-    {
+    ) {
     }
 
-    public function handle(Spending $spending, Closure $next)
+    public function handle(Spending $spending, Closure $next): Spending
     {
         $this->component->emit('credit-card::spending::deleted');
 
