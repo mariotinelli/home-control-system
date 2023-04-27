@@ -32,4 +32,4 @@ it('should be able to delete a couple spending category', function () {
 
 });
 
-todo('should not be able to delete a couple spending category if it has expenses');
+todo('should not be able to delete a couple spending category if it has spending');
