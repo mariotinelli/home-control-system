@@ -3,32 +3,32 @@
 namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 
 use App\Http\Livewire\CoupleSpendingCategories;
-use App\Models\User;
+use App\Models\{CoupleSpendingCategory, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
-
     $this->user = User::factory()->create();
 
-    actingAs($this->user);
+    $this->category = CoupleSpendingCategory::factory()->create();
 
+    actingAs($this->user);
 });
 
-it('should be able to create a new couple spending category', function () {
+it('should be able to update a couple spending category', function () {
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Create::class)
-        ->set('category.name', 'Test Category')
+    $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
+        ->set('category.name', 'Test Category Updated')
         ->call('save');
 
     // Assert
     $lw->assertHasNoErrors()
-        ->assertEmitted('couple-spending-category::created');
+        ->assertEmitted('couple-spending-category::updated');
 
     assertDatabaseHas('couple_spending_categories', [
-        'name' => 'Test Category',
+        'name' => 'Test Category Updated',
     ]);
 
 });
@@ -36,7 +36,7 @@ it('should be able to create a new couple spending category', function () {
 test('name is required', function () {
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Create::class)
+    $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
         ->set('category.name', null)
         ->call('save');
 
@@ -48,7 +48,7 @@ test('name is required', function () {
 test('name must be a string', function () {
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Create::class)
+    $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
         ->set('category.name', 123)
         ->call('save');
 
@@ -60,10 +60,10 @@ test('name must be a string', function () {
 test('name must be unique', function () {
 
     // Arrange
-    $category = \App\Models\CoupleSpendingCategory::factory()->create();
+    $category = CoupleSpendingCategory::factory()->create();
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Create::class)
+    $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
         ->set('category.name', $category->name)
         ->call('save');
 
@@ -75,7 +75,7 @@ test('name must be unique', function () {
 test('name must not be greater than 255 characters', function () {
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Create::class)
+    $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
         ->set('category.name', str_repeat('a', 256))
         ->call('save');
 
