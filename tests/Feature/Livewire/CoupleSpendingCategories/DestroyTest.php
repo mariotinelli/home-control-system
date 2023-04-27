@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 
 use App\Http\Livewire\CoupleSpendingCategories;
-use App\Models\{CoupleSpendingCategory, User};
+use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
@@ -32,4 +32,19 @@ it('should be able to delete a couple spending category', function () {
 
 });
 
-todo('should not be able to delete a couple spending category if it has spending');
+it('should not be able to delete a couple spending category if it has spending', function () {
+
+    // Arrange
+    CoupleSpending::factory()->create([
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Act
+    $lw = livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+        ->call('save');
+
+    // Assert
+    $lw->assertHasErrors()
+        ->assertNotEmitted('couple-spending-category::deleted');
+
+});
