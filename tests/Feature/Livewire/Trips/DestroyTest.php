@@ -51,7 +51,7 @@ it('should be not able to delete a trip if that have entries', function () {
 
     // Assert
     $lw->assertHasErrors(['trip'])
-        ->assertNotEmitted('trip::entry::deleted');
+        ->assertNotEmitted('trip::deleted');
 
     assertDatabaseHas('trips', [
         'id' => $this->trip->id,
@@ -59,10 +59,10 @@ it('should be not able to delete a trip if that have entries', function () {
 
 });
 
-todo('should be not able to delete a trip if that have withdraws', function () {
+it('should be not able to delete a trip if that have withdraws', function () {
 
     // Arrange
-    $this->trip->entries()->create([
+    $this->trip->withdraws()->create([
         'amount'      => 100,
         'description' => 'Teste',
         'date'        => now()->format('Y-m-d'),
@@ -74,7 +74,7 @@ todo('should be not able to delete a trip if that have withdraws', function () {
 
     // Assert
     $lw->assertHasErrors(['trip'])
-        ->assertNotEmitted('trip::entry::deleted');
+        ->assertNotEmitted('trip::deleted');
 
     assertDatabaseHas('trips', [
         'id' => $this->trip->id,

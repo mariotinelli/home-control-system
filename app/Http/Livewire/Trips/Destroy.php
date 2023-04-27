@@ -12,8 +12,8 @@ class Destroy extends Component
 
     public function save(): void
     {
-        if ($this->trip->entries()->count()) {
-            $this->addError('trip', 'This trip has entries.');
+        if ($this->trip->entries()->count() || $this->trip->withdraws()->count()) {
+            $this->addError('trip', 'This trip has entries or withdraws.');
 
             return;
         }
