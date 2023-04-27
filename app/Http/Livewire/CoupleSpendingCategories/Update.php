@@ -14,7 +14,12 @@ class Update extends Component
     public function getRules(): array
     {
         return [
-            'category.name' => ['required', 'string', Rule::unique('couple_spending_categories', 'name')->ignore($this->category->id, 'id'), 'max:255'],
+            'category.name' => [
+                'required',
+                'string',
+                Rule::unique('couple_spending_categories', 'name')->ignore($this->category->id, 'id'),
+                'max:255',
+            ],
         ];
     }
 
