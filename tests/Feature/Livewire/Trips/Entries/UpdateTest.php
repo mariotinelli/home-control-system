@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\Trips\Entries;
 
 use App\Http\Livewire\Trips;
-use App\Models\{Trip, User};
+use App\Models\{Trip, TripEntry, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -16,34 +16,38 @@ beforeEach(function () {
         'city_id' => 2,
     ]);
 
+    $this->tripEntry = TripEntry::factory()->create([
+        'trip_id' => $this->trip->id,
+    ]);
+
     actingAs($this->user);
 
 });
 
-it('should be able to create a new trip entry', function () {
+it('should be able to update a trip entry', function () {
     // Act
-    $lw = livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
-        ->set('tripEntry.amount', 100)
-        ->set('tripEntry.description', 'This is a new entry')
-        ->set('tripEntry.date', now()->format('Y-m-d'))
+    $lw = livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
+        ->set('tripEntry.amount', 200)
+        ->set('tripEntry.description', 'This is a update entry')
+        ->set('tripEntry.date', now()->addDay()->format('Y-m-d'))
         ->call('save');
 
     // Assert
     $lw->assertHasNoErrors()
-        ->assertEmitted('trip::entry::created');
+        ->assertEmitted('trip::entry::updated');
 
     assertDatabaseHas('trip_entries', [
         'trip_id'     => $this->trip->id,
-        'amount'      => 100,
-        'description' => 'This is a new entry',
-        'date'        => now()->format('Y-m-d'),
+        'amount'      => 200,
+        'description' => 'This is a update entry',
+        'date'        => now()->addDay()->format('Y-m-d'),
     ]);
 
 });
 
 test('amount is required', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.amount', null)
         ->call('save')
         ->assertHasErrors(['tripEntry.amount' => 'required']);
@@ -52,7 +56,7 @@ test('amount is required', function () {
 
 test('amount must be numeric', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.amount', 'abc')
         ->call('save')
         ->assertHasErrors(['tripEntry.amount' => 'numeric']);
@@ -61,7 +65,7 @@ test('amount must be numeric', function () {
 
 test('amount must be greater than 0', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.amount', 0)
         ->call('save')
         ->assertHasErrors(['tripEntry.amount' => 'min']);
@@ -70,7 +74,7 @@ test('amount must be greater than 0', function () {
 
 test('description is required', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.description', null)
         ->call('save')
         ->assertHasErrors(['tripEntry.description' => 'required']);
@@ -79,7 +83,7 @@ test('description is required', function () {
 
 test('description must be a string', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.description', 123)
         ->call('save')
         ->assertHasErrors(['tripEntry.description' => 'string']);
@@ -88,7 +92,7 @@ test('description must be a string', function () {
 
 test('description must be less than 255 characters', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.description', str_repeat('a', 256))
         ->call('save')
         ->assertHasErrors(['tripEntry.description' => 'max']);
@@ -97,7 +101,7 @@ test('description must be less than 255 characters', function () {
 
 test('date is required', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.date', null)
         ->call('save')
         ->assertHasErrors(['tripEntry.date' => 'required']);
@@ -106,7 +110,7 @@ test('date is required', function () {
 
 test('date must be a date', function () {
 
-    livewire(Trips\Entries\Create::class, ['trip' => $this->trip])
+    livewire(Trips\Entries\Update::class, ['tripEntry' => $this->tripEntry])
         ->set('tripEntry.date', 'abc')
         ->call('save')
         ->assertHasErrors(['tripEntry.date' => 'date']);

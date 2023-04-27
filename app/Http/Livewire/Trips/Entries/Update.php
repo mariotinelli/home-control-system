@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Trips\Entries;
 
-use App\Models\{Trip, TripEntry};
+use App\Models\TripEntry;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Create extends Component
+class Update extends Component
 {
-    public ?Trip $trip = null;
-
     public ?TripEntry $tripEntry = null;
 
     public function getRules(): array
@@ -25,20 +23,13 @@ class Create extends Component
     {
         $this->validate();
 
-        $this->tripEntry->trip()->associate($this->trip);
-
         $this->tripEntry->save();
 
-        $this->emit('trip::entry::created');
-    }
-
-    public function mount(): void
-    {
-        $this->tripEntry = new TripEntry();
+        $this->emit('trip::entry::updated');
     }
 
     public function render(): View
     {
-        return view('livewire.trips.entries.create');
+        return view('livewire.trips.entries.update');
     }
 }
