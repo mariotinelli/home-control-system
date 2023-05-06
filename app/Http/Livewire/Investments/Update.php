@@ -4,11 +4,14 @@ namespace App\Http\Livewire\Investments;
 
 use App\Models\Investment;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?Investment $investment = null;
 
     public function rules(): array
@@ -23,6 +26,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->investment);
+
         $this->validate();
 
         $this->investment->save();

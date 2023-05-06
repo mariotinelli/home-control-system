@@ -59,6 +59,8 @@ function getUserSilverPermissions(): array
         'investment_read',
         'investment_update',
         'investment_delete',
+        'investment_restore',
+        'investment_force_delete',
         'investment_entry_create',
         'investment_entry_read',
         'investment_entry_update',
