@@ -7,7 +7,7 @@ use App\Models\User;
 use Filament\Resources\{Form, Resource, Table};
 use Filament\Tables\Filters\SelectFilter;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -37,9 +37,19 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->label('Senha')
                     ->password()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create'),
+
+                Forms\Components\Select::make('roles')
+                    ->label('Função')
                     ->required()
-                    ->maxLength(255),
-            ]);
+                    ->multiple()
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->columnSpan(3),
+            ])
+            ->columns(3);
     }
 
     /**
@@ -64,21 +74,17 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\BadgeColumn::make('roles')
-                    ->name('Função')
-                    ->formatStateUsing(fn ($record): string => $record->load('roles')->roles->first()->name)
+                Tables\Columns\BadgeColumn::make('filament_roles')
+                    ->label('Funções')
                     ->colors([
-                        'danger'    => static fn ($state, $record) => $record->hasRole('Administrador'),
-                        'warning'   => static fn ($state, $record) => $record->hasRole('Usuário Ouro'),
-                        'secondary' => static fn ($state, $record) => $record->hasRole('Usuário Prata'),
-                        'success'   => static fn ($state, $record) => $record->hasRole('Usuário'),
-                    ])
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderBy('roles.id', $direction);
-                    }),
+                        'danger'    => static fn ($state, User $record): bool => $record->hasRole('Usuário'),
+                        'secondary' => static fn ($state, User $record): bool => $record->hasRole('Usuário Prata'),
+                        'warning'   => static fn ($state, User $record): bool => $record->hasRole('Usuário Ouro'),
+                        'success'   => static fn ($state, User $record): bool => $record->hasRole('Administrador'),
+                    ]),
 
             ])
-            ->defaultSort('roles.id')
+            ->defaultSort('id', 'desc')
             ->filters([
                 SelectFilter::make('roles')->relationship('roles', 'name'),
             ])
@@ -91,10 +97,19 @@ class UserResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageUsers::route('/'),
+            'index'  => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit'   => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

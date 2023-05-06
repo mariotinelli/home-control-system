@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
@@ -9,31 +10,55 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Admin
-        $role = \App\Models\Role::query()->whereName('Administrador')->first();
+        $adminRole = \App\Models\Role::query()->create(['name' => 'Administrador']);
 
         foreach (getAdminPermissions() as $permission) {
-            $role->givePermissionTo($permission);
+
+            $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
+
+            $adminRole->givePermissionTo($createdPermission);
+
+            $createdPermission->assignRole($adminRole);
+
         }
 
         // User Gold
-        $role = \App\Models\Role::query()->whereName('Usuário Ouro')->first();
+        $userGoldRole = \App\Models\Role::query()->create(['name' => 'Usuário Ouro']);
 
-        foreach (getUserGoldPermissions() as $permission) {
-            $role->givePermissionTo($permission);
+        foreach (getAdminPermissions() as $permission) {
+
+            $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
+
+            $userGoldRole->givePermissionTo($createdPermission);
+
+            $createdPermission->assignRole($userGoldRole);
+
         }
 
         // User Silver
-        $role = \App\Models\Role::query()->whereName('Usuário Prata')->first();
+        $userSilverRole = \App\Models\Role::query()->create(['name' => 'Usuário Prata']);
 
-        foreach (getUserSilverPermissions() as $permission) {
-            $role->givePermissionTo($permission);
+        foreach (getAdminPermissions() as $permission) {
+
+            $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
+
+            $userSilverRole->givePermissionTo($createdPermission);
+
+            $createdPermission->assignRole($userSilverRole);
+
         }
 
         // User
-        $role = \App\Models\Role::query()->whereName('Usuário')->first();
+        $userRole = \App\Models\Role::query()->create(['name' => 'Usuário']);
 
-        foreach (getUserPermissions() as $permission) {
-            $role->givePermissionTo($permission);
+        foreach (getAdminPermissions() as $permission) {
+
+            $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
+
+            $userRole->givePermissionTo($createdPermission);
+
+            $createdPermission->assignRole($userRole);
+
         }
 
     }
