@@ -10,7 +10,11 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'email' => 'email@teste.com',
+    ]);
+
+    $this->user->givePermissionTo(getUserPermissions());
 
     $this->goal = Goal::factory()->create();
 

@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Goals\Entries;
 
 use App\Models\{Goal, GoalEntry};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?Goal $goal = null;
 
     public ?GoalEntry $goalEntry = null;
@@ -22,6 +25,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', GoalEntry::class);
+
         $this->validate();
 
         $this->goalEntry->goal_id = $this->goal->id;
