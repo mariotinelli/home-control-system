@@ -12,6 +12,8 @@ beforeEach(function () {
 
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserSilverPermissions());
+
     $this->investment = Investment::factory()->create();
 
     $this->investmentWithdraw = InvestmentWithdraw::factory()->create([

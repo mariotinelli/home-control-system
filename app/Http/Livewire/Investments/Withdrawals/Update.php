@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Investments\Withdrawals;
 
 use App\Models\{Investment, InvestmentWithdraw};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?InvestmentWithdraw $investmentWithdraw = null;
 
     public ?Investment $investment = null;
@@ -22,6 +25,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->investmentWithdraw);
+
         $this->validate();
 
         $this->investmentWithdraw->investment_id = $this->investment->id;
