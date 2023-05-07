@@ -4,10 +4,13 @@ namespace App\Http\Livewire\MarketStock\Entries;
 
 use App\Models\{MarketStock, MarketStockEntry};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockEntry $marketStockEntry = null;
@@ -24,6 +27,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->marketStockEntry);
+
         $this->validate();
 
         \DB::beginTransaction();
