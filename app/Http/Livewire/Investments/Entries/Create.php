@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Investments\Entries;
 
 use App\Models\{Investment, InvestmentEntry};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?Investment $investment = null;
 
     public ?InvestmentEntry $investmentEntry = null;
@@ -22,6 +25,9 @@ class Create extends Component
 
     public function save(): void
     {
+
+        $this->authorize('create', InvestmentEntry::class);
+
         $this->validate();
 
         \DB::beginTransaction();
