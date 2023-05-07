@@ -24,12 +24,14 @@ class UserResource extends Resource
 
                 Forms\Components\TextInput::make('name')
                     ->label('Nome')
+                    ->string()
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('email')
                     ->label('E-mail')
                     ->unique(ignoreRecord: true)
+                    ->string()
                     ->email()
                     ->required()
                     ->maxLength(255),
@@ -37,12 +39,15 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->label('Senha')
                     ->password()
+                    ->string()
+                    ->minLength(8)
+                    ->maxLength(12)
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $context): bool => $context === 'create'),
 
                 Forms\Components\Select::make('roles')
-                    ->label('Função')
+                    ->label('Funções')
                     ->required()
                     ->multiple()
                     ->relationship('roles', 'name')

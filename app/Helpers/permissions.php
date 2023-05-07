@@ -8,6 +8,8 @@ function getAdminPermissions(): array
         'user_read',
         'user_update',
         'user_delete',
+        'user_restore',
+        'user_force_delete',
     ]);
 }
 
