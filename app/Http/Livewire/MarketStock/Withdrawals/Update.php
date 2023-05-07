@@ -5,10 +5,13 @@ namespace App\Http\Livewire\MarketStock\Withdrawals;
 use App\Models\{MarketStock, MarketStockWithdrawal};
 use App\Rules\GreaterThanQuantityMarketStockRule;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockWithdrawal $marketStockWithdraw = null;
@@ -33,6 +36,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->marketStockWithdraw);
+
         $this->validate();
 
         try {

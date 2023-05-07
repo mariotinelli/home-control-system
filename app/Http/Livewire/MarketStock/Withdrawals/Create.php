@@ -4,10 +4,13 @@ namespace App\Http\Livewire\MarketStock\Withdrawals;
 
 use App\Models\{MarketStock, MarketStockWithdrawal};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockWithdrawal $marketStockWithdraw = null;
@@ -31,6 +34,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', MarketStockWithdrawal::class);
+
         $this->validate();
 
         \DB::beginTransaction();

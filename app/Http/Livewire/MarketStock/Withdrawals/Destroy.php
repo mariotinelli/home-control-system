@@ -4,16 +4,20 @@ namespace App\Http\Livewire\MarketStock\Withdrawals;
 
 use App\Models\{MarketStock, MarketStockWithdrawal};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Destroy extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public ?MarketStockWithdrawal $marketStockWithdraw = null;
 
     public function save(): void
     {
+        $this->authorize('delete', $this->marketStockWithdraw);
 
         \DB::beginTransaction();
 
