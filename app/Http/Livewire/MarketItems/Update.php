@@ -5,10 +5,13 @@ namespace App\Http\Livewire\MarketItems;
 use App\Enums\TypeOfWeightEnum;
 use App\Models\MarketItem;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketItem $marketItem = null;
 
     public function rules(): array
@@ -23,6 +26,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->marketItem);
+
         $this->validate();
 
         $this->marketItem->save();
