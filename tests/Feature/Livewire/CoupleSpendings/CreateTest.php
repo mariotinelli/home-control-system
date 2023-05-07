@@ -12,6 +12,8 @@ beforeEach(function () {
 
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserSilverPermissions());
+
     $this->category = CoupleSpendingCategory::factory()->create();
 
     actingAs($this->user);

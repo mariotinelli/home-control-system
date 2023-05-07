@@ -12,6 +12,8 @@ beforeEach(function () {
 
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserGoldPermissions());
+
     actingAs($this->user);
 
 });

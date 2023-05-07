@@ -4,11 +4,16 @@ namespace App\Http\Livewire\Markets;
 
 use App\Models\Market;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
+    public ?Market $market = null;
+
     public function rules(): array
     {
         return [
@@ -16,10 +21,10 @@ class Update extends Component
         ];
     }
 
-    public ?Market $market = null;
-
     public function save(): void
     {
+        $this->authorize('update', $this->market);
+
         $this->validate();
 
         $this->market->save();
