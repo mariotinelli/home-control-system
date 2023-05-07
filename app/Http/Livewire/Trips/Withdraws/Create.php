@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Trips\Withdraws;
 
 use App\Models\{Trip, TripWithdraw};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?Trip $trip = null;
 
     public ?TripWithdraw $tripWithdraw = null;
@@ -23,6 +26,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', TripWithdraw::class);
+
         $this->validate();
 
         $this->tripWithdraw->trip()->associate($this->trip);

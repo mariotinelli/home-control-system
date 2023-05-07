@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Trips\Withdraws;
 
 use App\Models\TripWithdraw;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?TripWithdraw $tripWithdraw = null;
 
     public function getRules(): array
@@ -21,6 +24,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->tripWithdraw);
+
         $this->validate();
 
         $this->tripWithdraw->save();
