@@ -4,14 +4,18 @@ namespace App\Http\Livewire\Investments;
 
 use App\Models\Investment;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Destroy extends Component
 {
+    use AuthorizesRequests;
+
     public ?Investment $investment = null;
 
     public function save(): void
     {
+        $this->authorize('delete', $this->investment);
 
         if ($this->investment->entries()->exists() || $this->investment->withdrawals()->exists()) {
 
@@ -21,6 +25,8 @@ class Destroy extends Component
 
             return;
         }
+
+        $this->authorize('forceDelete', $this->investment);
 
         $this->investment->forceDelete();
 

@@ -5,13 +5,15 @@ namespace Tests\Feature\Livewire\CreditCards;
 use App\Http\Livewire\CreditCards;
 use App\Models\User;
 
-use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->actingAs($this->user);
+    $this->user->givePermissionTo(getUserPermissions());
+
+    actingAs($this->user);
 });
 
 it('should be able to create a credit card', function () {

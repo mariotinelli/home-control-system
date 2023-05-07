@@ -12,6 +12,8 @@ beforeEach(function () {
 
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserPermissions());
+
     $this->goal = Goal::factory()->create();
 
     actingAs($this->user);

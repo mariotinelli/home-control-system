@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Goals;
 
 use App\Models\Goal;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?Goal $goal = null;
 
     public function rules(): array
@@ -22,6 +25,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', Goal::class);
+
         $this->validate();
 
         $this->goal->save();

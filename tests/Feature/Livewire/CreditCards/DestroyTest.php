@@ -11,6 +11,8 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserPermissions());
+
     $this->creditCard = CreditCard::factory()->create([
         'user_id' => $this->user->id,
     ]);

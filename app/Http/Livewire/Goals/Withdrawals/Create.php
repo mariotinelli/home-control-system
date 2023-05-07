@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Goals\Withdrawals;
 
 use App\Models\{Goal, GoalWithdraw};
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?Goal $goal = null;
 
     public ?GoalWithdraw $goalWithdraw = null;
@@ -22,6 +25,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', GoalWithdraw::class);
+
         $this->validate();
 
         $this->goalWithdraw->goal_id = $this->goal->id;

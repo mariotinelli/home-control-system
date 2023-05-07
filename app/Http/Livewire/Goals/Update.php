@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Goals;
 
 use App\Models\Goal;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?Goal $goal = null;
 
     public function rules(): array
@@ -22,6 +25,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->goal);
+
         $this->validate();
 
         $this->goal->save();
