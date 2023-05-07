@@ -4,12 +4,26 @@ function getAdminPermissions(): array
 {
     return array_merge(getUserGoldPermissions(), [
         'access_admin',
+
+        // User Permissions
         'user_create',
         'user_read',
         'user_update',
         'user_delete',
         'user_restore',
         'user_force_delete',
+
+        // Role Permissions
+        'role_create',
+        'role_read',
+        'role_update',
+        'role_delete',
+
+        // Permission Permissions
+        'permission_create',
+        'permission_read',
+        'permission_update',
+        'permission_delete',
     ]);
 }
 
