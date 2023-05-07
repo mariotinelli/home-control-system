@@ -4,10 +4,13 @@ namespace App\Http\Livewire\Trips;
 
 use App\Models\Trip;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?Trip $trip = null;
 
     public function rules(): array
@@ -24,6 +27,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->trip);
+
         $this->validate();
 
         $this->trip->save();
