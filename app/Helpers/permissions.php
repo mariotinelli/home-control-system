@@ -38,6 +38,8 @@ function getUserGoldPermissions(): array
         'market_stock_read',
         'market_stock_update',
         'market_stock_delete',
+        'market_stock_restore',
+        'market_stock_force_delete',
         'market_stock_entry_create',
         'market_stock_entry_read',
         'market_stock_entry_update',

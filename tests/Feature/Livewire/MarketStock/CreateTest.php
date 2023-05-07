@@ -11,6 +11,8 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
+    $this->user->givePermissionTo(getUserGoldPermissions());
+
     $this->marketItem = MarketItem::factory()->create();
 
     actingAs($this->user);

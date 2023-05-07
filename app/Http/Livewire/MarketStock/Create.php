@@ -4,10 +4,13 @@ namespace App\Http\Livewire\MarketStock;
 
 use App\Models\MarketStock;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public function rules(): array
@@ -20,6 +23,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', MarketStock::class);
+
         $this->validate();
 
         $this->marketStock->save();
