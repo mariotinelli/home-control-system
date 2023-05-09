@@ -2,6 +2,7 @@
 
 use App\Filament;
 use App\Models\{Role, User};
+use App\Notifications\NewUserNotification;
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
@@ -61,6 +62,35 @@ it('can create a new user', function () {
             'model_id'   => User::where('email', $databaseUser->email)->first()->id,
         ]);
     }
+
+});
+
+it('can send email a new user', function () {
+    // Arrange
+    Notification::fake();
+
+    $newData = User::factory()->make();
+
+    $roles = Role::all()->random(2)->pluck('id')->toArray();
+
+    // Act
+    livewire(Filament\Resources\UserResource\Pages\CreateUser::class)
+        ->fillForm([
+            'name'     => $newData->name,
+            'email'    => $newData->email,
+            'password' => '12345678',
+            'roles'    => $roles,
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    // Assert
+    $databaseUser = User::where('email', $newData->email)->first();
+
+    Notification::assertSentTo(
+        [$databaseUser],
+        NewUserNotification::class
+    );
 
 });
 
