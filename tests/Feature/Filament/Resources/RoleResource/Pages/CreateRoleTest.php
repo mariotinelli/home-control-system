@@ -86,3 +86,17 @@ test('name input should be a maximum of 255 characters', function () {
         ->assertHasFormErrors(['name' => 'max'])
         ->assertSeeHtml(__('validation.max.string', ['attribute' => 'nome', 'max' => 255]));
 });
+
+test('name input should be unique', function () {
+    // Arrange
+    $role = Role::factory()->create();
+
+    // Act
+    livewire(Filament\Resources\RoleResource\Pages\CreateRole::class)
+        ->fillForm([
+            'name' => $role->name,
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['name' => 'unique'])
+        ->assertSeeHtml(__('validation.unique', ['attribute' => 'nome']));
+});
