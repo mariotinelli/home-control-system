@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers\PermissionsRelationManager;
 use App\Models\Role;
+use Exception;
 use Filament\Resources\{Form, Resource, Table};
 use Filament\{Forms, Tables};
 
@@ -25,32 +26,36 @@ class RoleResource extends Resource
         return $form
             ->schema([
 
-                Forms\Components\Grid::make(1)
-                    ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->label('Nome')
+                    ->unique(ignoreRecord: true)
+                    ->string()
+                    ->required()
+                    ->maxLength(255),
 
-                        Forms\Components\TextInput::make('name')
-                            ->label('Nome')
-                            ->unique(ignoreRecord: true)
-                            ->required()
-                            ->maxLength(255),
-
-                    ]),
-
-            ]);
+            ])->columns(1);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable()
                     ->sortable(),
+
             ])
+            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

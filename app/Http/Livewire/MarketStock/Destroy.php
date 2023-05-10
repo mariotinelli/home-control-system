@@ -4,14 +4,19 @@ namespace App\Http\Livewire\MarketStock;
 
 use App\Models\MarketStock;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Destroy extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketStock $marketStock = null;
 
     public function save(): void
     {
+        $this->authorize('market_stock_delete');
+
         \DB::beginTransaction();
 
         try {
@@ -26,6 +31,8 @@ class Destroy extends Component
 
                 return;
             }
+
+            $this->authorize('forceDelete', $this->marketStock);
 
             $this->marketStock->forceDelete();
 

@@ -25,7 +25,7 @@ class RolePermissionSeeder extends Seeder
         // User Gold
         $userGoldRole = \App\Models\Role::query()->create(['name' => 'Usuário Ouro']);
 
-        foreach (getAdminPermissions() as $permission) {
+        foreach (getUserGoldPermissions() as $permission) {
 
             $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
 
@@ -38,7 +38,7 @@ class RolePermissionSeeder extends Seeder
         // User Silver
         $userSilverRole = \App\Models\Role::query()->create(['name' => 'Usuário Prata']);
 
-        foreach (getAdminPermissions() as $permission) {
+        foreach (getUserSilverPermissions() as $permission) {
 
             $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
 
@@ -51,7 +51,7 @@ class RolePermissionSeeder extends Seeder
         // User
         $userRole = \App\Models\Role::query()->create(['name' => 'Usuário']);
 
-        foreach (getAdminPermissions() as $permission) {
+        foreach (getUserPermissions() as $permission) {
 
             $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
 

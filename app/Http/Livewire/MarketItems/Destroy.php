@@ -4,14 +4,18 @@ namespace App\Http\Livewire\MarketItems;
 
 use App\Models\MarketItem;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Destroy extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketItem $marketItem = null;
 
     public function save(): void
     {
+        $this->authorize('delete', $this->marketItem);
 
         if ($this->marketItem->marketStock()->exists()) {
 

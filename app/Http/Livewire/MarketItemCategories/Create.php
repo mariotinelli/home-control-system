@@ -4,10 +4,13 @@ namespace App\Http\Livewire\MarketItemCategories;
 
 use App\Models\MarketItemCategory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?MarketItemCategory $marketItemCategory = null;
 
     public function rules(): array
@@ -19,6 +22,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', MarketItemCategory::class);
+
         $this->validate();
 
         $this->marketItemCategory->save();

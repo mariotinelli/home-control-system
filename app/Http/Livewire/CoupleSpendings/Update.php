@@ -4,10 +4,13 @@ namespace App\Http\Livewire\CoupleSpendings;
 
 use App\Models\CoupleSpending;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Update extends Component
 {
+    use AuthorizesRequests;
+
     public ?CoupleSpending $coupleSpending = null;
 
     public function getRules(): array
@@ -22,6 +25,8 @@ class Update extends Component
 
     public function save(): void
     {
+        $this->authorize('update', $this->coupleSpending);
+
         $this->validate();
 
         $this->coupleSpending->save();
