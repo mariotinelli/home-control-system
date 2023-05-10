@@ -69,7 +69,7 @@ it('can delete roles', function () {
     assertModelMissing($role);
 });
 
-it('can bulk delete posts', function () {
+it('can bulk delete roles', function () {
     // Arrange
     $roles = Role::factory()->count(10)->create();
 
