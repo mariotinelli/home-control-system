@@ -5,11 +5,14 @@ namespace App\Http\Livewire\BankAccounts;
 use App\Models\BankAccount;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public ?BankAccount $bankAccount = null;
 
     protected function rules(): array
@@ -27,6 +30,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', BankAccount::class);
+
         $this->validate();
 
         Pipeline::send($this->bankAccount)
