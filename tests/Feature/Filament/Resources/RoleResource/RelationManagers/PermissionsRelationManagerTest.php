@@ -2,7 +2,13 @@
 
 use App\Filament\Resources;
 use App\Models\{Permission, Role};
-use Filament\Tables\Actions\{AttachAction, CreateAction, DeleteAction, DeleteBulkAction, DetachAction, DetachBulkAction, EditAction};
+use Filament\Tables\Actions\{AttachAction,
+    CreateAction,
+    DeleteAction,
+    DeleteBulkAction,
+    DetachAction,
+    DetachBulkAction,
+    EditAction};
 
 use function Pest\Laravel\{assertDatabaseHas, assertModelMissing};
 use function Pest\Livewire\livewire;
@@ -120,7 +126,7 @@ it('can detach permissions', function () {
 
 });
 
-it('can edit posts', function () {
+it('can edit permissions', function () {
     $role = Role::factory()
         ->has(Permission::factory()->count(1))
         ->create();

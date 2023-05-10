@@ -35,11 +35,19 @@ class RolesRelationManager extends RelationManager
     {
         return $table
             ->columns([
+
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable()
                     ->sortable(),
+
             ])
+            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])
