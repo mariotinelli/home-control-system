@@ -31,6 +31,7 @@ class PermissionResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->label('Nome')
                             ->unique(ignoreRecord: true)
+                            ->string()
                             ->required()
                             ->maxLength(255),
 
