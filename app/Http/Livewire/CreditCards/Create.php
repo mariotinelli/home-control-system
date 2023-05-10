@@ -6,11 +6,14 @@ use App\Models\CreditCard;
 use App\Pipes\CreditCard\{AssignCreditCardOwner, AssignCreditCardRemainingLimit, EmitCreditCardCreated, SaveCreditCard};
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
+
     public CreditCard $creditCard;
 
     public function getRules(): array
@@ -26,6 +29,8 @@ class Create extends Component
 
     public function save(): void
     {
+        $this->authorize('create', CreditCard::class);
+
         $this->validate();
 
         Pipeline::send($this->creditCard)
