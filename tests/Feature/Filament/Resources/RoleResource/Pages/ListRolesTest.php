@@ -18,7 +18,7 @@ beforeEach(function () {
 });
 
 it('user with access admin permission can access the page', function () {
-    get(Filament\Resources\UserResource::getUrl('index'))
+    get(Filament\Resources\RoleResource::getUrl('index'))
         ->assertSuccessful();
 });
 
@@ -29,87 +29,55 @@ it('user without access admin permission can access the page', function () {
     // Act
     actingAs($nonAdmin);
 
-    get(Filament\Resources\UserResource::getUrl('index'))
+    get(Filament\Resources\RoleResource::getUrl('index'))
         ->assertForbidden();
 });
 
-it('can list users', function () {
+it('can list roles', function () {
     // Arrange
-    $users = User::factory()->count(10)->create();
+    $roles = Role::factory()->count(2)->create();
 
     // Act
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->assertCanSeeTableRecords($users)
-        ->assertCountTableRecords(User::query()->count());
+    livewire(Filament\Resources\RoleResource\Pages\ListRoles::class)
+        ->assertCanSeeTableRecords($roles)
+        ->assertCountTableRecords(Role::query()->count());
 });
 
-it('can render user ids', function () {
+it('can render role ids', function () {
     User::factory()->count(1)->create();
 
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
+    livewire(Filament\Resources\RoleResource\Pages\ListRoles::class)
         ->assertCanRenderTableColumn('id');
 });
 
-it('can render user names', function () {
+it('can render role names', function () {
     User::factory()->count(1)->create();
 
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
+    livewire(Filament\Resources\RoleResource\Pages\ListRoles::class)
         ->assertCanRenderTableColumn('name');
 });
 
-it('can render user emails', function () {
-    User::factory()->count(1)->create();
-
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->assertCanRenderTableColumn('email');
-});
-
-it('can render user roles', function () {
-    User::factory()->count(1)->create();
-
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->assertCanRenderTableColumn('filament_roles');
-});
-
-it('can filter users by `roles`', function () {
+it('can delete roles', function () {
     // Arrange
-    $users = User::factory()->count(10)->create();
-
-    $users->each(fn ($user) => $user->roles()->attach(Role::all()->random(1)));
-
-    $role = Role::whereName('Administrador')->first();
+    $role = Role::factory()->create();
 
     // Act
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->assertCanSeeTableRecords($users)
-        ->filterTable('roles', $role->id)
-        ->assertCanSeeTableRecords($users->filter(fn ($user) => $user->roles()->where('name', '=', $role->name)->exists()))
-        ->assertCanNotSeeTableRecords($users->filter(fn ($user) => $user->roles()->where('name', '!=', $role->name)->exists()))
-        ->removeTableFilter('roles')
-        ->assertCanSeeTableRecords($users);
-});
-
-it('can delete users', function () {
-    // Arrange
-    $user = User::factory()->create();
-
-    // Act
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->callTableAction(DeleteAction::class, $user);
+    livewire(Filament\Resources\RoleResource\Pages\ListRoles::class)
+        ->callTableAction(DeleteAction::class, $role);
 
     // Assert
-    assertModelMissing($user);
+    assertModelMissing($role);
 });
 
 it('can bulk delete posts', function () {
     // Arrange
-    $users = User::factory()->count(10)->create();
+    $roles = Role::factory()->count(10)->create();
 
     // Act
-    livewire(Filament\Resources\UserResource\Pages\ListUsers::class)
-        ->callTableBulkAction(DeleteBulkAction::class, $users);
+    livewire(Filament\Resources\RoleResource\Pages\ListRoles::class)
+        ->callTableBulkAction(DeleteBulkAction::class, $roles);
 
-    foreach ($users as $user) {
-        assertModelMissing($user);
+    foreach ($roles as $role) {
+        assertModelMissing($role);
     }
 });
