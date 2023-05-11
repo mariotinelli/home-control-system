@@ -8,7 +8,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->admin = User::factory()->create();
+    $this->admin = User::factory()->create([
+        'email' => 'teste@email.com',
+    ]);
 
     $this->admin->givePermissionTo(getAdminPermissions());
 
@@ -37,7 +39,9 @@ it('user without access admin permission can access the page', function () {
 
 it('can create a new permission', function () {
     // Arrange
-    $newData = Permission::factory()->make();
+    $newData = Permission::factory()->make([
+        'name' => 'new permission',
+    ]);
 
     // Act
     livewire(Filament\Resources\PermissionResource\Pages\CreatePermission::class)
@@ -89,12 +93,14 @@ test('name input should be a maximum of 255 characters', function () {
 
 test('name input should be unique', function () {
     // Arrange
-    $role = Permission::factory()->create();
+    $permission = Permission::factory()->create([
+        'name' => 'new permission',
+    ]);
 
     // Act
     livewire(Filament\Resources\PermissionResource\Pages\CreatePermission::class)
         ->fillForm([
-            'name' => $role->name,
+            'name' => $permission->name,
         ])
         ->call('create')
         ->assertHasFormErrors(['name' => 'unique'])

@@ -12,7 +12,11 @@ beforeEach(function () {
 
     $this->faker = \Faker\Factory::create();
 
-    $this->user = User::factory()->createOne();
+    $this->user = User::factory()->createOne([
+        'email' => 'teste@email.com',
+    ]);
+
+    $this->user->givePermissionTo(getUserPermissions());
 
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,

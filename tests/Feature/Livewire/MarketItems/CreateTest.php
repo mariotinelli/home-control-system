@@ -11,7 +11,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'email' => 'teste@email.com',
+    ]);
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 

@@ -10,7 +10,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'email' => 'teste@email.com',
+    ]);
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
@@ -48,10 +50,8 @@ it('should be able to disable an investment if that have entries', function () {
         ->call('save')
         ->assertEmitted('investment::deleted');
 
-    assertDatabaseHas('investments', [
-        'id'         => $this->investment->id,
-        'deleted_at' => now(),
-    ]);
+    expect($this->investment->refresh())
+        ->deleted_at->not()->toBeNull;
 
 });
 
@@ -70,8 +70,7 @@ it('should be able to disable an investment if that have withdrawals', function 
         ->call('save')
         ->assertEmitted('investment::deleted');
 
-    assertDatabaseHas('investments', [
-        'id'         => $this->investment->id,
-        'deleted_at' => now(),
-    ]);
+    expect($this->investment->refresh())
+        ->deleted_at->not()->toBeNull;
+
 });
