@@ -35,8 +35,8 @@ jobs:
         
     - name: Execute tests (Unit and Feature tests) via PEST
       env:
-        DB_CONNECTION: mysql
-        DB_DATABASE: database/database.mysql
+          DB_CONNECTION: mysql
+          DB_DATABASE: test_db
       run: vendor/bin/pest --parallel
       
     - name: Execute Larastan
