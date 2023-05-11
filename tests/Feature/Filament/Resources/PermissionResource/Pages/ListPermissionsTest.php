@@ -9,7 +9,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->admin = User::factory()->create();
+    $this->admin = User::factory()->create([
+        'email' => 'teste@email.com',
+    ]);
 
     $this->admin->givePermissionTo(getAdminPermissions());
 
