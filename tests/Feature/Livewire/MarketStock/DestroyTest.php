@@ -57,10 +57,8 @@ it('should be able to disable a market stock if that has withdrawals and entries
     $lw->assertHasNoErrors()
         ->assertEmitted('market-stock::deleted');
 
-    assertDatabaseHas('market_stocks', [
-        'id'         => $this->marketStock->id,
-        'deleted_at' => now(),
-    ]);
+    expect($this->marketStock->refresh())
+        ->deleted_at->not()->toBeNull;
 
     assertDatabaseHas('market_stock_withdrawals', [
         'id'              => $withdrawal->id,

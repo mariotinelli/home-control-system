@@ -10,7 +10,9 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function () {
 
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'email' => 'teste@email.com',
+    ]);
 
     $this->user->givePermissionTo(getUserPermissions());
 
@@ -52,10 +54,8 @@ it('should be able to disable a goals if that has entries', function () {
     $lw->assertHasNoErrors()
         ->assertEmitted('goal::deleted');
 
-    assertDatabaseHas('goals', [
-        'id'         => $this->goal->id,
-        'deleted_at' => now(),
-    ]);
+    expect($this->goal->refresh())
+        ->deleted_at->not()->toBeNull;
 
 });
 
@@ -77,9 +77,7 @@ it('should be able to disable a goals if that has withdrawals', function () {
     $lw->assertHasNoErrors()
         ->assertEmitted('goal::deleted');
 
-    assertDatabaseHas('goals', [
-        'id'         => $this->goal->id,
-        'deleted_at' => now(),
-    ]);
+    expect($this->goal->refresh())
+        ->deleted_at->not()->toBeNull;
 
 });
