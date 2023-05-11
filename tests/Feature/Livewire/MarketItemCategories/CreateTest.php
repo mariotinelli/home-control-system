@@ -32,7 +32,8 @@ it('should be able to create market item category', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_item_categories', [
-        'name' => 'Test Market Item Category',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market Item Category',
     ]);
 
 });

@@ -13,7 +13,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->category = CoupleSpendingCategory::factory()->create();
+    $this->user->coupleSpendingCategories()->save(
+        $this->category = CoupleSpendingCategory::factory()->create()
+    );
 
     actingAs($this->user);
 });
@@ -29,7 +31,8 @@ it('should be able to delete a couple spending category', function () {
         ->assertEmitted('couple-spending-category::deleted');
 
     assertDatabaseMissing('couple_spending_categories', [
-        'id' => $this->category->id,
+        'id'      => $this->category->id,
+        'user_id' => $this->user->id,
     ]);
 
 });
@@ -37,9 +40,9 @@ it('should be able to delete a couple spending category', function () {
 it('should not be able to delete a couple spending category if it has spending', function () {
 
     // Arrange
-    CoupleSpending::factory()->create([
-        'couple_spending_category_id' => $this->category->id,
-    ]);
+    $this->category->spendings()->save(
+        CoupleSpending::factory()->create()
+    );
 
     // Act
     $lw = livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])

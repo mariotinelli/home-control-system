@@ -13,13 +13,17 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->marketItemCategory = MarketItemCategory::factory()->create([
-        'name' => 'Test Category',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $this->marketItemCategory = MarketItemCategory::factory()->make([
+            'name' => 'Test Category',
+        ])
+    );
 
-    $this->marketItem = MarketItem::factory()->create([
-        'market_item_category_id' => $this->marketItemCategory->id,
-    ]);
+    $this->user->marketItems()->save(
+        $this->marketItem = MarketItem::factory()->make([
+            'market_item_category_id' => $this->marketItemCategory->id,
+        ])
+    );
 
     actingAs($this->user);
 });

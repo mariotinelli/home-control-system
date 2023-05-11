@@ -16,9 +16,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->trip = Trip::factory()->create([
-        'city_id' => 2,
-    ]);
+    $this->user->trips()->save(
+        $this->trip = Trip::factory()->create([
+            'city_id' => 2,
+        ])
+    );
 
     actingAs($this->user);
 
@@ -40,6 +42,7 @@ it('should be able to update a trip', function () {
 
     assertDatabaseHas('trips', [
         'id'          => $this->trip->id,
+        'user_id'     => $this->user->id,
         'city_id'     => 3,
         'month'       => '11/2023',
         'description' => 'Test Description Update',

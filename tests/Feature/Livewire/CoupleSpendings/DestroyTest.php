@@ -16,11 +16,15 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->category = CoupleSpendingCategory::factory()->create();
+    $this->user->coupleSpendingCategories()->save(
+        $this->category = CoupleSpendingCategory::factory()->create()
+    );
 
-    $this->coupleSpending = CoupleSpending::factory()->create([
-        'couple_spending_category_id' => $this->category->id,
-    ]);
+    $this->user->coupleSpendings()->save(
+        $this->coupleSpending = $this->category->spendings()->save(
+            CoupleSpending::factory()->create()
+        )
+    );
 
     actingAs($this->user);
 
@@ -35,7 +39,8 @@ it('should be able to delete couple spending', function () {
     $lw->assertEmitted('couple-spending::deleted');
 
     assertDatabaseMissing('couple_spendings', [
-        'id' => $this->coupleSpending->id,
+        'user_id' => $this->user->id,
+        'id'      => $this->coupleSpending->id,
     ]);
 
 });

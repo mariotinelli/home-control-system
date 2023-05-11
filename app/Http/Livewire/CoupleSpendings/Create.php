@@ -29,7 +29,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->coupleSpending->save();
+        auth()->user()->coupleSpendings()->save($this->coupleSpending);
 
         $this->emit('couple-spending::created');
     }

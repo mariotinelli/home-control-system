@@ -6,6 +6,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -64,6 +65,46 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return new Attribute(function () {
             return $this->getRoleNames()->toArray();
         });
+    }
+
+    public function coupleSpendingCategories(): HasMany
+    {
+        return $this->hasMany(CoupleSpendingCategory::class);
+    }
+
+    public function coupleSpendings(): HasMany
+    {
+        return $this->hasMany(CoupleSpending::class);
+    }
+
+    public function goals(): HasMany
+    {
+        return $this->hasMany(Goal::class);
+    }
+
+    public function investments(): HasMany
+    {
+        return $this->hasMany(Investment::class);
+    }
+
+    public function marketItemCategories(): HasMany
+    {
+        return $this->hasMany(MarketItemCategory::class);
+    }
+
+    public function marketItems(): HasMany
+    {
+        return $this->hasMany(MarketItem::class);
+    }
+
+    public function markets(): HasMany
+    {
+        return $this->hasMany(Market::class);
+    }
+
+    public function trips(): HasMany
+    {
+        return $this->hasMany(Trip::class);
     }
 
 }

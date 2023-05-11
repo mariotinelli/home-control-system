@@ -16,11 +16,15 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->category = CoupleSpendingCategory::factory()->create();
+    $this->user->coupleSpendingCategories()->save(
+        $this->category = CoupleSpendingCategory::factory()->create()
+    );
 
-    $this->coupleSpending = CoupleSpending::factory()->create([
-        'couple_spending_category_id' => $this->category->id,
-    ]);
+    $this->user->coupleSpendings()->save(
+        $this->coupleSpending = $this->category->spendings()->save(
+            CoupleSpending::factory()->create()
+        )
+    );
 
     actingAs($this->user);
 
@@ -43,6 +47,7 @@ it('should be able to update a couple spending', function () {
         ->assertEmitted('couple-spending::updated');
 
     assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $category2->id,
         'description'                 => 'Test Updated',
         'amount'                      => 200,

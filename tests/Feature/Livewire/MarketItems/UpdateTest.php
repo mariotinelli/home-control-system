@@ -17,13 +17,17 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->marketItemCategory = MarketItemCategory::factory()->create([
-        'name' => 'Test Category',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $this->marketItemCategory = MarketItemCategory::factory()->make([
+            'name' => 'Test Category',
+        ])
+    );
 
-    $this->marketItem = MarketItem::factory()->create([
-        'market_item_category_id' => $this->marketItemCategory->id,
-    ]);
+    $this->user->marketItems()->save(
+        $this->marketItem = MarketItem::factory()->make([
+            'market_item_category_id' => $this->marketItemCategory->id,
+        ])
+    );
 
     actingAs($this->user);
 
@@ -44,6 +48,7 @@ it('should be able to update a market item', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
+        'user_id'                 => $this->user->id,
         'name'                    => 'Test Market Item Update',
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight'             => TypeOfWeightEnum::KILOGRAM,
@@ -55,13 +60,18 @@ it('should be able to update a market item', function () {
 it('unique name for market item, but ignore if market item category is different', function () {
 
     // Arrange
-    $marketItemCategory2 = MarketItemCategory::factory()->create([
-        'name' => 'Test Category 2',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $marketItemCategory2 = MarketItemCategory::factory()->create([
+            'name' => 'Test Category 2',
+        ])
+    );
 
-    $marketItem2 = MarketItem::factory()->create([
-        'market_item_category_id' => $marketItemCategory2->id,
-    ]);
+    $this->user->marketItems()->save(
+        $marketItem2 = MarketItem::factory()->create([
+            'name'                    => 'Test Market Item',
+            'market_item_category_id' => $marketItemCategory2->id,
+        ])
+    );
 
     // Act
     $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
@@ -85,6 +95,7 @@ it('unique name for market item, but ignore if market item category is different
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
+        'user_id'                 => $this->user->id,
         'name'                    => $marketItem2->name,
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight'             => TypeOfWeightEnum::GRAM,
@@ -96,13 +107,17 @@ it('unique name for market item, but ignore if market item category is different
 it('unique name for market item, but ignore if current market item name', function () {
 
     // Arrange
-    $marketItemCategory2 = MarketItemCategory::factory()->create([
-        'name' => 'Test Category 2',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $marketItemCategory2 = MarketItemCategory::factory()->create([
+            'name' => 'Test Category 2',
+        ])
+    );
 
-    $marketItem2 = MarketItem::factory()->create([
-        'market_item_category_id' => $marketItemCategory2->id,
-    ]);
+    $this->user->marketItems()->save(
+        $marketItem2 = MarketItem::factory()->create([
+            'market_item_category_id' => $marketItemCategory2->id,
+        ])
+    );
 
     // Act
     $lw = livewire(MarketItems\Update::class, ['marketItem' => $this->marketItem])
@@ -122,10 +137,11 @@ it('unique name for market item, but ignore if current market item name', functi
         ->call('save');
 
     // Assert 2
-    $lw->assertEmitted('market-item::updated')
-        ->assertHasNoErrors();
+    $lw->assertHasNoErrors()
+        ->assertEmitted('market-item::updated');
 
     assertDatabaseHas('market_items', [
+        'user_id'                 => $this->user->id,
         'name'                    => $this->marketItem->name,
         'market_item_category_id' => $marketItemCategory2->id,
         'type_weight'             => TypeOfWeightEnum::TON,

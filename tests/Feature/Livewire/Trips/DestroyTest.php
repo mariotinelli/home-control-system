@@ -16,9 +16,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->trip = Trip::factory()->create([
-        'city_id' => 2,
-    ]);
+    $this->user->trips()->save(
+        $this->trip = Trip::factory()->create([
+            'city_id' => 2,
+        ])
+    );
 
     actingAs($this->user);
 

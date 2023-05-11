@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\CoupleSpendingCategory;
+use App\Models\{CoupleSpendingCategory, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CoupleSpendingCategoryFactory extends Factory
@@ -12,7 +12,8 @@ class CoupleSpendingCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence(5),
+            'user_id' => User::factory(),
+            'name'    => $this->faker->sentence(5),
         ];
     }
 }

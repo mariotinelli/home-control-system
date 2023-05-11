@@ -16,7 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->category = CoupleSpendingCategory::factory()->create();
+    $this->user->coupleSpendingCategories()->save(
+        $this->category = CoupleSpendingCategory::factory()->create()
+    );
 
     actingAs($this->user);
 
@@ -37,6 +39,7 @@ it('should be able to create couple spending', function () {
         ->assertEmitted('couple-spending::created');
 
     assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
         'description'                 => 'Test',
         'amount'                      => 100,

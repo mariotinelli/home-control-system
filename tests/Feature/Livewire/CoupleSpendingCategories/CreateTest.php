@@ -32,7 +32,8 @@ it('should be able to create a new couple spending category', function () {
         ->assertEmitted('couple-spending-category::created');
 
     assertDatabaseHas('couple_spending_categories', [
-        'name' => 'Test Category',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Category',
     ]);
 
 });

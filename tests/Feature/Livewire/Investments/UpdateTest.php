@@ -16,7 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->investment = Investment::factory()->create();
+    $this->user->investments()->save(
+        $this->investment = Investment::factory()->make()
+    );
 
     actingAs($this->user);
 
@@ -37,6 +39,8 @@ it('should be able to create a new investments', function () {
         ->assertEmitted('investment::updated');
 
     assertDatabaseHas('investments', [
+        'id'          => $this->investment->id,
+        'user_id'     => $this->user->id,
         'name'        => 'Test Investment 2',
         'description' => 'Test Description 2',
         'owner'       => 'Mário 2',
