@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Markets;
 use App\Models\Market;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Create extends Component
@@ -16,7 +17,12 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'market.name' => ['required', 'string', 'unique:markets,name', 'max:255'],
+            'market.name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('markets', 'name')->where('user_id', auth()->id()),
+            ],
         ];
     }
 
@@ -26,7 +32,9 @@ class Create extends Component
 
         $this->validate();
 
-        $this->market->save();
+        auth()->user()->markets()->create([
+            'name' => $this->market->name,
+        ]);
 
         $this->emit('market::created');
     }

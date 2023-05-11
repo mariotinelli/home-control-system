@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Investment;
+use App\Models\{Investment, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvestmentFactory extends Factory
@@ -12,6 +12,7 @@ class InvestmentFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id'     => User::factory(),
             'name'        => $this->faker->sentence,
             'description' => $this->faker->text,
             'owner'       => $this->faker->name,

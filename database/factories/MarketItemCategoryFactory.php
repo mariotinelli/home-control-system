@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\MarketItemCategory;
+use App\Models\{MarketItemCategory, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MarketItemCategoryFactory extends Factory
@@ -12,7 +12,8 @@ class MarketItemCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name,
+            'user_id' => User::factory(),
+            'name'    => $this->faker->name,
         ];
     }
 }

@@ -31,7 +31,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->trip->save();
+        auth()->user()->trips()->save($this->trip);
 
         $this->emit('trip::created');
     }

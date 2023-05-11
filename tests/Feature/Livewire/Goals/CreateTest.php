@@ -33,6 +33,7 @@ it('should be able to create a new goal', function () {
         ->assertEmitted('goal::created');
 
     assertDatabaseHas('goals', [
+        'user_id'     => $this->user->id,
         'name'        => 'Test Goal',
         'to_reach'    => 100,
         'owner'       => 'Mario',

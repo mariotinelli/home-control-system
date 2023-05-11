@@ -30,7 +30,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->marketItem->save();
+        auth()->user()->marketItems()->save($this->marketItem);
 
         $this->emit('market-item::created');
     }

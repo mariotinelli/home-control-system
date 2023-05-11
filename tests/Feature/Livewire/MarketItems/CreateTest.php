@@ -17,9 +17,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->marketItemCategory = MarketItemCategory::factory()->create([
-        'name' => 'Test Category',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $this->marketItemCategory = MarketItemCategory::factory()->make([
+            'name' => 'Test Category',
+        ])
+    );
 
     actingAs($this->user);
 
@@ -40,6 +42,7 @@ it('should be able to create market item', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
+        'user_id'                 => $this->user->id,
         'name'                    => 'Test Market Item',
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight'             => TypeOfWeightEnum::GRAM,
@@ -51,17 +54,22 @@ it('should be able to create market item', function () {
 it('unique name for market item, but ignore if market item category is different', function () {
 
     // Arrange
-    $marketItemCategory2 = MarketItemCategory::factory()->create([
-        'name' => 'Test Category 2',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $marketItemCategory2 = MarketItemCategory::factory()->create([
+            'name' => 'Test Category 2',
+        ])
+    );
 
-    $marketItem2 = MarketItem::factory()->create([
-        'market_item_category_id' => $marketItemCategory2->id,
-    ]);
+    $this->user->marketItems()->save(
+        $marketItem = MarketItem::factory()->create([
+            'name'                    => 'Test Market Item',
+            'market_item_category_id' => $marketItemCategory2->id,
+        ])
+    );
 
     // Act
     $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.name', $marketItem2->name)
+        ->set('marketItem.name', $marketItem->name)
         ->set('marketItem.market_item_category_id', $marketItemCategory2->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
@@ -72,7 +80,7 @@ it('unique name for market item, but ignore if market item category is different
 
     // Act 2
     $lw = livewire(MarketItems\Create::class)
-        ->set('marketItem.name', $marketItem2->name)
+        ->set('marketItem.name', $marketItem->name)
         ->set('marketItem.market_item_category_id', $this->marketItemCategory->id)
         ->set('marketItem.type_weight', TypeOfWeightEnum::GRAM)
         ->set('marketItem.weight', 10)
@@ -83,7 +91,8 @@ it('unique name for market item, but ignore if market item category is different
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'name'                    => $marketItem2->name,
+        'user_id'                 => $this->user->id,
+        'name'                    => $marketItem->name,
         'market_item_category_id' => $this->marketItemCategory->id,
         'type_weight'             => TypeOfWeightEnum::GRAM,
         'weight'                  => 10,

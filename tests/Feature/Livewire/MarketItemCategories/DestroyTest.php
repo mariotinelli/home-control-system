@@ -16,9 +16,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->marketItemCategory = MarketItemCategory::factory()->create([
-        'name' => 'Test Category',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $this->marketItemCategory = MarketItemCategory::factory()->create([
+            'name' => 'Test Market Item Category',
+        ])
+    );
 
     actingAs($this->user);
 
@@ -45,9 +47,9 @@ it('should be able to delete market item category', function () {
 it('should not be able to delete market item category if it has market items', function () {
 
     // Arrange
-    MarketItem::factory()->create([
-        'market_item_category_id' => $this->marketItemCategory->id,
-    ]);
+    $this->marketItemCategory->marketItems()->save(
+        MarketItem::factory()->create()
+    );
 
     // Act
     $lw = livewire(MarketItemCategories\Destroy::class, [
@@ -58,7 +60,8 @@ it('should not be able to delete market item category if it has market items', f
     $lw->assertForbidden();
 
     assertDatabaseHas('market_item_categories', [
-        'name' => 'Test Category',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market Item Category',
     ]);
 
 });

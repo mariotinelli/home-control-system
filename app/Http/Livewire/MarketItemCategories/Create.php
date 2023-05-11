@@ -26,7 +26,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->marketItemCategory->save();
+        auth()->user()->marketItemCategories()->save($this->marketItemCategory);
 
         $this->emit('market-item-category::created');
     }

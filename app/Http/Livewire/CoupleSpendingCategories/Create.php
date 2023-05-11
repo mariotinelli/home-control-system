@@ -26,7 +26,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->category->save();
+        auth()->user()->coupleSpendingCategories()->save($this->category);
 
         $this->emit('couple-spending-category::created');
 

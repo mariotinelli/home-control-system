@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Goal;
+use App\Models\{Goal, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GoalFactory extends Factory
@@ -12,6 +12,7 @@ class GoalFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id'     => User::factory(),
             'name'        => $this->faker->sentence,
             'to_reach'    => $this->faker->numberBetween(1, 1000),
             'owner'       => $this->faker->name,

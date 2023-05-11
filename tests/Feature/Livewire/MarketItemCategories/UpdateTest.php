@@ -16,9 +16,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->marketItemCategory = MarketItemCategory::factory()->create([
-        'name' => 'Test Market Item Category',
-    ]);
+    $this->user->marketItemCategories()->save(
+        $this->marketItemCategory = MarketItemCategory::factory()->create([
+            'name' => 'Test Market Item Category',
+        ])
+    );
 
     actingAs($this->user);
 
@@ -36,7 +38,9 @@ it('should be able to update market item marketItemCategory', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_item_categories', [
-        'name' => 'Test Market Item Category Update',
+        'id'      => $this->marketItemCategory->id,
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market Item Category Update',
     ]);
 
 });

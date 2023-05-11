@@ -16,7 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserSilverPermissions());
 
-    $this->investment = Investment::factory()->create();
+    $this->user->investments()->save(
+        $this->investment = Investment::factory()->make()
+    );
 
     actingAs($this->user);
 
@@ -30,7 +32,9 @@ it('should be able to force delete an investment if that doesnt have entries and
         ->call('save')
         ->assertEmitted('investment::deleted');
 
-    assertDatabaseMissing('investments', ['id' => $this->investment->id]);
+    assertDatabaseMissing('investments', [
+        'id' => $this->investment->id,
+    ]);
 
 });
 
