@@ -12,6 +12,8 @@ beforeEach(function () {
 
     $this->user = User::factory()->createOne();
 
+    $this->user->givePermissionTo(getUserPermissions());
+
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
     ]);
