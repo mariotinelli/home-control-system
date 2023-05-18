@@ -17,12 +17,6 @@ class Destroy extends Component
     {
         $this->authorize('delete', $this->category);
 
-        if ($this->category->spendings()->count() > 0) {
-            $this->addError('category', 'This category has spendings');
-
-            return;
-        }
-
         $this->category->delete();
 
         $this->emit('couple-spending-category::deleted');

@@ -5,13 +5,13 @@ namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 use App\Http\Livewire\CoupleSpendingCategories;
 use App\Models\{CoupleSpendingCategory, User};
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas};
+use function Pest\Laravel\{actingAs};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->user->givePermissionTo(getUserSilverPermissions());
+    $this->user->givePermissionTo('couple_spending_category_update');
 
     $this->user->coupleSpendingCategories()->save(
         $this->category = CoupleSpendingCategory::factory()->create()
@@ -21,20 +21,44 @@ beforeEach(function () {
 });
 
 it('should be able to update a couple spending category', function () {
+    // Arrange
+    $newData = CoupleSpendingCategory::factory()->makeOne();
 
     // Act
     $lw = livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
-        ->set('category.name', 'Test Category Updated')
+        ->set('category.name', $newData->name)
         ->call('save');
 
     // Assert
     $lw->assertHasNoErrors()
         ->assertEmitted('couple-spending-category::updated');
 
-    assertDatabaseHas('couple_spending_categories', [
-        'user_id' => $this->user->id,
-        'name'    => 'Test Category Updated',
-    ]);
+    expect($this->category->refresh())
+        ->user_id->toBe($this->user->id)
+        ->name->toBe($newData->name);
+
+});
+
+it('should be not able to update a couple spending category if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_update');
+
+    // Act
+    livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to update a couple spending category if not authenticated', function () {
+
+    // Arrange
+    \Auth::logout();
+
+    // Act
+    livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
 
 });
 

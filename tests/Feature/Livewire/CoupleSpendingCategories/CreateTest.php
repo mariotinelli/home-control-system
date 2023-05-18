@@ -3,7 +3,8 @@
 namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 
 use App\Http\Livewire\CoupleSpendingCategories;
-use App\Models\User;
+use App\Models\{CoupleSpendingCategory, User};
+use Auth;
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -14,17 +15,19 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserSilverPermissions());
+    $this->user->givePermissionTo('couple_spending_category_create');
 
     actingAs($this->user);
 
 });
 
 it('should be able to create a new couple spending category', function () {
+    // Arrange
+    $newData = CoupleSpendingCategory::factory()->makeOne();
 
     // Act
     $lw = livewire(CoupleSpendingCategories\Create::class)
-        ->set('category.name', 'Test Category')
+        ->set('category.name', $newData->name)
         ->call('save');
 
     // Assert
@@ -33,8 +36,31 @@ it('should be able to create a new couple spending category', function () {
 
     assertDatabaseHas('couple_spending_categories', [
         'user_id' => $this->user->id,
-        'name'    => 'Test Category',
+        'name'    => $newData->name,
     ]);
+
+});
+
+it('should be not able to create a new couple spending category if no has permission', function () {
+    // Arrange
+    $newData = CoupleSpendingCategory::factory()->makeOne();
+
+    $this->user->revokePermissionTo('couple_spending_category_create');
+
+    // Act - No has permission
+    livewire(CoupleSpendingCategories\Create::class)
+        ->call('save')
+        ->assertForbidden();
+});
+
+it('should be not able to create a new couple spending category if not authenticated', function () {
+    // Arrange
+    Auth::logout();
+
+    // Act - Not authenticated
+    livewire(CoupleSpendingCategories\Create::class)
+        ->call('save')
+        ->assertForbidden();
 
 });
 
@@ -65,7 +91,7 @@ test('name must be a string', function () {
 test('name must be unique', function () {
 
     // Arrange
-    $category = \App\Models\CoupleSpendingCategory::factory()->create();
+    $category = CoupleSpendingCategory::factory()->create();
 
     // Act
     $lw = livewire(CoupleSpendingCategories\Create::class)
