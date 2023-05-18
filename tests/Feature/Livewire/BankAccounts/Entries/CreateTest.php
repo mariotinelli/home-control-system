@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
 use App\Http\Livewire\BankAccounts\Entries;
-use App\Models\{BankAccount, User};
+use App\Models\{BankAccount, BankAccountEntry, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -14,7 +14,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('bank_account_entry_create');
 
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
@@ -24,75 +24,70 @@ beforeEach(function () {
 
 });
 
-it('should be create a new entry', function () {
+it("should be able to create a new bank account entry if are the account owner and has the 'bank_account_entry_create' permission", function () {
+    // Arrange
+    $newData = BankAccountEntry::factory()->makeOne();
 
+    // Act
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('entry.value', 100)
-        ->set('entry.description', 'Test')
-        ->set('entry.date', now()->format('Y-m-d'))
+        ->set('entry.value', $newData->value)
+        ->set('entry.description', $newData->description)
+        ->set('entry.date', $newData->date)
         ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('bank-account::entry::created');
 
+    // Assert
     assertDatabaseHas('bank_account_entries', [
         'bank_account_id' => $this->bankAccount->id,
-        'value'           => 100,
-        'description'     => 'Test',
-        'date'            => now()->format('Y-m-d'),
+        'value'           => $newData->value,
+        'description'     => $newData->description,
+        'date'            => $newData->date,
     ]);
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance + 100,
-    ]);
+    $newBalance = number_format($this->bankAccount->balance + $newData->value, 2, '.', '');
+
+    expect($this->bankAccount->refresh())
+        ->balance->toBe($newBalance);
 
 });
 
-it('should be create a new entry in bank account only bank account owner', function () {
+it('should be not able to create a new bank account entry if are not the account owner', function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
 
-    actingAs(User::factory()->createOne());
+    $user2->givePermissionTo('bank_account_entry_create');
+
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
 
-    actingAs($this->user);
+});
+
+it("should be not able to create a new bank account entry if not has the 'bank_account_entry_create' permission", function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
+
+    $user2->revokePermissionTo('bank_account_entry_create');
+
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('entry.value', 100)
-        ->set('entry.description', 'Test')
-        ->set('entry.date', now()->format('Y-m-d'))
         ->call('save')
-        ->assertEmitted('bank-account::entry::created');
-
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => 100,
-        'description'     => 'Test',
-        'date'            => now()->format('Y-m-d'),
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance + 100,
-    ]);
+        ->assertForbidden();
 
 });
 
 test('value is required', function () {
 
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('entry.value', '')
+        ->set('entry.value', null)
         ->call('save')
         ->assertHasErrors(['entry.value' => 'required']);
-
-});
-
-test('value should be a number', function () {
-
-    livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('entry.value', 'test')
-        ->call('save')
-        ->assertHasErrors(['entry.value' => 'numeric']);
 
 });
 
@@ -107,15 +102,6 @@ test('value should be a greater than zero', function () {
         ->set('entry.value', 1)
         ->call('save')
         ->assertHasNoErrors(['entry.value' => 'min']);
-
-});
-
-test('value should be a less than 10 digits', function () {
-
-    livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('entry.value', 10000000000)
-        ->call('save')
-        ->assertHasErrors(['entry.value' => 'max_digits']);
 
 });
 

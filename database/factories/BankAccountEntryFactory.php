@@ -18,8 +18,8 @@ class BankAccountEntryFactory extends Factory
     {
         return [
             'value'       => $this->faker->randomFloat(2, 1, 1000),
-            'description' => $this->faker->sentence,
-            'date'        => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'description' => $this->faker->sentence(1),
+            'date'        => $this->faker->date(),
         ];
     }
 }

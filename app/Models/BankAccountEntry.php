@@ -10,6 +10,10 @@ class BankAccountEntry extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'value' => 'decimal:2',
+    ];
+
     public function bankAccount(): BelongsTo
     {
         return $this->belongsTo(BankAccount::class);

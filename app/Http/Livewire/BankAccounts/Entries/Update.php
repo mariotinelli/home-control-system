@@ -18,7 +18,7 @@ class Update extends Component
     public function rules(): array
     {
         return [
-            'entry.value'       => ['required', 'numeric', 'min:1', 'max_digits:10'],
+            'entry.value'       => ['required', 'decimal:2', 'min:1'],
             'entry.description' => ['required', 'string', 'max:255'],
             'entry.date'        => ['required', 'date'],
         ];

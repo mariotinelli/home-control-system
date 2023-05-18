@@ -14,7 +14,9 @@ class ReverseBankAccountBalance
 
     public function handle(BankAccountEntry $entry, \Closure $next): BankAccountEntry
     {
-        $this->bankAccount->balance -= $this->oldEntryValue;
+        $balance = $this->bankAccount->balance - $this->oldEntryValue;
+
+        $this->bankAccount->balance = number_format($balance, 2, '.', '');
 
         return $next($entry);
     }

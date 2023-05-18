@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\BankAccounts\Entries;
 use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
+use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -14,15 +14,15 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('bank_account_entry_delete');
 
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
     ]);
 
-    $this->entry = BankAccountEntry::factory()->createOne([
-        'bank_account_id' => $this->bankAccount->id,
-    ]);
+    $this->bankAccount->entries()->save(
+        $this->entry = BankAccountEntry::factory()->makeOne()
+    );
 
     $this->bankAccount->update([
         'balance' => $this->bankAccount->balance + $this->entry->value,
@@ -32,74 +32,49 @@ beforeEach(function () {
 
 });
 
-it('should be to delete a entry', function () {
+it("should be able to delete a entry if are the account owner and has the 'bank_account_entry_delete' permission", function () {
 
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance,
-    ]);
-
+    // Act
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
         ->call('save')
         ->assertEmitted('bank-account::entry::deleted');
 
+    // Assert
     assertDatabaseMissing('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
+        'id' => $this->entry->id,
     ]);
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance - $this->entry->value,
-    ]);
+    $newBalance = number_format($this->bankAccount->balance - $this->entry->value, 2, '.', '');
+
+    expect($this->bankAccount->refresh())
+        ->balance->toBe($newBalance);
 
 });
 
-it('should be to delete a entry only bank account owner', function () {
+it('should be not able to delete a entry if are not the account owner', function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
 
-    actingAs(User::factory()->createOne());
+    $user2->givePermissionTo('bank_account_entry_delete');
+
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
         ->call('save')
         ->assertForbidden();
 
-    actingAs($this->user);
+});
 
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
-    ]);
+it("should be not able to delete a entry if not has the 'bank_account_entry_delete' permission", function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance,
-    ]);
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
         ->call('save')
-        ->assertEmitted('bank-account::entry::deleted');
-
-    assertDatabaseMissing('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance - $this->entry->value,
-    ]);
+        ->assertForbidden();
 
 });

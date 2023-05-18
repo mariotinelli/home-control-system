@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\BankAccounts\Entries;
 use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas};
+use function Pest\Laravel\{actingAs};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -14,15 +14,15 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('bank_account_entry_update');
 
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
     ]);
 
-    $this->entry = BankAccountEntry::factory()->createOne([
-        'bank_account_id' => $this->bankAccount->id,
-    ]);
+    $this->bankAccount->entries()->save(
+        $this->entry = BankAccountEntry::factory()->makeOne()
+    );
 
     $this->bankAccount->update([
         'balance' => $this->bankAccount->balance + $this->entry->value,
@@ -32,99 +32,71 @@ beforeEach(function () {
 
 });
 
-it('should be to update a entry', function () {
+it("should be able to update a entry if are the account owner and has the 'bank_account_entry_update' permission", function () {
+    // Arrange
+    $newData = BankAccountEntry::factory()->makeOne();
 
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance,
-    ]);
-
+    // Act
     livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', 200)
-        ->set('entry.description', 'Test Update')
-        ->set('entry.date', now()->format('Y-m-d'))
+        ->set('entry.value', $newData->value)
+        ->set('entry.description', $newData->description)
+        ->set('entry.date', $newData->date)
         ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('bank-account::entry::updated');
 
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => 200,
-        'description'     => 'Test Update',
-        'date'            => now()->format('Y-m-d'),
-    ]);
+    // Assert
+    $oldEntryValue = $this->entry->getOriginal('value');
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
-    ]);
+    $oldBalance = $this->bankAccount->balance;
+
+    expect($this->entry->refresh()->value)
+        ->toBe($newData->value)
+        ->and($this->entry->refresh())
+            ->description->toBe($newData->description)
+            ->date->toBe($newData->date);
+
+    $newBalance = number_format(($oldBalance - $oldEntryValue) + $newData->value, 2, '.', '');
+
+    expect($this->bankAccount->refresh())
+        ->balance->toBe($newBalance);
 
 });
 
-it('should be to update a entry only bank account owner', function () {
+it('should be not able to update a entry if are not the account owner', function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
 
-    actingAs(User::factory()->createOne());
+    $user2->givePermissionTo('bank_account_entry_update');
+
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Update::class, ['entry' => $this->entry])
         ->call('save')
         ->assertForbidden();
 
-    actingAs($this->user);
+});
 
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $this->entry->value,
-        'description'     => $this->entry->description,
-        'date'            => $this->entry->date->format('Y-m-d'),
-    ]);
+it("should be not able to update a entry if not has the 'bank_account_entry_update' permission", function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance,
-    ]);
+    // Act
+    actingAs($user2);
 
     livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', 200)
-        ->set('entry.description', 'Test Update')
-        ->set('entry.date', now()->format('Y-m-d'))
         ->call('save')
-        ->assertEmitted('bank-account::entry::updated');
-
-    assertDatabaseHas('bank_account_entries', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => 200,
-        'description'     => 'Test Update',
-        'date'            => now()->format('Y-m-d'),
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => ($this->bankAccount->balance - $this->entry->value) + 200,
-    ]);
+        ->assertForbidden();
 
 });
 
 test('value is required', function () {
 
     livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', '')
+        ->set('entry.value', null)
         ->call('save')
         ->assertHasErrors(['entry.value' => 'required']);
-
-});
-
-test('value should be a number', function () {
-
-    livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', 'test')
-        ->call('save')
-        ->assertHasErrors(['entry.value' => 'numeric']);
 
 });
 
@@ -134,20 +106,6 @@ test('value should be a greater than zero', function () {
         ->set('entry.value', -100)
         ->call('save')
         ->assertHasErrors(['entry.value' => 'min']);
-
-    livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', 1)
-        ->call('save')
-        ->assertHasNoErrors(['entry.value' => 'min']);
-
-});
-
-test('value should be a less than 10 digits', function () {
-
-    livewire(Entries\Update::class, ['entry' => $this->entry])
-        ->set('entry.value', 10000000000)
-        ->call('save')
-        ->assertHasErrors(['entry.value' => 'max_digits']);
 
 });
 
