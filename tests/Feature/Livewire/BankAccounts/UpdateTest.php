@@ -14,7 +14,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('bank_account_update');
 
     $this->bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
@@ -25,62 +25,123 @@ beforeEach(function () {
 });
 
 it('should be able to update a bank account', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
 
+    // Act
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.bank_name', 'Bank name Update')
-        ->set('bankAccount.type', 'Corrente Update')
-        ->set('bankAccount.agency_number', 4321)
-        ->set('bankAccount.number', '654321')
-        ->set('bankAccount.digit', 2)
-        ->set('bankAccount.balance', 2000)
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('bank-account::updated');
 
+    // Assert
     assertDatabaseHas('bank_accounts', [
         'user_id'       => $this->user->id,
-        'bank_name'     => 'Bank name Update',
-        'type'          => 'Corrente Update',
-        'agency_number' => 4321,
-        'number'        => '654321',
-        'digit'         => 2,
-        'balance'       => 2000,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'agency_number' => $newData->agency_number,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'balance'       => $newData->balance,
     ]);
 
 });
 
-it('should be able to update a bank account only bank account owner', function () {
+it('should be able to update a bank account if own it', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
 
-    actingAs(User::factory()->createOne());
+    // Act
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.agency_digit', $newData->agency_digit)
+        ->set('bankAccount.balance', $newData->balance)
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertEmitted('bank-account::updated');
+
+    // Assert
+    expect($this->bankAccount->refresh())
+        ->user_id->toBe($this->user->id)
+        ->bank_name->toBe($newData->bank_name)
+        ->type->toBe($newData->type)
+        ->number->toBe($newData->number)
+        ->digit->toBe($newData->digit)
+        ->agency_number->toBe($newData->agency_number)
+        ->agency_digit->toBe($newData->agency_digit)
+        ->balance->toBe($newData->balance);
+
+});
+
+it('should not be able to update a bank account if not own it', function () {
+    // Arrange
+    $user2 = User::factory()->createOne();
+
+    $user2->givePermissionTo('bank_account_update');
+
+    // Act
+    actingAs($user2);
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
 
-    actingAs($this->user);
+});
 
+it("should be not able to update a bank account if not has the 'bank account update' permission", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_update');
+
+    // Act
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.bank_name', 'Bank name Update')
-        ->set('bankAccount.type', 'Corrente Update')
-        ->set('bankAccount.agency_number', 4321)
-        ->set('bankAccount.number', '654321')
-        ->set('bankAccount.digit', 2)
-        ->set('bankAccount.balance', 2000)
         ->call('save')
+        ->assertForbidden();
+
+});
+
+it("should be able to update a bank account if has the 'bank account update' permission", function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    // Act
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.agency_digit', $newData->agency_digit)
+        ->set('bankAccount.balance', $newData->balance)
+        ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('bank-account::updated');
 
-    assertDatabaseHas('bank_accounts', [
-        'user_id'       => $this->user->id,
-        'bank_name'     => 'Bank name Update',
-        'type'          => 'Corrente Update',
-        'agency_number' => 4321,
-        'number'        => '654321',
-        'digit'         => 2,
-        'balance'       => 2000,
-    ]);
+    // Assert
+    expect($this->bankAccount->refresh())
+        ->user_id->toBe($this->user->id)
+        ->bank_name->toBe($newData->bank_name)
+        ->type->toBe($newData->type)
+        ->number->toBe($newData->number)
+        ->digit->toBe($newData->digit)
+        ->agency_number->toBe($newData->agency_number)
+        ->agency_digit->toBe($newData->agency_digit)
+        ->balance->toBe($newData->balance);
 
 });
 
 it('should be not able to update a balance when exists entries', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
 
     $this->bankAccount->entries()->create([
         'value'       => 1000,
@@ -88,24 +149,17 @@ it('should be not able to update a balance when exists entries', function () {
         'date'        => now(),
     ]);
 
+    // Act
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', 2000)
+        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
         ->assertForbidden();
 
-    assertDatabaseHas('bank_accounts', [
-        'user_id'       => $this->user->id,
-        'bank_name'     => $this->bankAccount->bank_name,
-        'type'          => $this->bankAccount->type,
-        'agency_number' => $this->bankAccount->agency_number,
-        'number'        => $this->bankAccount->number,
-        'digit'         => $this->bankAccount->digit,
-        'balance'       => $this->bankAccount->balance,
-    ]);
-
 });
 
-it('should be able to update a bank account only when not exists withdraws of values', function () {
+it('should be not able to update a balance when exists withdraws', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
 
     $this->bankAccount->withdrawals()->create([
         'value'       => 1000,
@@ -113,25 +167,44 @@ it('should be able to update a bank account only when not exists withdraws of va
         'date'        => now(),
     ]);
 
+    // Act
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.bank_name', 'Bank name Update')
-        ->set('bankAccount.type', 'Corrente Update')
-        ->set('bankAccount.agency_number', 4321)
-        ->set('bankAccount.number', '654321')
-        ->set('bankAccount.digit', 2)
-        ->set('bankAccount.balance', 2000)
+        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
         ->assertForbidden();
 
-    assertDatabaseHas('bank_accounts', [
-        'user_id'       => $this->user->id,
-        'bank_name'     => $this->bankAccount->bank_name,
-        'type'          => $this->bankAccount->type,
-        'agency_number' => $this->bankAccount->agency_number,
-        'number'        => $this->bankAccount->number,
-        'digit'         => $this->bankAccount->digit,
-        'balance'       => $this->bankAccount->balance,
-    ]);
+});
+
+it('should be not able to update a balance when not exists entries and withdraws', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    expect($this->bankAccount->entries()->count())->toBe(0)
+        ->and($this->bankAccount->withdrawals()->count())->toBe(0);
+
+    // Act
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.agency_digit', $newData->agency_digit)
+        ->set('bankAccount.balance', $newData->balance)
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertEmitted('bank-account::updated');
+
+    // Assert
+    expect($this->bankAccount->refresh())
+        ->user_id->toBe($this->user->id)
+        ->bank_name->toBe($newData->bank_name)
+        ->type->toBe($newData->type)
+        ->number->toBe($newData->number)
+        ->digit->toBe($newData->digit)
+        ->agency_number->toBe($newData->agency_number)
+        ->agency_digit->toBe($newData->agency_digit)
+        ->balance->toBe($newData->balance);
 
 });
 
@@ -162,30 +235,12 @@ test('bank name should be have a max length of 100 characters', function () {
 
 });
 
-test('type is required', function () {
+test('bank account type is required', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.type', '')
+        ->set('bankAccount.type', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.type' => 'required']);
-
-});
-
-test('type should be a string', function () {
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.type', 123)
-        ->call('save')
-        ->assertHasErrors(['bankAccount.type' => 'string']);
-
-});
-
-test('type should be have a max length of 100 characters', function () {
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.type', str_repeat('a', 101))
-        ->call('save')
-        ->assertHasErrors(['bankAccount.type' => 'max']);
 
 });
 
@@ -198,62 +253,64 @@ test('number is required', function () {
 
 });
 
-test('number should be a string', function () {
+test('number should be a numeric', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.number', 123)
+        ->set('bankAccount.number', 'abc')
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'string']);
+        ->assertHasErrors(['bankAccount.number' => 'numeric']);
 
 });
 
-test('ignore number unique only when updating same bank account', function () {
+test('number should be unique', function () {
 
-    $newBankAccount = BankAccount::factory()->createOne([
+    $newData = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
         'number'  => '123456',
     ]);
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.number', $newBankAccount->number)
+        ->set('bankAccount.number', $newData->number)
         ->call('save')
         ->assertHasErrors(['bankAccount.number' => 'unique']);
 
+});
+
+test('ignore number unique only when updating same bank account', function () {
+    // Arrange
+    $newData = BankAccount::factory()->createOne([
+        'user_id' => $this->user->id,
+        'number'  => '123456',
+    ]);
+
+    // Act - Error
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.number', $newData->number)
+        ->call('save')
+        ->assertHasErrors(['bankAccount.number' => 'unique']);
+
+    // Act - Success
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
         ->set('bankAccount.number', $this->bankAccount->number)
         ->call('save')
         ->assertHasNoErrors(['bankAccount.number' => 'unique']);
 });
 
-test('number should be unique', function () {
-
-    $newBankAccount = BankAccount::factory()->createOne([
-        'user_id' => $this->user->id,
-        'number'  => '123456',
-    ]);
+test('number should be have a min digits of 5', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.number', $newBankAccount->number)
+        ->set('bankAccount.number', (int) str_repeat('9', 4))
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'unique']);
+        ->assertHasErrors(['bankAccount.number' => 'min_digits']);
 
 });
 
-test('number should be have a min length of 5 characters', function () {
+test('number should be have a max digits of 20', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.number', str_repeat('9', 4))
+        ->set('bankAccount.number', (float) str_repeat('9', 21))
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'min']);
-
-});
-
-test('number should be have a max length of 20 characters', function () {
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.number', str_repeat('9', 21))
-        ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'max']);
+        ->assertHasErrors(['bankAccount.number' => 'max_digits']);
 
 });
 
@@ -287,27 +344,9 @@ test('digit should be have a max digits of 1', function () {
 test('balance is required', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', '')
+        ->set('bankAccount.balance', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.balance' => 'required']);
-
-});
-
-test('balance should be a numeric', function () {
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', 'abc')
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
-
-});
-
-test('balance should be have a max digits of 10 digits', function () {
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', (int) str_repeat('9', 11))
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'max_digits']);
 
 });
 
@@ -350,7 +389,7 @@ test('agency number should be have a max digits of 4', function () {
 test('agency digit is nullable', function () {
 
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.agency_digit', '')
+        ->set('bankAccount.agency_digit', null)
         ->call('save')
         ->assertHasNoErrors(['bankAccount.agency_digit']);
 

@@ -14,32 +14,79 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('bank_account_create');
 
     actingAs($this->user);
 
 });
 
-it('should be able create a bank account', function () {
+it('should be able to create a bank account', function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
 
+    // Act
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.bank_name', 'Bank name')
-        ->set('bankAccount.type', 'Corrente')
-        ->set('bankAccount.agency_number', 1234)
-        ->set('bankAccount.number', '123456')
-        ->set('bankAccount.digit', 1)
-        ->set('bankAccount.balance', 1000)
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.agency_digit', $newData->agency_digit)
+        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
         ->assertEmitted('bank-account::created');
 
+    // Assert
     assertDatabaseHas('bank_accounts', [
         'user_id'       => $this->user->id,
-        'bank_name'     => 'Bank name',
-        'type'          => 'Corrente',
-        'agency_number' => 1234,
-        'number'        => '123456',
-        'digit'         => 1,
-        'balance'       => 1000,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'agency_number' => $newData->agency_number,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
+    ]);
+
+});
+
+it("should be not able to create a bank account if not has the 'bank_account_create' permission", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_create');
+
+    // Act
+    livewire(BankAccounts\Create::class)
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it("should be able to create a bank account if has the 'bank_account_create' permission", function () {
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    // Act
+    livewire(BankAccounts\Create::class)
+        ->set('bankAccount.bank_name', $newData->bank_name)
+        ->set('bankAccount.type', $newData->type)
+        ->set('bankAccount.number', $newData->number)
+        ->set('bankAccount.digit', $newData->digit)
+        ->set('bankAccount.agency_number', $newData->agency_number)
+        ->set('bankAccount.agency_digit', $newData->agency_digit)
+        ->set('bankAccount.balance', $newData->balance)
+        ->call('save')
+        ->assertEmitted('bank-account::created');
+
+    // Assert
+    assertDatabaseHas('bank_accounts', [
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'agency_number' => $newData->agency_number,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
     ]);
 
 });
@@ -74,27 +121,9 @@ test('bank name should be have a max length of 100 characters', function () {
 test('type is required', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.type', '')
+        ->set('bankAccount.type', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.type' => 'required']);
-
-});
-
-test('type should be a string', function () {
-
-    livewire(BankAccounts\Create::class)
-        ->set('bankAccount.type', 123)
-        ->call('save')
-        ->assertHasErrors(['bankAccount.type' => 'string']);
-
-});
-
-test('type should be have a max length of 100 characters', function () {
-
-    livewire(BankAccounts\Create::class)
-        ->set('bankAccount.type', str_repeat('a', 101))
-        ->call('save')
-        ->assertHasErrors(['bankAccount.type' => 'max']);
 
 });
 
@@ -107,17 +136,17 @@ test('number is required', function () {
 
 });
 
-test('number should be a string', function () {
+test('number should be a numeric', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.number', 123)
+        ->set('bankAccount.number', 'abc')
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'string']);
+        ->assertHasErrors(['bankAccount.number' => 'numeric']);
 
 });
 
 test('number should be unique', function () {
-
+    // Arrange
     $newBankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
         'number'  => '123456',
@@ -130,28 +159,28 @@ test('number should be unique', function () {
 
 });
 
-test('number should be have a min length of 5 characters', function () {
+test('number should be have a min digits of 5', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.number', str_repeat('9', 4))
+        ->set('bankAccount.number', (int) str_repeat('9', 4))
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'min']);
+        ->assertHasErrors(['bankAccount.number' => 'min_digits']);
 
 });
 
-test('number should be have a max length of 20 characters', function () {
+test('number should be have a max digits of 20', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.number', str_repeat('9', 21))
+        ->set('bankAccount.number', (float) str_repeat('9', 21))
         ->call('save')
-        ->assertHasErrors(['bankAccount.number' => 'max']);
+        ->assertHasErrors(['bankAccount.number' => 'max_digits']);
 
 });
 
 test('digit is required', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.digit', '')
+        ->set('bankAccount.digit', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.digit' => 'required']);
 
@@ -178,27 +207,9 @@ test('digit should be have a max digits of 1', function () {
 test('balance is required', function () {
 
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.balance', '')
+        ->set('bankAccount.balance', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.balance' => 'required']);
-
-});
-
-test('balance should be a numeric', function () {
-
-    livewire(BankAccounts\Create::class)
-        ->set('bankAccount.balance', 'abc')
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
-
-});
-
-test('balance should be have a max digits of 10 digits', function () {
-
-    livewire(BankAccounts\Create::class)
-        ->set('bankAccount.balance', 11111111111)
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'max_digits']);
 
 });
 

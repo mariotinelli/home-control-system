@@ -18,6 +18,10 @@ class Destroy extends Component
     {
         $this->authorize('delete', $this->bankAccount);
 
+        $this->bankAccount->entries()->delete();
+
+        $this->bankAccount->withdrawals()->delete();
+
         $this->bankAccount->delete();
 
         $this->emit('bank-account::destroyed');
