@@ -17,7 +17,7 @@ class Update extends Component
     public function rules(): array
     {
         return [
-            'withdraw.value'       => ['required', 'numeric', 'min:1', 'max_digits:10'],
+            'withdraw.value'       => ['required', 'decimal:2', 'min:1'],
             'withdraw.description' => ['required', 'string', 'max:255'],
             'withdraw.date'        => ['required', 'date'],
         ];
@@ -29,11 +29,9 @@ class Update extends Component
 
         $this->validate();
 
-        $this->withdraw->bankAccount->balance += $this->withdraw->getOriginal('value');
-
-        $this->withdraw->bankAccount->balance -= $this->withdraw->value;
-
-        $this->withdraw->bankAccount->save();
+        $this->withdraw->bankAccount->update([
+            'balance' => ($this->withdraw->bankAccount->balance + $this->withdraw->getOriginal('value') - $this->withdraw->value),
+        ]);
 
         $this->withdraw->save();
 
