@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire\BankAccounts;
 
+use App\Http\Requests\BankAccount\UpdateBankAccountRequest;
 use App\Models\BankAccount;
-use App\Rules\UpdateBankAccountBalance;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Update extends Component
@@ -18,15 +17,7 @@ class Update extends Component
 
     public function rules(): array
     {
-        return [
-            'bankAccount.bank_name'     => ['required', 'string', 'max:100'],
-            'bankAccount.type'          => ['required', 'string', 'max:100'],
-            'bankAccount.number'        => ['required', 'string', Rule::unique('bank_accounts', 'number')->ignore($this->bankAccount->id, 'id'), 'min:5', 'max:20'],
-            'bankAccount.digit'         => ['required', 'numeric', 'max_digits:1'],
-            'bankAccount.agency_number' => ['required', 'numeric', 'min_digits:4', 'max_digits:4'],
-            'bankAccount.agency_digit'  => ['nullable', 'numeric', 'max_digits:1'],
-            'bankAccount.balance'       => ['required', 'numeric', 'max_digits:10', new UpdateBankAccountBalance($this->bankAccount)],
-        ];
+        return (new UpdateBankAccountRequest($this->bankAccount))->rules();
     }
 
     public function save(): void
@@ -35,7 +26,7 @@ class Update extends Component
 
         $this->validate();
 
-        $this->bankAccount->save();
+        auth()->user()->bankAccounts()->save($this->bankAccount);
 
         $this->emit('bank-account::updated');
     }

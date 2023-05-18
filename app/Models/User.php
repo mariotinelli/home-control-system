@@ -55,6 +55,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'filament_roles',
     ];
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Administrador');
+    }
+
     public function canAccessFilament(): bool
     {
         return $this->hasPermissionTo('access_admin');
@@ -65,6 +70,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return new Attribute(function () {
             return $this->getRoleNames()->toArray();
         });
+    }
+
+    public function bankAccounts(): HasMany
+    {
+        return $this->hasMany(BankAccount::class);
     }
 
     public function coupleSpendingCategories(): HasMany
