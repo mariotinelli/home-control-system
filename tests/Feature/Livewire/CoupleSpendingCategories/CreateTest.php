@@ -43,8 +43,6 @@ it('should be able to create a new couple spending category', function () {
 
 it('should be not able to create a new couple spending category if no has permission', function () {
     // Arrange
-    $newData = CoupleSpendingCategory::factory()->makeOne();
-
     $this->user->revokePermissionTo('couple_spending_category_create');
 
     // Act - No has permission

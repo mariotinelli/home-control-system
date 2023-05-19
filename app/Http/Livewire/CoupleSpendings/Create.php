@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\CoupleSpendings;
 
-use App\Models\{CoupleSpending, CoupleSpendingCategory};
+use App\Models\{CoupleSpending};
+use App\Rules\CoupleSpendingCategoryOwnerRule;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -16,10 +17,14 @@ class Create extends Component
     public function getRules(): array
     {
         return [
-            'coupleSpending.couple_spending_category_id' => ['required', 'exists:couple_spending_categories,id'],
-            'coupleSpending.description'                 => ['required', 'string', 'max:255'],
-            'coupleSpending.amount'                      => ['required', 'numeric', 'min:1'],
-            'coupleSpending.date'                        => ['required', 'date'],
+            'coupleSpending.couple_spending_category_id' => [
+                'required',
+                'exists:couple_spending_categories,id',
+                new CoupleSpendingCategoryOwnerRule(),
+            ],
+            'coupleSpending.description' => ['required', 'string', 'max:255'],
+            'coupleSpending.amount'      => ['required', 'numeric', 'min:1'],
+            'coupleSpending.date'        => ['required', 'date'],
         ];
     }
 
@@ -28,10 +33,6 @@ class Create extends Component
         $this->authorize('create', CoupleSpending::class);
 
         $this->validate();
-
-        if (auth()->id() != CoupleSpendingCategory::find($this->coupleSpending->couple_spending_category_id)->user_id) {
-            abort(403);
-        }
 
         auth()->user()->coupleSpendings()->save($this->coupleSpending);
 

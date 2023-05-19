@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\CoupleSpendings;
 use App\Http\Livewire\CoupleSpendings;
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 
-use function Pest\Laravel\{actingAs};
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -50,12 +50,14 @@ it('should be able to update a couple spending', function () {
     $lw->assertHasNoErrors()
         ->assertEmitted('couple-spending::updated');
 
-    expect($this->coupleSpending->refresh())
-        ->user_id->toBe($this->user->id)
-        ->couple_spending_category_id->toBe($newData->couple_spending_category_id)
-        ->description->toBe($newData->description)
-        ->amount->toBe($newData->amount)
-        ->date->toBe($newData->date);
+    assertDatabaseHas('couple_spendings', [
+        'id'                          => $this->coupleSpending->id,
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $newData->couple_spending_category_id,
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
+    ]);
 
 });
 
@@ -63,9 +65,9 @@ it('should not be able to change category to a category that it doesnt own', fun
     // Arrange
     $newData = CoupleSpending::factory()->makeOne();
 
-    User::factory()->create()->coupleSpendingCategories()->save(
-        $category2 = CoupleSpendingCategory::factory()->create()
-    );
+    $category2 = CoupleSpendingCategory::factory()->create([
+        'user_id' => User::factory(),
+    ]);
 
     // Act
     livewire(CoupleSpendings\Update::class, ['coupleSpending' => $this->coupleSpending])
@@ -80,14 +82,10 @@ it('should not be able to change category to a category that it doesnt own', fun
 
 it('should be not able to update a couple spending if not owner', function () {
     // Arrange
-    $notOwner = User::factory()->create();
-
-    $notOwner->givePermissionTo('couple_spending_category_delete');
+    $coupleSpending2 = CoupleSpending::factory()->create();
 
     // Act
-    actingAs($notOwner);
-
-    livewire(CoupleSpendings\Update::class, ['coupleSpending' => $this->coupleSpending])
+    livewire(CoupleSpendings\Update::class, ['coupleSpending' => $coupleSpending2])
         ->call('save')
         ->assertForbidden();
 
@@ -184,6 +182,18 @@ test('amount is required', function () {
 
     // Assert
     $lw->assertHasErrors(['coupleSpending.amount' => 'required']);
+
+});
+
+test('amount must be numeric', function () {
+
+    // Act
+    $lw = livewire(CoupleSpendings\Update::class, ['coupleSpending' => $this->coupleSpending])
+        ->set('coupleSpending.amount', 'abc')
+        ->call('save');
+
+    // Assert
+    $lw->assertHasErrors(['coupleSpending.amount' => 'numeric']);
 
 });
 
