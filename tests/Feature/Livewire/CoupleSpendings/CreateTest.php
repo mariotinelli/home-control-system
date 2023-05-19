@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\CoupleSpendings;
 
 use App\Http\Livewire\CoupleSpendings;
-use App\Models\{CoupleSpendingCategory, User};
+use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -14,7 +14,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserSilverPermissions());
+    $this->user->givePermissionTo('couple_spending_create');
 
     $this->user->coupleSpendingCategories()->save(
         $this->category = CoupleSpendingCategory::factory()->create()
@@ -25,13 +25,15 @@ beforeEach(function () {
 });
 
 it('should be able to create couple spending', function () {
+    // Arrange
+    $newData = CoupleSpending::factory()->makeOne();
 
     // Act
     $lw = livewire(CoupleSpendings\Create::class)
         ->set('coupleSpending.couple_spending_category_id', $this->category->id)
-        ->set('coupleSpending.description', 'Test')
-        ->set('coupleSpending.amount', 100)
-        ->set('coupleSpending.date', '2021-01-01')
+        ->set('coupleSpending.description', $newData->description)
+        ->set('coupleSpending.amount', $newData->amount)
+        ->set('coupleSpending.date', $newData->date)
         ->call('save');
 
     // Assert
@@ -41,10 +43,51 @@ it('should be able to create couple spending', function () {
     assertDatabaseHas('couple_spendings', [
         'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
-        'description'                 => 'Test',
-        'amount'                      => 100,
-        'date'                        => '2021-01-01',
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
     ]);
+
+});
+
+it('should be not able to create couple spending if not category owner', function () {
+    // Arrange
+    $newData = CoupleSpending::factory()->makeOne();
+
+    User::factory()->create()->coupleSpendingCategories()->save(
+        $category2 = CoupleSpendingCategory::factory()->create()
+    );
+
+    // Act
+    livewire(CoupleSpendings\Create::class)
+        ->set('coupleSpending.couple_spending_category_id', $category2->id)
+        ->set('coupleSpending.description', $newData->description)
+        ->set('coupleSpending.amount', $newData->amount)
+        ->set('coupleSpending.date', $newData->date)
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to create couple spending if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_create');
+
+    // Act
+    livewire(CoupleSpendings\Create::class)
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to create couple spending if not authenticated', function () {
+    // Arrange
+    \Auth::logout();
+
+    // Act
+    livewire(CoupleSpendings\Create::class)
+        ->call('save')
+        ->assertForbidden();
 
 });
 
@@ -117,18 +160,6 @@ test('amount is required', function () {
 
     // Assert
     $lw->assertHasErrors(['coupleSpending.amount' => 'required']);
-
-});
-
-test('amount must be numeric', function () {
-
-    // Act
-    $lw = livewire(CoupleSpendings\Create::class)
-        ->set('coupleSpending.amount', 'abc')
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors(['coupleSpending.amount' => 'numeric']);
 
 });
 

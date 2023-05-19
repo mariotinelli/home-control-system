@@ -39,6 +39,21 @@ it('should be able to update a couple spending category', function () {
 
 });
 
+it('should be not able to update a couple spending category if not owner', function () {
+    // Arrange
+    $notOwner = User::factory()->create();
+
+    $notOwner->givePermissionTo('couple_spending_category_update');
+
+    actingAs($notOwner);
+
+    // Act
+    livewire(CoupleSpendingCategories\Update::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
 it('should be not able to update a couple spending category if not has permission', function () {
     // Arrange
     $this->user->revokePermissionTo('couple_spending_category_update');
