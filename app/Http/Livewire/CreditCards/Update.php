@@ -31,6 +31,14 @@ class Update extends Component
 
         $this->validate();
 
+        $this->creditCard->remaining_limit = $this->creditCard->limit - $this->creditCard->spendings()->sum('amount');
+
+        if ($this->creditCard->remaining_limit < 0) {
+            $this->addError('creditCard.limit', 'The limit is less than the sum of the spendings.');
+
+            return;
+        }
+
         $this->creditCard->save();
 
         $this->emit('credit-card::updated');

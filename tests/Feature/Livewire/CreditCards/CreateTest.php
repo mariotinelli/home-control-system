@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\CreditCards;
 
 use App\Http\Livewire\CreditCards;
-use App\Models\User;
+use App\Models\{CreditCard, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -11,31 +11,58 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('credit_card_create');
 
     actingAs($this->user);
 });
 
 it('should be able to create a credit card', function () {
+    // Arrange
+    $newData = CreditCard::factory()->makeOne();
 
+    // Act
     livewire(CreditCards\Create::class)
-        ->set('creditCard.bank', 'Test')
-        ->set('creditCard.number', '1234567890123456')
-        ->set('creditCard.expiration', '12/2030')
-        ->set('creditCard.cvv', '123')
-        ->set('creditCard.limit', 1000)
+        ->set('creditCard.bank', $newData->bank)
+        ->set('creditCard.number', $newData->number)
+        ->set('creditCard.expiration', $newData->expiration)
+        ->set('creditCard.cvv', $newData->cvv)
+        ->set('creditCard.limit', $newData->limit)
         ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('credit-card::created');
 
+    // Assert
     assertDatabaseHas('credit_cards', [
         'user_id'         => $this->user->id,
-        'bank'            => 'Test',
-        'number'          => '1234567890123456',
-        'expiration'      => '12/2030',
-        'cvv'             => '123',
-        'limit'           => 1000,
-        'remaining_limit' => 1000,
+        'bank'            => $newData->bank,
+        'number'          => $newData->number,
+        'expiration'      => $newData->expiration,
+        'cvv'             => $newData->cvv,
+        'limit'           => $newData->limit,
+        'remaining_limit' => $newData->limit,
     ]);
+
+});
+
+it('should be not able to create a credit card if not have permission to this', function () {
+    // Arrange
+    $this->user->revokePermissionTo('credit_card_create');
+
+    // Act
+    livewire(CreditCards\Create::class)
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should not be able to create a credit card if not authenticated', function () {
+    // Arrange
+    \Auth::logout();
+
+    // Act
+    livewire(CreditCards\Create::class)
+        ->call('save')
+        ->assertForbidden();
 
 });
 
