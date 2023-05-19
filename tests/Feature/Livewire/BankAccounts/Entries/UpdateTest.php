@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\BankAccounts\Entries;
 use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
 
-use function Pest\Laravel\{actingAs};
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -32,7 +32,7 @@ beforeEach(function () {
 
 });
 
-it("should be able to update a entry if are the account owner and has the 'bank_account_entry_update' permission", function () {
+it("should be able to update a entry", function () {
     // Arrange
     $newData = BankAccountEntry::factory()->makeOne();
 
@@ -46,45 +46,52 @@ it("should be able to update a entry if are the account owner and has the 'bank_
         ->assertEmitted('bank-account::entry::updated');
 
     // Assert
-    $oldEntryValue = $this->entry->getOriginal('value');
+    assertDatabaseHas('bank_account_entries', [
+        'id'          => $this->entry->id,
+        'value'       => $newData->value,
+        'description' => $newData->description,
+        'date'        => $newData->date,
+    ]);
 
-    $oldBalance = $this->bankAccount->balance;
-
-    expect($this->entry->refresh()->value)
-        ->toBe($newData->value)
-        ->and($this->entry->refresh())
-            ->description->toBe($newData->description)
-            ->date->toBe($newData->date);
-
-    $newBalance = number_format(($oldBalance - $oldEntryValue) + $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+    assertDatabaseHas('bank_accounts', [
+        'id'      => $this->bankAccount->id,
+        'user_id' => $this->user->id,
+        'balance' => ($this->bankAccount->balance - $this->entry->value) + $newData->value,
+    ]);
 
 });
 
 it('should be not able to update a entry if are not the account owner', function () {
     // Arrange
-    $user2 = User::factory()->createOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
-    $user2->givePermissionTo('bank_account_entry_update');
+    $bankAccount2->entries()->save(
+        $entry2 = BankAccountEntry::factory()->makeOne()
+    );
 
     // Act
-    actingAs($user2);
+    livewire(Entries\Update::class, ['entry' => $entry2])
+        ->call('save')
+        ->assertForbidden();
 
+});
+
+it("should be not able to update a entry if not has permission to this", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_entry_update');
+
+    // Act
     livewire(Entries\Update::class, ['entry' => $this->entry])
         ->call('save')
         ->assertForbidden();
 
 });
 
-it("should be not able to update a entry if not has the 'bank_account_entry_update' permission", function () {
+it("should be not able to update a entry if not authenticated", function () {
     // Arrange
-    $user2 = User::factory()->createOne();
+    \Auth::logout();
 
     // Act
-    actingAs($user2);
-
     livewire(Entries\Update::class, ['entry' => $this->entry])
         ->call('save')
         ->assertForbidden();
@@ -97,6 +104,15 @@ test('value is required', function () {
         ->set('entry.value', null)
         ->call('save')
         ->assertHasErrors(['entry.value' => 'required']);
+
+});
+
+test('value should be a numeric', function () {
+
+    livewire(Entries\Update::class, ['entry' => $this->entry])
+        ->set('entry.value', 'abc')
+        ->call('save')
+        ->assertHasErrors(['entry.value' => 'numeric']);
 
 });
 

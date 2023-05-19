@@ -12,8 +12,7 @@ class BankAccount extends Model
     use HasFactory;
 
     protected $casts = [
-        'type'    => BankAccountTypeEnum::class,
-        'balance' => 'decimal:2',
+        'type' => BankAccountTypeEnum::class,
     ];
 
     public function entries(): HasMany

@@ -6,7 +6,6 @@ use App\Models\{BankAccount, BankAccountEntry};
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
@@ -20,7 +19,7 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'entry.value'       => ['required', 'decimal:2', 'min:1'],
+            'entry.value'       => ['required', 'numeric', 'min:1'],
             'entry.description' => ['required', 'string', 'max:255'],
             'entry.date'        => ['required', 'date'],
         ];
@@ -32,15 +31,13 @@ class Create extends Component
 
         $this->validate();
 
-        Pipeline::send($this->entry)
-            ->through([
-                (new \App\Pipes\BankAccounts\Entries\AssignBankAccountEntry($this->bankAccount)),
-                (new \App\Pipes\BankAccounts\Entries\SaveEntry()),
-                (new \App\Pipes\BankAccounts\Entries\CalculateBankAccountBalance($this->bankAccount)),
-                (new \App\Pipes\BankAccounts\Entries\UpdateBankAccount($this->bankAccount)),
-                (new \App\Pipes\BankAccounts\Entries\EmitEntryCreated($this)),
-            ])
-            ->thenReturn();
+        $this->bankAccount->entries()->save($this->entry);
+
+        $this->bankAccount->update([
+            'balance' => $this->bankAccount->balance + $this->entry->value,
+        ]);
+
+        $this->emit('bank-account::entry::created');
     }
 
     public function mount(): void

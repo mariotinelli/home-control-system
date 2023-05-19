@@ -16,15 +16,15 @@ beforeEach(function () {
 
     $this->user->givePermissionTo('bank_account_entry_create');
 
-    $this->bankAccount = BankAccount::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->bankAccounts()->save(
+        $this->bankAccount = BankAccount::factory()->makeOne()
+    );
 
     actingAs($this->user);
 
 });
 
-it("should be able to create a new bank account entry if are the account owner and has the 'bank_account_entry_create' permission", function () {
+it("should be able to create a new entry", function () {
     // Arrange
     $newData = BankAccountEntry::factory()->makeOne();
 
@@ -45,37 +45,40 @@ it("should be able to create a new bank account entry if are the account owner a
         'date'            => $newData->date,
     ]);
 
-    $newBalance = number_format($this->bankAccount->balance + $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+    assertDatabaseHas('bank_accounts', [
+        'id'      => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance + $newData->value,
+    ]);
 
 });
 
 it('should be not able to create a new bank account entry if are not the account owner', function () {
     // Arrange
-    $user2 = User::factory()->createOne();
-
-    $user2->givePermissionTo('bank_account_entry_create');
+    $bankAccount2 = BankAccount::factory()->createOne();
 
     // Act
-    actingAs($user2);
+    livewire(Entries\Create::class, ['bankAccount' => $bankAccount2])
+        ->call('save')
+        ->assertForbidden();
 
+});
+
+it("should be not able to create a new bank account entry if not has permission to this", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_entry_create');
+
+    // Act
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
 
 });
 
-it("should be not able to create a new bank account entry if not has the 'bank_account_entry_create' permission", function () {
+it("should be not able to create a new bank account entry if not authenticated", function () {
     // Arrange
-    $user2 = User::factory()->createOne();
-
-    $user2->revokePermissionTo('bank_account_entry_create');
+    \Auth::logout();
 
     // Act
-    actingAs($user2);
-
     livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
@@ -88,6 +91,15 @@ test('value is required', function () {
         ->set('entry.value', null)
         ->call('save')
         ->assertHasErrors(['entry.value' => 'required']);
+
+});
+
+test('value should be a numeric', function () {
+
+    livewire(Entries\Create::class, ['bankAccount' => $this->bankAccount])
+        ->set('entry.value', 'test')
+        ->call('save')
+        ->assertHasErrors(['entry.value' => 'numeric']);
 
 });
 

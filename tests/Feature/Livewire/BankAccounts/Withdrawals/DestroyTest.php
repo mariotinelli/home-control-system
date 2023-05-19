@@ -51,62 +51,39 @@ it('should be able to delete a withdraw', function () {
 
 });
 
-it('should be not able to delete a withdraw if is not bank account owner', function () {
+it('should be not able to delete a withdraw if is not account owner', function () {
     // Arrange
-    $notOwner = User::factory()->createOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
-    $notOwner->givePermissionTo('bank_account_withdraw_delete');
+    $bankAccount2->withdrawals()->save(
+        $withdraw2 = BankAccountWithdraw::factory()->makeOne()
+    );
 
-    // Act - Not owner
-    actingAs($notOwner);
-
-    livewire(Withdrawals\Destroy::class, ['withdraw' => $this->withdraw])
+    // Act
+    livewire(Withdrawals\Destroy::class, ['withdraw' => $withdraw2])
         ->call('save')
         ->assertForbidden();
-
-    // Act - Owner
-    actingAs($this->user);
-
-    livewire(Withdrawals\Destroy::class, ['withdraw' => $this->withdraw])
-        ->call('save')
-        ->assertEmitted('bank-account::withdraw::deleted');
-
-    assertDatabaseMissing('bank_account_withdraws', [
-        'id' => $this->withdraw->id,
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance + $this->withdraw->value,
-    ]);
 
 });
 
-it('should be not able to delete a withdraw if is not has bank_account_withdraw_delete permission', function () {
+it('should be not able to delete a withdraw if is not authenticated', function () {
     // Arrange
-    $this->user->revokePermissionTo('bank_account_withdraw_delete');
+    \Auth::logout();
 
-    // Act - Not has permission
+    // Act
     livewire(Withdrawals\Destroy::class, ['withdraw' => $this->withdraw])
         ->call('save')
         ->assertForbidden();
 
-    // Act - Has permission
-    $this->user->givePermissionTo('bank_account_withdraw_delete');
+});
 
-    actingAs($this->user);
+it('should be not able to delete a withdraw if is not has permission to this', function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_withdraw_delete');
 
+    // Act
     livewire(Withdrawals\Destroy::class, ['withdraw' => $this->withdraw])
         ->call('save')
-        ->assertEmitted('bank-account::withdraw::deleted');
-
-    assertDatabaseMissing('bank_account_withdraws', [
-        'id' => $this->withdraw->id,
-    ]);
-
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance + $this->withdraw->value,
-    ]);
+        ->assertForbidden();
 
 });

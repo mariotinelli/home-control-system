@@ -50,7 +50,7 @@ it('should be able to create a bank account', function () {
 
 });
 
-it("should be not able to create a bank account if not has the 'bank_account_create' permission", function () {
+it("should be not able to create a bank account if not has permission to this", function () {
     // Arrange
     $this->user->revokePermissionTo('bank_account_create');
 
@@ -61,33 +61,14 @@ it("should be not able to create a bank account if not has the 'bank_account_cre
 
 });
 
-it("should be able to create a bank account if has the 'bank_account_create' permission", function () {
+it("should be not able to create a bank account if not authenticated", function () {
     // Arrange
-    $newData = BankAccount::factory()->makeOne();
+    \Auth::logout();
 
     // Act
     livewire(BankAccounts\Create::class)
-        ->set('bankAccount.bank_name', $newData->bank_name)
-        ->set('bankAccount.type', $newData->type)
-        ->set('bankAccount.number', $newData->number)
-        ->set('bankAccount.digit', $newData->digit)
-        ->set('bankAccount.agency_number', $newData->agency_number)
-        ->set('bankAccount.agency_digit', $newData->agency_digit)
-        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
-        ->assertEmitted('bank-account::created');
-
-    // Assert
-    assertDatabaseHas('bank_accounts', [
-        'user_id'       => $this->user->id,
-        'bank_name'     => $newData->bank_name,
-        'type'          => $newData->type,
-        'number'        => $newData->number,
-        'digit'         => $newData->digit,
-        'agency_number' => $newData->agency_number,
-        'agency_digit'  => $newData->agency_digit,
-        'balance'       => $newData->balance,
-    ]);
+        ->assertForbidden();
 
 });
 
@@ -210,6 +191,15 @@ test('balance is required', function () {
         ->set('bankAccount.balance', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.balance' => 'required']);
+
+});
+
+test('balance should be a numeric', function () {
+
+    livewire(BankAccounts\Create::class)
+        ->set('bankAccount.balance', 'abc')
+        ->call('save')
+        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
 
 });
 

@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\BankAccounts\Entries;
 use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
 
-use function Pest\Laravel\{actingAs, assertDatabaseMissing};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -32,7 +32,7 @@ beforeEach(function () {
 
 });
 
-it("should be able to delete a entry if are the account owner and has the 'bank_account_entry_delete' permission", function () {
+it("should be able to delete a entry", function () {
 
     // Act
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
@@ -44,35 +44,33 @@ it("should be able to delete a entry if are the account owner and has the 'bank_
         'id' => $this->entry->id,
     ]);
 
-    $newBalance = number_format($this->bankAccount->balance - $this->entry->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+    assertDatabaseHas('bank_accounts', [
+        'id'      => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance - $this->entry->value,
+    ]);
 
 });
 
 it('should be not able to delete a entry if are not the account owner', function () {
     // Arrange
-    $user2 = User::factory()->createOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
-    $user2->givePermissionTo('bank_account_entry_delete');
+    $bankAccount2->entries()->save(
+        $entry2 = BankAccountEntry::factory()->makeOne()
+    );
 
     // Act
-    actingAs($user2);
-
-    livewire(Entries\Destroy::class, ['entry' => $this->entry])
+    livewire(Entries\Destroy::class, ['entry' => $entry2])
         ->call('save')
         ->assertForbidden();
 
 });
 
-it("should be not able to delete a entry if not has the 'bank_account_entry_delete' permission", function () {
+it("should be not able to delete a entry if not has permission to this", function () {
     // Arrange
-    $user2 = User::factory()->createOne();
+    $this->user->revokePermissionTo('bank_account_entry_delete');
 
     // Act
-    actingAs($user2);
-
     livewire(Entries\Destroy::class, ['entry' => $this->entry])
         ->call('save')
         ->assertForbidden();
