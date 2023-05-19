@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\BankAccountTypeEnum;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class BankAccountFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id'       => User::factory(),
             'bank_name'     => fake()->sentence(1),
             'type'          => fake()->randomElement(BankAccountTypeEnum::toArray()),
             'number'        => rand(10000, 99999),

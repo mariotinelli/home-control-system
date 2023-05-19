@@ -11,7 +11,7 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->user->givePermissionTo(getUserSilverPermissions());
+    $this->user->givePermissionTo('couple_spending_category_delete');
 
     $this->user->coupleSpendingCategories()->save(
         $this->category = CoupleSpendingCategory::factory()->create()
@@ -31,13 +31,52 @@ it('should be able to delete a couple spending category', function () {
         ->assertEmitted('couple-spending-category::deleted');
 
     assertDatabaseMissing('couple_spending_categories', [
-        'id'      => $this->category->id,
-        'user_id' => $this->user->id,
+        'id' => $this->category->id,
     ]);
 
 });
 
-it('should not be able to delete a couple spending category if it has spending', function () {
+it('should be not able to delete a couple spending category if not owner', function () {
+
+    // Arrange
+    $notOwner = User::factory()->create();
+
+    $notOwner->givePermissionTo('couple_spending_category_delete');
+
+    actingAs($notOwner);
+
+    // Act
+    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to delete a couple spending category if not has permission', function () {
+
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_delete');
+
+    // Act
+    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to delete a couple spending category if not authenticated', function () {
+
+    // Arrange
+    \Auth::logout();
+
+    // Act
+    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to delete a couple spending category if has spending', function () {
 
     // Arrange
     $this->category->spendings()->save(
@@ -45,11 +84,8 @@ it('should not be able to delete a couple spending category if it has spending',
     );
 
     // Act
-    $lw = livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
-        ->call('save');
-
-    // Assert
-    $lw->assertHasErrors()
-        ->assertNotEmitted('couple-spending-category::deleted');
+    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+        ->call('save')
+        ->assertForbidden();
 
 });

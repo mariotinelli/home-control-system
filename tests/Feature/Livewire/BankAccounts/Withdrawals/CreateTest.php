@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\BankAccounts\Withdrawals;
 
 use App\Http\Livewire\BankAccounts\Withdrawals;
-use App\Models\{BankAccount, User};
+use App\Models\{BankAccount, BankAccountWithdraw, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -14,85 +14,105 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->bankAccounts()->save(
+        $this->bankAccount = BankAccount::factory()->makeOne()
+    );
 
-    $this->bankAccount = BankAccount::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->givePermissionTo('bank_account_withdraw_create');
 
     actingAs($this->user);
 
 });
 
-test('should be able to create a withdraw', function () {
+test("should be able to create a new bank account withdraw if are the account owner", function () {
+    // Arrange
+    $newData = BankAccountWithdraw::factory()->makeOne();
 
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', 100)
-        ->set('withdraw.description', 'Test')
-        ->set('withdraw.date', '2021-01-01')
-        ->call('save')
-        ->assertEmitted('bank-account::withdraw::created');
+    $notOwner = User::factory()->createOne();
 
-    assertDatabaseHas('bank_account_withdraws', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => 100,
-        'description'     => 'Test',
-        'date'            => '2021-01-01',
-    ]);
+    $notOwner->givePermissionTo('bank_account_withdraw_create');
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance - 100,
-    ]);
-
-});
-
-it('should be create a new withdraw in bank account only bank account owner', function () {
-
-    actingAs(User::factory()->createOne());
+    // Act - Not owner
+    actingAs($notOwner);
 
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
 
+    // Act - Owner
     actingAs($this->user);
 
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', 100)
-        ->set('withdraw.description', 'Test')
-        ->set('withdraw.date', now()->format('Y-m-d'))
+        ->set('withdraw.value', $newData->value)
+        ->set('withdraw.description', $newData->description)
+        ->set('withdraw.date', $newData->date)
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertEmitted('bank-account::withdraw::created');
+
+    // Assert
+    assertDatabaseHas('bank_account_withdraws', [
+        'bank_account_id' => $this->bankAccount->id,
+        'value'           => $newData->value,
+        'description'     => $newData->description,
+        'date'            => $newData->date,
+    ]);
+
+    $newBalance = number_format($this->bankAccount->balance - $newData->value, 2, '.', '');
+
+    expect($this->bankAccount->refresh())
+        ->balance->toBe($newBalance);
+
+});
+
+test("should be able to create a new bank account withdraw if has the 'bank_account_withdraw_create' permission", function () {
+    // Arrange
+    $newData = BankAccountWithdraw::factory()->makeOne();
+
+    $notHavePermission = User::factory()->createOne();
+
+    $notHavePermission->revokePermissionTo('bank_account_withdraw_create');
+
+    // Act - Not have permission
+    actingAs($notHavePermission);
+
+    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
+        ->call('save')
+        ->assertForbidden();
+
+    // Act - Have permission
+    actingAs($this->user);
+
+    $this->user->givePermissionTo('bank_account_withdraw_create');
+
+    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
+        ->set('withdraw.value', $newData->value)
+        ->set('withdraw.description', $newData->description)
+        ->set('withdraw.date', $newData->date)
         ->call('save')
         ->assertEmitted('bank-account::withdraw::created');
 
+    // Assert
     assertDatabaseHas('bank_account_withdraws', [
         'bank_account_id' => $this->bankAccount->id,
-        'value'           => 100,
-        'description'     => 'Test',
-        'date'            => now()->format('Y-m-d'),
+        'value'           => $newData->value,
+        'description'     => $newData->description,
+        'date'            => $newData->date,
     ]);
 
-    assertDatabaseHas('bank_accounts', [
-        'id'      => $this->bankAccount->id,
-        'balance' => $this->bankAccount->balance - 100,
-    ]);
+    $newBalance = number_format($this->bankAccount->balance - $newData->value, 2, '.', '');
+
+    expect($this->bankAccount->refresh())
+        ->balance->toBe($newBalance);
 
 });
 
 test('value is required', function () {
 
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', '')
+        ->set('withdraw.value', null)
         ->call('save')
         ->assertHasErrors(['withdraw.value' => 'required']);
-
-});
-
-test('value should be a number', function () {
-
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', 'test')
-        ->call('save')
-        ->assertHasErrors(['withdraw.value' => 'numeric']);
 
 });
 
@@ -102,20 +122,6 @@ test('value should be a greater than zero', function () {
         ->set('withdraw.value', -100)
         ->call('save')
         ->assertHasErrors(['withdraw.value' => 'min']);
-
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', 1)
-        ->call('save')
-        ->assertHasNoErrors(['withdraw.value' => 'min']);
-
-});
-
-test('value should be a less than 10 digits', function () {
-
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', 10000000000)
-        ->call('save')
-        ->assertHasErrors(['withdraw.value' => 'max_digits']);
 
 });
 

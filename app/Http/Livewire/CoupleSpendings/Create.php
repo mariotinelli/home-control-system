@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\CoupleSpendings;
 
-use App\Models\CoupleSpending;
+use App\Models\{CoupleSpending, CoupleSpendingCategory};
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
@@ -28,6 +28,10 @@ class Create extends Component
         $this->authorize('create', CoupleSpending::class);
 
         $this->validate();
+
+        if (auth()->id() != CoupleSpendingCategory::find($this->coupleSpending->couple_spending_category_id)->user_id) {
+            abort(403);
+        }
 
         auth()->user()->coupleSpendings()->save($this->coupleSpending);
 

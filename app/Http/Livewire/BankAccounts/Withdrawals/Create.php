@@ -19,7 +19,7 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'withdraw.value'       => ['required', 'numeric', 'min:1', 'max_digits:10'],
+            'withdraw.value'       => ['required', 'decimal:2', 'min:1'],
             'withdraw.description' => ['required', 'string', 'max:255'],
             'withdraw.date'        => ['required', 'date'],
         ];
@@ -31,13 +31,11 @@ class Create extends Component
 
         $this->validate();
 
-        $this->withdraw->bank_account_id = $this->bankAccount->id;
+        $this->bankAccount->withdrawals()->save($this->withdraw);
 
-        $this->withdraw->save();
-
-        $this->bankAccount->balance -= $this->withdraw->value;
-
-        $this->bankAccount->save();
+        $this->bankAccount->update([
+            'balance' => $this->bankAccount->balance - $this->withdraw->value,
+        ]);
 
         $this->emit('bank-account::withdraw::created');
     }

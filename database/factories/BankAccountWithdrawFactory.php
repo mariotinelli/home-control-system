@@ -19,7 +19,7 @@ class BankAccountWithdrawFactory extends Factory
         return [
             'value'           => $this->faker->randomFloat(2, 1, 1000),
             'bank_account_id' => \App\Models\BankAccount::factory(),
-            'description'     => $this->faker->sentence,
+            'description'     => $this->faker->sentence(1),
             'date'            => $this->faker->date(),
         ];
     }

@@ -14,4 +14,9 @@ class CoupleSpendingCategory extends Model
     {
         return $this->hasMany(CoupleSpending::class);
     }
+
+    public function user(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }
