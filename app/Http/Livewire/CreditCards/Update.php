@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\CreditCards;
 
 use App\Models\CreditCard;
+use App\Rules\RemainingLimitNotNegativeRule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,10 +19,16 @@ class Update extends Component
     {
         return [
             'creditCard.bank'       => ['required', 'string', 'max:100', 'min:3'],
-            'creditCard.number'     => ['required', 'string', 'max:16', 'min:16'],
+            'creditCard.number'     => ['required', 'numeric', 'max_digits:16', 'min_digits:16'],
             'creditCard.expiration' => ['required', 'string', 'max:7', 'min:7'],
             'creditCard.cvv'        => ['required', 'numeric', 'max_digits:3', 'min_digits:3'],
-            'creditCard.limit'      => ['required', 'numeric', 'max_digits:10', 'min_digits:2'],
+            'creditCard.limit'      => [
+                'required',
+                'numeric',
+                'max_digits:10',
+                'min_digits:2',
+                new RemainingLimitNotNegativeRule($this->creditCard),
+            ],
         ];
     }
 
@@ -32,12 +39,6 @@ class Update extends Component
         $this->validate();
 
         $this->creditCard->remaining_limit = $this->creditCard->limit - $this->creditCard->spendings()->sum('amount');
-
-        if ($this->creditCard->remaining_limit < 0) {
-            $this->addError('creditCard.limit', 'The limit is less than the sum of the spendings.');
-
-            return;
-        }
 
         $this->creditCard->save();
 

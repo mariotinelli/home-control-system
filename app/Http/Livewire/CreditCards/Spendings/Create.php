@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\CreditCards\Spendings;
 
 use App\Models\{CreditCard, Spending};
+use App\Rules\AmountNotGreaterThanRemainingLimitRule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
@@ -20,7 +20,11 @@ class Create extends Component
     public function getRules(): array
     {
         return [
-            'spending.amount'      => ['required', 'numeric', 'max_digits:10'],
+            'spending.amount' => ['required',
+                'numeric',
+                'max_digits:10',
+                new AmountNotGreaterThanRemainingLimitRule($this->creditCard),
+            ],
             'spending.description' => ['required', 'string', 'max:255'],
         ];
     }
@@ -31,15 +35,13 @@ class Create extends Component
 
         $this->validate();
 
-        Pipeline::send($this->spending)
-            ->through([
-                (new \App\Pipes\Spending\CalculateRemainingLimit($this->creditCard)),
-                (new \App\Pipes\Spending\UpdateCreditCard($this->creditCard)),
-                (new \App\Pipes\Spending\AssignCreditCardSpeding($this->creditCard)),
-                \App\Pipes\Spending\SaveSpending::class,
-                (new \App\Pipes\Spending\EmitSpendingCreated($this)),
-            ])
-            ->thenReturn();
+        $this->creditCard->update([
+            'remaining_limit' => $this->creditCard->remaining_limit - $this->spending->amount,
+        ]);
+
+        $this->creditCard->spendings()->save($this->spending);
+
+        $this->emit('credit-card::spending::created');
     }
 
     public function mount(): void

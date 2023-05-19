@@ -116,32 +116,32 @@ test('number is required', function () {
 
 });
 
-test('number should be a string', function () {
+test('number should be a numeric', function () {
 
     livewire(CreditCards\Create::class)
-        ->set('creditCard.number', 123)
+        ->set('creditCard.number', 'abc')
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'string'])
+        ->assertHasErrors(['creditCard.number' => 'numeric'])
         ->assertNotEmitted('credit-card::created');
 
 });
 
-test('number should be have a max of 16 characters', function () {
+test('number should be have a max of 16 digits', function () {
 
     livewire(CreditCards\Create::class)
-        ->set('creditCard.number', str_repeat('1', 17))
+        ->set('creditCard.number', (int) str_repeat('1', 17))
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'max'])
+        ->assertHasErrors(['creditCard.number' => 'max_digits'])
         ->assertNotEmitted('credit-card::created');
 
 });
 
-test('number should be have a min of 16 characters', function () {
+test('number should be have a min of 16 digits', function () {
 
     livewire(CreditCards\Create::class)
-        ->set('creditCard.number', str_repeat('1', 15))
+        ->set('creditCard.number', (int) str_repeat('1', 15))
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'min'])
+        ->assertHasErrors(['creditCard.number' => 'min_digits'])
         ->assertNotEmitted('credit-card::created');
 
 });

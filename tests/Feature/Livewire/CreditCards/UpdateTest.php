@@ -49,7 +49,7 @@ it('should be able to update a credit card', function () {
 
 });
 
-it('correctly update the remaining limit when there are spending', function () {
+it('correctly update the remaining limit when change limit and there are spending', function () {
     // Arrange
     $newData = CreditCard::factory()->makeOne([
         'limit'           => $this->creditCard->limit * 2,
@@ -197,32 +197,31 @@ test('number is required', function () {
 
 });
 
-test('number should be a string', function () {
+test('number should be a numeric', function () {
 
     livewire(CreditCards\Update::class, ['creditCard' => $this->creditCard])
-        ->set('creditCard.number', 123)
+        ->set('creditCard.number', 'abc')
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'string'])
+        ->assertHasErrors(['creditCard.number' => 'numeric'])
         ->assertNotEmitted('credit-card::created');
-
 });
 
-test('number should be have a max of 16 characters', function () {
+test('number should be have a max of 16 digits', function () {
 
     livewire(CreditCards\Update::class, ['creditCard' => $this->creditCard])
         ->set('creditCard.number', str_repeat('1', 17))
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'max'])
+        ->assertHasErrors(['creditCard.number' => 'max_digits'])
         ->assertNotEmitted('credit-card::created');
 
 });
 
-test('number should be have a min of 16 characters', function () {
+test('number should be have a min of 16 digits', function () {
 
     livewire(CreditCards\Update::class, ['creditCard' => $this->creditCard])
         ->set('creditCard.number', str_repeat('1', 15))
         ->call('save')
-        ->assertHasErrors(['creditCard.number' => 'min'])
+        ->assertHasErrors(['creditCard.number' => 'min_digits'])
         ->assertNotEmitted('credit-card::created');
 
 });
@@ -310,7 +309,7 @@ test('cvv should be have a min of 3 digits', function () {
 test('limit is required', function () {
 
     livewire(CreditCards\Update::class, ['creditCard' => $this->creditCard])
-        ->set('creditCard.limit', '')
+        ->set('creditCard.limit', null)
         ->call('save')
         ->assertHasErrors(['creditCard.limit' => 'required'])
         ->assertNotEmitted('credit-card::created');

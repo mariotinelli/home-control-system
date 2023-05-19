@@ -6,7 +6,6 @@ use App\Models\Spending;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Destroy extends Component
@@ -19,14 +18,13 @@ class Destroy extends Component
     {
         $this->authorize('delete', $this->spending);
 
-        Pipeline::send($this->spending)
-            ->through([
-                (new \App\Pipes\Spending\ReverseRemainingLimit($this->spending->amount, $this->spending->creditCard)),
-                (new \App\Pipes\Spending\UpdateCreditCard($this->spending->creditCard)),
-                \App\Pipes\Spending\DeleteSpending::class,
-                (new \App\Pipes\Spending\EmitSpendingDeleted($this)),
-            ])
-            ->thenReturn();
+        $this->spending->creditCard->update([
+            'remaining_limit' => $this->spending->creditCard->remaining_limit + $this->spending->amount,
+        ]);
+
+        $this->spending->delete();
+
+        $this->emit('credit-card::spending::deleted');
     }
 
     public function render(): View|Factory|Application

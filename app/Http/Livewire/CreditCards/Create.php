@@ -7,7 +7,6 @@ use App\Pipes\CreditCard\{AssignCreditCardOwner, AssignCreditCardRemainingLimit,
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
@@ -20,7 +19,7 @@ class Create extends Component
     {
         return [
             'creditCard.bank'       => ['required', 'string', 'max:100', 'min:3'],
-            'creditCard.number'     => ['required', 'string', 'max:16', 'min:16'],
+            'creditCard.number'     => ['required', 'numeric', 'max_digits:16', 'min_digits:16'],
             'creditCard.expiration' => ['required', 'string', 'max:7', 'min:7'],
             'creditCard.cvv'        => ['required', 'numeric', 'max_digits:3', 'min_digits:3'],
             'creditCard.limit'      => ['required', 'numeric', 'max_digits:10', 'min_digits:2'],
@@ -33,14 +32,11 @@ class Create extends Component
 
         $this->validate();
 
-        Pipeline::send($this->creditCard)
-            ->through([
-                AssignCreditCardOwner::class,
-                AssignCreditCardRemainingLimit::class,
-                SaveCreditCard::class,
-                (new EmitCreditCardCreated($this)),
-            ])
-            ->then(fn (CreditCard $creditCard) => $creditCard);
+        $this->creditCard->remaining_limit = $this->creditCard->limit;
+
+        auth()->user()->creditCards()->save($this->creditCard);
+
+        $this->emit('credit-card::created');
     }
 
     public function mount(): void
