@@ -39,14 +39,10 @@ it('should be able to delete a couple spending category', function () {
 it('should be not able to delete a couple spending category if not owner', function () {
 
     // Arrange
-    $notOwner = User::factory()->create();
-
-    $notOwner->givePermissionTo('couple_spending_category_delete');
-
-    actingAs($notOwner);
+    $category2 = CoupleSpendingCategory::factory()->create();
 
     // Act
-    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $this->category])
+    livewire(CoupleSpendingCategories\Destroy::class, ['category' => $category2])
         ->call('save')
         ->assertForbidden();
 

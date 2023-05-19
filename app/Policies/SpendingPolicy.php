@@ -2,47 +2,36 @@
 
 namespace App\Policies;
 
-use App\Models\{Spending, User};
+use App\Models\{CreditCard, Spending, User};
 
 class SpendingPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
         return $user->hasPermissionTo('credit_card_spending_read');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Spending $creditCardSpending): bool
     {
-        return $user->hasPermissionTo('credit_card_spending_read');
+        return $user->hasPermissionTo('credit_card_spending_read')
+            && $user->id === $creditCardSpending->creditCard->user_id;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(User $user, CreditCard $creditCard): bool
     {
-        return $user->hasPermissionTo('credit_card_spending_create');
+        return $user->hasPermissionTo('credit_card_spending_create')
+            && $user->id === $creditCard->user_id;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Spending $creditCardSpending): bool
     {
-        return $user->hasPermissionTo('credit_card_spending_update');
+        return $user->hasPermissionTo('credit_card_spending_update')
+            && $user->id === $creditCardSpending->creditCard->user_id;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, Spending $creditCardSpending): bool
     {
-        return $user->hasPermissionTo('credit_card_spending_delete');
+        return $user->hasPermissionTo('credit_card_spending_delete')
+            && $user->id === $creditCardSpending->creditCard->user_id;
     }
 }

@@ -11,17 +11,17 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('credit_card_spending_update');
 
-    $this->creditCard = CreditCard::factory()->create([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->creditCards()->save(
+        $this->creditCard = CreditCard::factory()->makeOne()
+    );
 
-    $this->oldRemainingLimit = $this->creditCard->remaining_limit;
-
-    $this->spending = Spending::factory()->create([
-        'credit_card_id' => $this->creditCard->id,
-    ]);
+    $this->creditCard->spendings()->save(
+        $this->spending = Spending::factory()->makeOne([
+            'amount' => $this->creditCard->remaining_limit,
+        ])
+    );
 
     $this->creditCard->update([
         'remaining_limit' => $this->creditCard->remaining_limit - $this->spending->amount,
@@ -32,73 +32,82 @@ beforeEach(function () {
 
 it('should be able to update a spending', function () {
 
-    assertDatabaseHas('spendings', [
-        'credit_card_id' => $this->creditCard->id,
-        'amount'         => $this->spending->amount,
-        'description'    => $this->spending->description,
+    // Arrange
+    $newData = Spending::factory()->makeOne([
+        'amount' => ($this->creditCard->remaining_limit + $this->spending->amount) - 1,
     ]);
 
-    assertDatabaseHas('credit_cards', [
-        'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->creditCard->remaining_limit,
-    ]);
-
+    // Act
     livewire(Spendings\Update::class, ['spending' => $this->spending])
-        ->set('spending.amount', 500)
-        ->set('spending.description', 'Test Update')
+        ->set('spending.amount', $newData->amount)
+        ->set('spending.description', $newData->description)
         ->call('save')
+        ->assertHasNoErrors()
         ->assertEmitted('credit-card::spending::updated');
 
+    // Assert
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount'         => 500,
-        'description'    => 'Test Update',
+        'amount'         => $newData->amount,
+        'description'    => $newData->description,
     ]);
 
     assertDatabaseHas('credit_cards', [
         'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->oldRemainingLimit - 500,
+        'user_id'         => $this->user->id,
+        'remaining_limit' => ($this->creditCard->remaining_limit + $this->spending->amount) - $newData->amount,
     ]);
 
 });
 
-it('only credit card owner should be able to update a spending', function () {
+it('should be not able to update spending amount to greater than remaining limit', function () {
+    // Arrange
+    $newData = Spending::factory()->makeOne([
+        'amount' => ($this->creditCard->remaining_limit + $this->spending->amount) + 1,
+    ]);
 
-    actingAs(User::factory()->create());
+    // Act
+    livewire(Spendings\Update::class, ['spending' => $this->spending])
+        ->set('spending.amount', $newData->amount)
+        ->call('save')
+        ->assertHasErrors(['spending.amount']);
 
+});
+
+it('should be not able to update a spending if not credit card owner', function () {
+    // Arrange
+    $creditCard2 = CreditCard::factory()->create();
+
+    $creditCard2->spendings()->save(
+        $spending2 = Spending::factory()->makeOne()
+    );
+
+    // Act
+    livewire(Spendings\Update::class, ['spending' => $spending2])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to update a spending if not has permission to this', function () {
+    // Arrange
+    $this->user->revokePermissionTo('credit_card_spending_update');
+
+    // Act
     livewire(Spendings\Update::class, ['spending' => $this->spending])
         ->call('save')
         ->assertForbidden();
 
-    assertDatabaseHas('spendings', [
-        'credit_card_id' => $this->creditCard->id,
-        'amount'         => $this->spending->amount,
-        'description'    => $this->spending->description,
-    ]);
+});
 
-    assertDatabaseHas('credit_cards', [
-        'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->creditCard->remaining_limit,
-    ]);
+it('should be not able to update a spending if not authenticated', function () {
+    // Arrange
+    \Auth::logout();
 
-    actingAs($this->user);
-
+    // Act
     livewire(Spendings\Update::class, ['spending' => $this->spending])
-        ->set('spending.amount', 500)
-        ->set('spending.description', 'Test Update')
         ->call('save')
-        ->assertEmitted('credit-card::spending::updated');
-
-    assertDatabaseHas('spendings', [
-        'credit_card_id' => $this->creditCard->id,
-        'amount'         => 500,
-        'description'    => 'Test Update',
-    ]);
-
-    assertDatabaseHas('credit_cards', [
-        'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->oldRemainingLimit - 500,
-    ]);
+        ->assertForbidden();
 
 });
 

@@ -54,9 +54,9 @@ it('should be not able to create couple spending if not category owner', functio
     // Arrange
     $newData = CoupleSpending::factory()->makeOne();
 
-    User::factory()->create()->coupleSpendingCategories()->save(
-        $category2 = CoupleSpendingCategory::factory()->create()
-    );
+    $category2 = CoupleSpendingCategory::factory()->create([
+        'user_id' => User::factory(),
+    ]);
 
     // Act
     livewire(CoupleSpendings\Create::class)
@@ -160,6 +160,18 @@ test('amount is required', function () {
 
     // Assert
     $lw->assertHasErrors(['coupleSpending.amount' => 'required']);
+
+});
+
+test('amount must be numeric', function () {
+
+    // Act
+    $lw = livewire(CoupleSpendings\Create::class)
+        ->set('coupleSpending.amount', 'abc')
+        ->call('save');
+
+    // Assert
+    $lw->assertHasErrors(['coupleSpending.amount' => 'numeric']);
 
 });
 

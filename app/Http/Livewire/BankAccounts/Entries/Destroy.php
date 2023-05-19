@@ -6,7 +6,6 @@ use App\Models\BankAccountEntry;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Destroy extends Component
@@ -19,14 +18,13 @@ class Destroy extends Component
     {
         $this->authorize('delete', $this->entry);
 
-        Pipeline::send($this->entry)
-            ->through([
-                (new \App\Pipes\BankAccounts\Entries\ReverseBankAccountBalance($this->entry->bankAccount, $this->entry->getOriginal('value'))),
-                (new \App\Pipes\BankAccounts\Entries\UpdateBankAccount($this->entry->bankAccount)),
-                (new \App\Pipes\BankAccounts\Entries\DeleteBankAccountEntry()),
-                (new \App\Pipes\BankAccounts\Entries\EmitBankAccountEntryDeleted($this)),
-            ])
-            ->thenReturn();
+        $this->entry->bankAccount->update([
+            'balance' => $this->entry->bankAccount->balance - $this->entry->value,
+        ]);
+
+        $this->entry->delete();
+
+        $this->emit('bank-account::entry::deleted');
     }
 
     public function render(): View|Factory|Application

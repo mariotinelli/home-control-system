@@ -47,14 +47,10 @@ it('should be able to delete couple spending', function () {
 it('should be not able to delete couple spending if not owner', function () {
 
     // Arrange
-    $notOwner = User::factory()->create();
-
-    $notOwner->givePermissionTo('couple_spending_delete');
-
-    actingAs($notOwner);
+    $coupleSpending2 = CoupleSpending::factory()->create();
 
     // Act
-    livewire(CoupleSpendings\Destroy::class, ['coupleSpending' => $this->coupleSpending])
+    livewire(CoupleSpendings\Destroy::class, ['coupleSpending' => $coupleSpending2])
         ->call('save')
         ->assertForbidden();
 

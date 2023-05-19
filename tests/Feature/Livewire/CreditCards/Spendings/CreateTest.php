@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\CreditCards\Spendings;
 
 use App\Http\Livewire\CreditCards\Spendings;
-use App\Models\{CreditCard, User};
+use App\Models\{CreditCard, Spending, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
@@ -11,67 +11,91 @@ use function Pest\Livewire\livewire;
 beforeEach(function () {
     $this->user = User::factory()->create();
 
-    $this->user->givePermissionTo(getUserPermissions());
+    $this->user->givePermissionTo('credit_card_spending_create');
 
-    $this->creditCard = CreditCard::factory()->create([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->creditCards()->save(
+        $this->creditCard = CreditCard::factory()->makeOne()
+    );
 
     actingAs($this->user);
 });
 
-it('should be able create a spending', function () {
+it('should be able to create a spending', function () {
+    // Arrange
+    $newData = Spending::factory()->makeOne([
+        'amount' => $this->creditCard->remaining_limit - 1,
+    ]);
 
+    // Act
     livewire(Spendings\Create::class, ['creditCard' => $this->creditCard])
-        ->set('spending.amount', 100)
-        ->set('spending.description', 'Test')
+        ->set('spending.amount', $newData->amount)
+        ->set('spending.description', $newData->description)
         ->call('save')
         ->assertEmitted('credit-card::spending::created');
 
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount'         => 100,
-        'description'    => 'Test',
+        'amount'         => $newData->amount,
+        'description'    => $newData->description,
     ]);
 
     assertDatabaseHas('credit_cards', [
         'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->creditCard->remaining_limit - 100,
+        'remaining_limit' => $this->creditCard->remaining_limit - $newData->amount,
     ]);
 
 });
 
-it('should be able create a spending in credit card only owner', function () {
+it('should be not able to create a spending greater than remaining limit', function () {
+    // Arrange
+    $newData = Spending::factory()->makeOne([
+        'amount' => $this->creditCard->remaining_limit + 1,
+    ]);
 
-    actingAs(User::factory()->create());
+    // Act
+    livewire(Spendings\Create::class, ['creditCard' => $this->creditCard])
+        ->set('spending.amount', $newData->amount)
+        ->call('save')
+        ->assertHasErrors(['spending.amount']);
 
+});
+
+it('should be not able to create a spending if not credit card owner', function () {
+    // Arrange
+    $creditCard2 = CreditCard::factory()->create();
+
+    // Act
+    livewire(Spendings\Create::class, ['creditCard' => $creditCard2])
+        ->call('save')
+        ->assertForbidden();
+
+});
+
+it('should be not able to create a spending if not has permission to this', function () {
+    // Arrange
+    $this->user->revokePermissionTo('credit_card_spending_create');
+
+    // Act
     livewire(Spendings\Create::class, ['creditCard' => $this->creditCard])
         ->call('save')
         ->assertForbidden();
 
-    actingAs($this->user);
+});
 
+it('should be not able to create a spending if not authenticated', function () {
+    // Arrange
+    \Auth::logout();
+
+    // Act
     livewire(Spendings\Create::class, ['creditCard' => $this->creditCard])
-        ->set('spending.amount', 100)
-        ->set('spending.description', 'Test')
         ->call('save')
-        ->assertEmitted('credit-card::spending::created');
+        ->assertForbidden();
 
-    assertDatabaseHas('spendings', [
-        'credit_card_id' => $this->creditCard->id,
-        'amount'         => 100,
-        'description'    => 'Test',
-    ]);
-
-    assertDatabaseHas('credit_cards', [
-        'id'              => $this->creditCard->id,
-        'remaining_limit' => $this->creditCard->remaining_limit - 100,
-    ]);
 });
 
 test('amount is required', function () {
     livewire(Spendings\Create::class, ['creditCard' => $this->creditCard])
-        ->set('spending.amount', '')
+        ->set('spending.amount', null)
         ->call('save')
         ->assertHasErrors(['spending.amount' => 'required']);
 });

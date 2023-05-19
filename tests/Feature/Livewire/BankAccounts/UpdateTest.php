@@ -16,9 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo('bank_account_update');
 
-    $this->bankAccount = BankAccount::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->bankAccounts()->save(
+        $this->bankAccount = BankAccount::factory()->makeOne()
+    );
 
     actingAs($this->user);
 
@@ -53,52 +53,18 @@ it('should be able to update a bank account', function () {
 
 });
 
-it('should be able to update a bank account if own it', function () {
+it('should be not able to update a bank account if not own it', function () {
     // Arrange
-    $newData = BankAccount::factory()->makeOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
     // Act
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.bank_name', $newData->bank_name)
-        ->set('bankAccount.type', $newData->type)
-        ->set('bankAccount.number', $newData->number)
-        ->set('bankAccount.digit', $newData->digit)
-        ->set('bankAccount.agency_number', $newData->agency_number)
-        ->set('bankAccount.agency_digit', $newData->agency_digit)
-        ->set('bankAccount.balance', $newData->balance)
-        ->call('save')
-        ->assertHasNoErrors()
-        ->assertEmitted('bank-account::updated');
-
-    // Assert
-    expect($this->bankAccount->refresh())
-        ->user_id->toBe($this->user->id)
-        ->bank_name->toBe($newData->bank_name)
-        ->type->toBe($newData->type)
-        ->number->toBe($newData->number)
-        ->digit->toBe($newData->digit)
-        ->agency_number->toBe($newData->agency_number)
-        ->agency_digit->toBe($newData->agency_digit)
-        ->balance->toBe($newData->balance);
-
-});
-
-it('should not be able to update a bank account if not own it', function () {
-    // Arrange
-    $user2 = User::factory()->createOne();
-
-    $user2->givePermissionTo('bank_account_update');
-
-    // Act
-    actingAs($user2);
-
-    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+    livewire(BankAccounts\Update::class, ['bankAccount' => $bankAccount2])
         ->call('save')
         ->assertForbidden();
 
 });
 
-it("should be not able to update a bank account if not has the 'bank account update' permission", function () {
+it("should be not able to update a bank account if not has permission to this", function () {
     // Arrange
     $this->user->revokePermissionTo('bank_account_update');
 
@@ -109,33 +75,14 @@ it("should be not able to update a bank account if not has the 'bank account upd
 
 });
 
-it("should be able to update a bank account if has the 'bank account update' permission", function () {
+it("should be not able to update a bank account if not authenticated", function () {
     // Arrange
-    $newData = BankAccount::factory()->makeOne();
+    \Auth::logout();
 
     // Act
     livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.bank_name', $newData->bank_name)
-        ->set('bankAccount.type', $newData->type)
-        ->set('bankAccount.number', $newData->number)
-        ->set('bankAccount.digit', $newData->digit)
-        ->set('bankAccount.agency_number', $newData->agency_number)
-        ->set('bankAccount.agency_digit', $newData->agency_digit)
-        ->set('bankAccount.balance', $newData->balance)
         ->call('save')
-        ->assertHasNoErrors()
-        ->assertEmitted('bank-account::updated');
-
-    // Assert
-    expect($this->bankAccount->refresh())
-        ->user_id->toBe($this->user->id)
-        ->bank_name->toBe($newData->bank_name)
-        ->type->toBe($newData->type)
-        ->number->toBe($newData->number)
-        ->digit->toBe($newData->digit)
-        ->agency_number->toBe($newData->agency_number)
-        ->agency_digit->toBe($newData->agency_digit)
-        ->balance->toBe($newData->balance);
+        ->assertForbidden();
 
 });
 
@@ -175,7 +122,7 @@ it('should be not able to update a balance when exists withdraws', function () {
 
 });
 
-it('should be not able to update a balance when not exists entries and withdraws', function () {
+it('should be able to update a balance when not exists entries and withdraws', function () {
     // Arrange
     $newData = BankAccount::factory()->makeOne();
 
@@ -196,15 +143,15 @@ it('should be not able to update a balance when not exists entries and withdraws
         ->assertEmitted('bank-account::updated');
 
     // Assert
-    expect($this->bankAccount->refresh())
-        ->user_id->toBe($this->user->id)
-        ->bank_name->toBe($newData->bank_name)
-        ->type->toBe($newData->type)
-        ->number->toBe($newData->number)
-        ->digit->toBe($newData->digit)
-        ->agency_number->toBe($newData->agency_number)
-        ->agency_digit->toBe($newData->agency_digit)
-        ->balance->toBe($newData->balance);
+    assertDatabaseHas('bank_accounts', [
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'agency_number' => $newData->agency_number,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'balance'       => $newData->balance,
+    ]);
 
 });
 
@@ -347,6 +294,15 @@ test('balance is required', function () {
         ->set('bankAccount.balance', null)
         ->call('save')
         ->assertHasErrors(['bankAccount.balance' => 'required']);
+
+});
+
+test('balance should be a numeric', function () {
+
+    livewire(BankAccounts\Update::class, ['bankAccount' => $this->bankAccount])
+        ->set('bankAccount.balance', 'abc')
+        ->call('save')
+        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
 
 });
 

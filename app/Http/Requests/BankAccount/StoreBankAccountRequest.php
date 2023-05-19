@@ -26,7 +26,7 @@ class StoreBankAccountRequest extends FormRequest
             'bankAccount.digit'         => ['required', 'numeric', 'max_digits:1'],
             'bankAccount.agency_number' => ['required', 'numeric', 'min_digits:4', 'max_digits:4'],
             'bankAccount.agency_digit'  => ['nullable', 'numeric', 'max_digits:1'],
-            'bankAccount.balance'       => ['required', 'decimal:2'],
+            'bankAccount.balance'       => ['required', 'numeric'],
         ];
     }
 }

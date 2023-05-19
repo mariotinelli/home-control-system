@@ -10,10 +10,6 @@ class CoupleSpending extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'amount' => 'decimal:2',
-    ];
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(CoupleSpendingCategory::class, 'couple_spending_category_id');

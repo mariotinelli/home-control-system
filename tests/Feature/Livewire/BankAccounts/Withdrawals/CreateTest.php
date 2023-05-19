@@ -24,24 +24,11 @@ beforeEach(function () {
 
 });
 
-test("should be able to create a new bank account withdraw if are the account owner", function () {
+test("should be able to create a new withdraw", function () {
     // Arrange
     $newData = BankAccountWithdraw::factory()->makeOne();
 
-    $notOwner = User::factory()->createOne();
-
-    $notOwner->givePermissionTo('bank_account_withdraw_create');
-
-    // Act - Not owner
-    actingAs($notOwner);
-
-    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->call('save')
-        ->assertForbidden();
-
-    // Act - Owner
-    actingAs($this->user);
-
+    // Act
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
         ->set('withdraw.value', $newData->value)
         ->set('withdraw.description', $newData->description)
@@ -58,52 +45,43 @@ test("should be able to create a new bank account withdraw if are the account ow
         'date'            => $newData->date,
     ]);
 
-    $newBalance = number_format($this->bankAccount->balance - $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+    assertDatabaseHas('bank_accounts', [
+        'id'      => $this->bankAccount->id,
+        'balance' => $this->bankAccount->balance - $newData->value,
+    ]);
 
 });
 
-test("should be able to create a new bank account withdraw if has the 'bank_account_withdraw_create' permission", function () {
+test("should be not able to create a new withdraw if not account owner", function () {
     // Arrange
-    $newData = BankAccountWithdraw::factory()->makeOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
-    $notHavePermission = User::factory()->createOne();
+    // Act
+    livewire(Withdrawals\Create::class, ['bankAccount' => $bankAccount2])
+        ->call('save')
+        ->assertForbidden();
 
-    $notHavePermission->revokePermissionTo('bank_account_withdraw_create');
+});
 
-    // Act - Not have permission
-    actingAs($notHavePermission);
+test("should be not able to create a new withdraw if not authenticated", function () {
+    // Arrange
+    \Auth::logout();
 
+    // Act
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
         ->call('save')
         ->assertForbidden();
 
-    // Act - Have permission
-    actingAs($this->user);
+});
 
-    $this->user->givePermissionTo('bank_account_withdraw_create');
+test("should be not able to create a new withdraw if not has permission to this", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_withdraw_create');
 
+    // Act
     livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
-        ->set('withdraw.value', $newData->value)
-        ->set('withdraw.description', $newData->description)
-        ->set('withdraw.date', $newData->date)
         ->call('save')
-        ->assertEmitted('bank-account::withdraw::created');
-
-    // Assert
-    assertDatabaseHas('bank_account_withdraws', [
-        'bank_account_id' => $this->bankAccount->id,
-        'value'           => $newData->value,
-        'description'     => $newData->description,
-        'date'            => $newData->date,
-    ]);
-
-    $newBalance = number_format($this->bankAccount->balance - $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+        ->assertForbidden();
 
 });
 
@@ -113,6 +91,15 @@ test('value is required', function () {
         ->set('withdraw.value', null)
         ->call('save')
         ->assertHasErrors(['withdraw.value' => 'required']);
+
+});
+
+test('value should be a numeric', function () {
+
+    livewire(Withdrawals\Create::class, ['bankAccount' => $this->bankAccount])
+        ->set('withdraw.value', 'a')
+        ->call('save')
+        ->assertHasErrors(['withdraw.value' => 'numeric']);
 
 });
 

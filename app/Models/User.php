@@ -117,4 +117,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return $this->hasMany(Trip::class);
     }
 
+    public function creditCards(): HasMany
+    {
+        return $this->hasMany(CreditCard::class);
+    }
+
 }

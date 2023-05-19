@@ -16,9 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo('bank_account_delete');
 
-    $this->bankAccount = BankAccount::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
+    $this->user->bankAccounts()->save(
+        $this->bankAccount = BankAccount::factory()->makeOne()
+    );
 
     actingAs($this->user);
 
@@ -41,33 +41,15 @@ it('should be able to destroy a bank account', function () {
 it('should be not able to delete a bank account if not own it', function () {
 
     // Arrange
-    $user2 = User::factory()->createOne();
-
-    $user2->givePermissionTo('bank_account_delete');
+    $bankAccount2 = BankAccount::factory()->createOne();
 
     // Act
-    actingAs($user2);
-
-    livewire(BankAccounts\Destroy::class, ['bankAccount' => $this->bankAccount])
+    livewire(BankAccounts\Destroy::class, ['bankAccount' => $bankAccount2])
         ->call('destroy')
         ->assertForbidden();
 });
 
-it('should be able to delete a bank account if own it', function () {
-
-    // Act
-    livewire(BankAccounts\Destroy::class, ['bankAccount' => $this->bankAccount])
-        ->call('destroy')
-        ->assertEmitted('bank-account::destroyed');
-
-    // Assert
-    assertDatabaseMissing('bank_accounts', [
-        'id' => $this->bankAccount->id,
-    ]);
-
-});
-
-it("should be able to delete a bank account if has the 'bank_account_delete' permission", function () {
+it("should be not able to delete a bank account if not has permission to this", function () {
     // Arrange
     $this->user->revokePermissionTo('bank_account_delete');
 
@@ -75,19 +57,17 @@ it("should be able to delete a bank account if has the 'bank_account_delete' per
     livewire(BankAccounts\Destroy::class, ['bankAccount' => $this->bankAccount])
         ->call('destroy')
         ->assertForbidden();
+
 });
 
-it("should be not able to delete a bank account if not has the 'bank_account_delete' permission", function () {
+it("should be not able to delete a bank account if not authenticated", function () {
+    // Arrange
+    \Auth::logout();
 
     // Act
     livewire(BankAccounts\Destroy::class, ['bankAccount' => $this->bankAccount])
         ->call('destroy')
-        ->assertEmitted('bank-account::destroyed');
-
-    // Assert
-    assertDatabaseMissing('bank_accounts', [
-        'id' => $this->bankAccount->id,
-    ]);
+        ->assertForbidden();
 
 });
 

@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\BankAccounts\Entries;
 use App\Http\Livewire\BankAccounts\Withdrawals;
 use App\Models\{BankAccount, BankAccountWithdraw, User};
 
-use function Pest\Laravel\{actingAs};
+use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -32,24 +32,11 @@ beforeEach(function () {
 
 });
 
-it('should be to update a withdraw if are the account owner', function () {
+it('should be to update a withdraw', function () {
     // Arrange
     $newData = BankAccountWithdraw::factory()->makeOne();
 
-    $notOwner = User::factory()->createOne();
-
-    $notOwner->givePermissionTo('bank_account_withdraw_update');
-
-    // Act - Not owner
-    actingAs($notOwner);
-
-    livewire(Withdrawals\Update::class, ['withdraw' => $this->withdraw])
-        ->call('save')
-        ->assertForbidden();
-
-    // Act - Owner
-    actingAs($this->user);
-
+    // Act
     livewire(Withdrawals\Update::class, ['withdraw' => $this->withdraw])
         ->set('withdraw.value', $newData->value)
         ->set('withdraw.description', $newData->description)
@@ -59,62 +46,54 @@ it('should be to update a withdraw if are the account owner', function () {
         ->assertEmitted('bank-account::withdraw::updated');
 
     // Assert
-    $oldWithdrawValue = $this->withdraw->getOriginal('value');
+    assertDatabaseHas('bank_account_withdraws', [
+        'id'          => $this->withdraw->id,
+        'value'       => $newData->value,
+        'description' => $newData->description,
+        'date'        => $newData->date,
+    ]);
 
-    $oldBalance = $this->bankAccount->balance;
-
-    expect($this->withdraw->refresh()->value)
-        ->toBe($newData->value)
-        ->and($this->withdraw->refresh())
-            ->description->toBe($newData->description)
-            ->date->toBe($newData->date);
-
-    $newBalance = number_format(($oldBalance + $oldWithdrawValue) - $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+    assertDatabaseHas('bank_accounts', [
+        'id'      => $this->bankAccount->id,
+        'balance' => ($this->bankAccount->balance + $this->withdraw->value) - $newData->value,
+    ]);
 
 });
 
-it("should be to update a withdraw if has the 'bank_account_entry_update' permission", function () {
+it("should be not able to update a withdraw if not account owner", function () {
     // Arrange
-    $newData = BankAccountWithdraw::factory()->makeOne();
+    $bankAccount2 = BankAccount::factory()->createOne();
 
-    $notHasPermission = User::factory()->createOne();
+    $bankAccount2->withdrawals()->save(
+        $withdraw2 = BankAccountWithdraw::factory()->makeOne()
+    );
 
-    // Act - Not owner
-    actingAs($notHasPermission);
+    // Act
+    livewire(Withdrawals\Update::class, ['withdraw' => $withdraw2])
+        ->call('save')
+        ->assertForbidden();
 
+});
+
+it("should be not able to update a withdraw if not authenticated", function () {
+    // Arrange
+    \Auth::logout();
+
+    // Act
     livewire(Withdrawals\Update::class, ['withdraw' => $this->withdraw])
         ->call('save')
         ->assertForbidden();
 
-    // Act - Owner
-    actingAs($this->user);
+});
 
+it("should be not able to update a withdraw if not has permission to this", function () {
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_withdraw_update');
+
+    // Act
     livewire(Withdrawals\Update::class, ['withdraw' => $this->withdraw])
-        ->set('withdraw.value', $newData->value)
-        ->set('withdraw.description', $newData->description)
-        ->set('withdraw.date', $newData->date)
         ->call('save')
-        ->assertHasNoErrors()
-        ->assertEmitted('bank-account::withdraw::updated');
-
-    // Assert
-    $oldWithdrawValue = $this->withdraw->getOriginal('value');
-
-    $oldBalance = $this->bankAccount->balance;
-
-    expect($this->withdraw->refresh()->value)
-        ->toBe($newData->value)
-        ->and($this->withdraw->refresh())
-        ->description->toBe($newData->description)
-        ->date->toBe($newData->date);
-
-    $newBalance = number_format(($oldBalance + $oldWithdrawValue) - $newData->value, 2, '.', '');
-
-    expect($this->bankAccount->refresh())
-        ->balance->toBe($newBalance);
+        ->assertForbidden();
 
 });
 
@@ -124,6 +103,15 @@ test('value is required', function () {
         ->set('withdraw.value', null)
         ->call('save')
         ->assertHasErrors(['withdraw.value' => 'required']);
+
+});
+
+test('value should be a numeric', function () {
+
+    livewire(Withdrawals\Update::class, ['withdraw' => $this->withdraw])
+        ->set('withdraw.value', 'test')
+        ->call('save')
+        ->assertHasErrors(['withdraw.value' => 'numeric']);
 
 });
 

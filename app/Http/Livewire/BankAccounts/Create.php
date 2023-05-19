@@ -7,7 +7,6 @@ use App\Models\BankAccount;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Pipeline;
 use Livewire\Component;
 
 class Create extends Component
@@ -27,13 +26,9 @@ class Create extends Component
 
         $this->validate();
 
-        Pipeline::send($this->bankAccount)
-            ->through([
-                \App\Pipes\BankAccounts\AssignBankAccountOwner::class,
-                \App\Pipes\BankAccounts\SaveBankAccount::class,
-                (new \App\Pipes\BankAccounts\EmitBankAccountCreated($this)),
-            ])
-            ->thenReturn();
+        auth()->user()->bankAccounts()->save($this->bankAccount);
+
+        $this->emit('bank-account::created');
     }
 
     public function mount(): void

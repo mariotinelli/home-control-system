@@ -18,6 +18,8 @@ class Destroy extends Component
     {
         $this->authorize('delete', $this->creditCard);
 
+        $this->creditCard->spendings()->delete();
+
         $this->creditCard->delete();
 
         $this->emit('credit-card::destroyed');
