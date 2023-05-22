@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\CreditCards;
 
-use App\Http\Livewire\CreditCards;
 use App\Models\{CreditCard, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -32,12 +32,12 @@ it('should be able to create a credit card', function () {
 
     // Assert
     assertDatabaseHas('credit_cards', [
-        'user_id' => $this->user->id,
-        'bank' => $newData->bank,
-        'number' => $newData->number,
-        'expiration' => $newData->expiration,
-        'cvv' => $newData->cvv,
-        'limit' => $newData->limit,
+        'user_id'         => $this->user->id,
+        'bank'            => $newData->bank,
+        'number'          => $newData->number,
+        'expiration'      => $newData->expiration,
+        'cvv'             => $newData->cvv,
+        'limit'           => $newData->limit,
         'remaining_limit' => $newData->limit,
     ]);
 

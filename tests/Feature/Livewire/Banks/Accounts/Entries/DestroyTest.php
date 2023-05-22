@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
-use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
@@ -44,7 +44,7 @@ it("should be able to delete a entry", function () {
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => $this->bankAccount->balance - $this->entry->value,
     ]);
 

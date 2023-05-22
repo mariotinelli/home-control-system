@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts;
 
-use App\Http\Livewire\BankAccounts;
 use App\Models\{BankAccount, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
@@ -75,26 +75,26 @@ it('delete all entries and withdrawals', function () {
     $this->bankAccount->entries()->createMany([
         [
             'description' => 'Teste 1',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
     ]);
 
     $this->bankAccount->withdrawals()->createMany([
         [
             'description' => 'Teste 1',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
     ]);
 

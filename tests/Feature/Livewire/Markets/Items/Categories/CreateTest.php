@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketItemCategories;
 
-use App\Http\Livewire\MarketItemCategories;
 use App\Models\User;
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -32,7 +32,7 @@ it('should be able to create market item category', function () {
 
     assertDatabaseHas('market_item_categories', [
         'user_id' => $this->user->id,
-        'name' => 'Test Market Item Category',
+        'name'    => 'Test Market Item Category',
     ]);
 
 });

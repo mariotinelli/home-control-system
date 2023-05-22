@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketItemCategories;
 
-use App\Http\Livewire\MarketItemCategories;
 use App\Models\{MarketItem, MarketItemCategory, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
@@ -60,7 +60,7 @@ it('should not be able to delete market item category if it has market items', f
 
     assertDatabaseHas('market_item_categories', [
         'user_id' => $this->user->id,
-        'name' => 'Test Market Item Category',
+        'name'    => 'Test Market Item Category',
     ]);
 
 });

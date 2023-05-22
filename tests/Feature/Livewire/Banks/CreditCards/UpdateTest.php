@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\CreditCards;
 
-use App\Http\Livewire\CreditCards;
 use App\Models\{CreditCard, Spending, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -36,13 +36,13 @@ it('should be able to update a credit card', function () {
 
     // Assert
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
-        'user_id' => $this->user->id,
-        'bank' => $newData->bank,
-        'number' => $newData->number,
-        'expiration' => $newData->expiration,
-        'cvv' => $newData->cvv,
-        'limit' => $newData->limit,
+        'id'              => $this->creditCard->id,
+        'user_id'         => $this->user->id,
+        'bank'            => $newData->bank,
+        'number'          => $newData->number,
+        'expiration'      => $newData->expiration,
+        'cvv'             => $newData->cvv,
+        'limit'           => $newData->limit,
         'remaining_limit' => $newData->limit,
     ]);
 
@@ -51,7 +51,7 @@ it('should be able to update a credit card', function () {
 it('correctly update the remaining limit when change limit and there are spending', function () {
     // Arrange
     $newData = CreditCard::factory()->makeOne([
-        'limit' => $this->creditCard->limit * 2,
+        'limit'           => $this->creditCard->limit * 2,
         'remaining_limit' => $this->creditCard->limit * 2,
     ]);
 
@@ -78,13 +78,13 @@ it('correctly update the remaining limit when change limit and there are spendin
 
     // Assert
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
-        'user_id' => $this->user->id,
-        'bank' => $newData->bank,
-        'number' => $newData->number,
-        'expiration' => $newData->expiration,
-        'cvv' => $newData->cvv,
-        'limit' => $newData->limit,
+        'id'              => $this->creditCard->id,
+        'user_id'         => $this->user->id,
+        'bank'            => $newData->bank,
+        'number'          => $newData->number,
+        'expiration'      => $newData->expiration,
+        'cvv'             => $newData->cvv,
+        'limit'           => $newData->limit,
         'remaining_limit' => $newData->limit - $spending->sum('amount'),
     ]);
 
@@ -93,8 +93,8 @@ it('correctly update the remaining limit when change limit and there are spendin
 it('should be not able to change the limit in case the change leaves the remaining limit negative', function () {
     // Arrange
     $creditCard2 = CreditCard::factory()->create([
-        'user_id' => $this->user->id,
-        'limit' => 1000,
+        'user_id'         => $this->user->id,
+        'limit'           => 1000,
         'remaining_limit' => 1000,
     ]);
 

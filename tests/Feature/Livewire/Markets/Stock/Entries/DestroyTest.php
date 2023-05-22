@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketStock\Entries;
 
-use App\Http\Livewire\MarketStock;
 use App\Models\{MarketStockEntry, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
@@ -21,7 +21,7 @@ beforeEach(function () {
 
     $this->marketStockEntry = MarketStockEntry::factory()->create([
         'market_stock_id' => $this->marketStock->id,
-        'quantity' => 50,
+        'quantity'        => 50,
     ]);
 
     $this->marketStock->increment('quantity', $this->marketStockEntry->quantity);
@@ -38,7 +38,7 @@ it('should be able to delete a entry of the market stock', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Destroy::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->call('save');
 
@@ -51,7 +51,7 @@ it('should be able to delete a entry of the market stock', function () {
     ]);
 
     assertDatabaseHas('market_stocks', [
-        'id' => $this->marketStock->id,
+        'id'       => $this->marketStock->id,
         'quantity' => 100,
     ]);
 

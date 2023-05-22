@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketItems;
 
-use App\Http\Livewire\MarketItems;
 use App\Models\{MarketItem, MarketItemCategory, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 

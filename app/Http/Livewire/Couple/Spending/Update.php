@@ -23,8 +23,8 @@ class Update extends Component
                 new CoupleSpendingCategoryOwnerRule(),
             ],
             'coupleSpending.description' => ['required', 'string', 'max:255'],
-            'coupleSpending.amount' => ['required', 'numeric', 'min:1'],
-            'coupleSpending.date' => ['required', 'date'],
+            'coupleSpending.amount'      => ['required', 'numeric', 'min:1'],
+            'coupleSpending.date'        => ['required', 'date'],
         ];
     }
 

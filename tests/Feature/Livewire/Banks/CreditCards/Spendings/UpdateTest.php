@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\CreditCards\Spendings;
 
-use App\Http\Livewire\CreditCards\Spendings;
 use App\Models\{CreditCard, Spending, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -47,13 +47,13 @@ it('should be able to update a spending', function () {
     // Assert
     assertDatabaseHas('spendings', [
         'credit_card_id' => $this->creditCard->id,
-        'amount' => $newData->amount,
-        'description' => $newData->description,
+        'amount'         => $newData->amount,
+        'description'    => $newData->description,
     ]);
 
     assertDatabaseHas('credit_cards', [
-        'id' => $this->creditCard->id,
-        'user_id' => $this->user->id,
+        'id'              => $this->creditCard->id,
+        'user_id'         => $this->user->id,
         'remaining_limit' => ($this->creditCard->remaining_limit + $this->spending->amount) - $newData->amount,
     ]);
 

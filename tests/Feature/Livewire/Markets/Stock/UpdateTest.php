@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketStock;
 
-use App\Http\Livewire\MarketStock;
 use App\Models\{MarketItem, MarketStockEntry, MarketStockWithdrawal, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -37,7 +37,7 @@ it('should be able to update a market stock', function () {
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $marketItem2->id,
-        'quantity' => 20,
+        'quantity'       => 20,
     ]);
 
 });
@@ -61,7 +61,7 @@ it('should be not able to update a market stock if that has entries', function (
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketItem->id,
-        'quantity' => $this->marketStock->quantity,
+        'quantity'       => $this->marketStock->quantity,
     ]);
 
 });
@@ -85,7 +85,7 @@ it('should be not able to update a market stock if that has withdrawals', functi
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketItem->id,
-        'quantity' => $this->marketStock->quantity,
+        'quantity'       => $this->marketStock->quantity,
     ]);
 
 });

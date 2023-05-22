@@ -19,9 +19,9 @@ class Create extends Component
     {
         return [
             'marketStockWithdraw.market_stock_id' => ['required', 'integer', 'exists:market_stocks,id'],
-            'marketStockWithdraw.market_id' => ['required', 'integer', 'exists:markets,id'],
-            'marketStockWithdraw.price' => ['required', 'numeric', 'min:1'],
-            'marketStockWithdraw.quantity' => ['required', 'integer', 'min:1', 'max:' . $this->marketStock->quantity],
+            'marketStockWithdraw.market_id'       => ['required', 'integer', 'exists:markets,id'],
+            'marketStockWithdraw.price'           => ['required', 'numeric', 'min:1'],
+            'marketStockWithdraw.quantity'        => ['required', 'integer', 'min:1', 'max:' . $this->marketStock->quantity],
         ];
     }
 

@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Livewire\CreditCards;
 
-use App\Http\Livewire\CreditCards;
 use App\Models\{CreditCard, Spending, User};
 use Auth;
+
 use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
