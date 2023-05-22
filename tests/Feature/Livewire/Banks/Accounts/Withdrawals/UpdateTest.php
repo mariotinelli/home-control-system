@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
-use App\Http\Livewire\BankAccounts\Withdrawals;
 use App\Models\{BankAccount, BankAccountWithdraw, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -46,14 +46,14 @@ it('should be to update a withdraw', function () {
 
     // Assert
     assertDatabaseHas('bank_account_withdraws', [
-        'id' => $this->withdraw->id,
-        'value' => $newData->value,
+        'id'          => $this->withdraw->id,
+        'value'       => $newData->value,
         'description' => $newData->description,
-        'date' => $newData->date,
+        'date'        => $newData->date,
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'balance' => ($this->bankAccount->balance + $this->withdraw->value) - $newData->value,
     ]);
 

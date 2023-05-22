@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketStock;
 
-use App\Http\Livewire\MarketStock;
 use App\Models\{MarketItem, MarketStockEntry, MarketStockWithdrawal, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 
@@ -60,12 +60,12 @@ it('should be able to disable a market stock if that has withdrawals and entries
         ->deleted_at->not()->toBeNull;
 
     assertDatabaseHas('market_stock_withdrawals', [
-        'id' => $withdrawal->id,
+        'id'              => $withdrawal->id,
         'market_stock_id' => $this->marketStock->id,
     ]);
 
     assertDatabaseHas('market_stock_entries', [
-        'id' => $entry->id,
+        'id'              => $entry->id,
         'market_stock_id' => $this->marketStock->id,
     ]);
 

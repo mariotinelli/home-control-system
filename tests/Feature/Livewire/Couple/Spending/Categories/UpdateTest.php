@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 
-use App\Http\Livewire\CoupleSpendingCategories;
 use App\Models\{CoupleSpendingCategory, User};
+
 use function Pest\Laravel\{actingAs};
 use function Pest\Livewire\livewire;
 

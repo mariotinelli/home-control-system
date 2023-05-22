@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts\Entries;
 
-use App\Http\Livewire\BankAccounts\Entries;
 use App\Models\{BankAccount, BankAccountEntry, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -46,14 +46,14 @@ it("should be able to update a entry", function () {
 
     // Assert
     assertDatabaseHas('bank_account_entries', [
-        'id' => $this->entry->id,
-        'value' => $newData->value,
+        'id'          => $this->entry->id,
+        'value'       => $newData->value,
         'description' => $newData->description,
-        'date' => $newData->date,
+        'date'        => $newData->date,
     ]);
 
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
+        'id'      => $this->bankAccount->id,
         'user_id' => $this->user->id,
         'balance' => ($this->bankAccount->balance - $this->entry->value) + $newData->value,
     ]);

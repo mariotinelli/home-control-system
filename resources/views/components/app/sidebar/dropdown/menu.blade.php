@@ -4,11 +4,15 @@
 
 <a
     @click="open = !open"
-    class="flex items-center justify-between p-2 text-base font-semibold text-gray-400 md:text-gray-900 rounded-lg dark:text-white"
+    class="flex items-center justify-between p-2 text-base font-semibold rounded-lg"
     role="button"
     aria-haspopup="true"
     x-show="!sidebarCollapse"
     :aria-expanded="(open) ? 'true' : 'false'"
+    x-bind:class="{
+        'text-gray-900 dark:md:text-white md:text-gray-900 dark:text-white': open,
+        'text-gray-600 dark:md:text-gray-400 md:text-gray-600 dark:text-gray-400': ! open
+    }"
 >
 
     <div class="flex space-x-3">

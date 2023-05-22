@@ -17,10 +17,10 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'marketItem.name' => ['required', 'string', 'max:150', 'unique:market_items,name,' . $this->marketItem->id . ',id,market_item_category_id,' . $this->marketItem->market_item_category_id],
+            'marketItem.name'                    => ['required', 'string', 'max:150', 'unique:market_items,name,' . $this->marketItem->id . ',id,market_item_category_id,' . $this->marketItem->market_item_category_id],
             'marketItem.market_item_category_id' => ['required', 'integer', 'exists:market_item_categories,id'],
-            'marketItem.type_weight' => ['required', 'string', 'in:' . implode(',', TypeOfWeightEnum::getValues())],
-            'marketItem.weight' => ['required', 'numeric', 'min:1', 'max:100000'],
+            'marketItem.type_weight'             => ['required', 'string', 'in:' . implode(',', TypeOfWeightEnum::getValues())],
+            'marketItem.weight'                  => ['required', 'numeric', 'min:1', 'max:100000'],
         ];
     }
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketStock;
 
-use App\Http\Livewire\MarketStock;
 use App\Models\{MarketItem, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -31,7 +31,7 @@ it('should be able to create a new market stock', function () {
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketItem->id,
-        'quantity' => 10,
+        'quantity'       => 10,
     ]);
 
 });

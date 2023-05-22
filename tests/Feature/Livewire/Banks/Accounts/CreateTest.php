@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts;
 
-use App\Http\Livewire\BankAccounts;
 use App\Models\{BankAccount, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -37,14 +37,14 @@ it('should be able to create a bank account', function () {
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
         'agency_number' => $newData->agency_number,
-        'agency_digit' => $newData->agency_digit,
-        'balance' => $newData->balance,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
     ]);
 
 });
@@ -129,7 +129,7 @@ test('number should be unique', function () {
     // Arrange
     $newBankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
-        'number' => '123456',
+        'number'  => '123456',
     ]);
 
     livewire(\App\Http\Livewire\Banks\Accounts\Create::class)

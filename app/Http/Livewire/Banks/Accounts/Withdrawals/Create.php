@@ -19,9 +19,9 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'withdraw.value' => ['required', 'numeric', 'min:1'],
+            'withdraw.value'       => ['required', 'numeric', 'min:1'],
             'withdraw.description' => ['required', 'string', 'max:255'],
-            'withdraw.date' => ['required', 'date'],
+            'withdraw.date'        => ['required', 'date'],
         ];
     }
 

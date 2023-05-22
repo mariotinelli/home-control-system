@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Livewire\CoupleSpendingCategories;
 
-use App\Http\Livewire\CoupleSpendingCategories;
 use App\Models\{CoupleSpendingCategory, User};
 use Auth;
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -35,7 +35,7 @@ it('should be able to create a new couple spending category', function () {
 
     assertDatabaseHas('couple_spending_categories', [
         'user_id' => $this->user->id,
-        'name' => $newData->name,
+        'name'    => $newData->name,
     ]);
 
 });

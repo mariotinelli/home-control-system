@@ -18,11 +18,11 @@ class Create extends Component
     public function getRules(): array
     {
         return [
-            'creditCard.bank' => ['required', 'string', 'max:100', 'min:3'],
-            'creditCard.number' => ['required', 'numeric', 'max_digits:16', 'min_digits:16'],
+            'creditCard.bank'       => ['required', 'string', 'max:100', 'min:3'],
+            'creditCard.number'     => ['required', 'numeric', 'max_digits:16', 'min_digits:16'],
             'creditCard.expiration' => ['required', 'string', 'max:7', 'min:7'],
-            'creditCard.cvv' => ['required', 'numeric', 'max_digits:3', 'min_digits:3'],
-            'creditCard.limit' => ['required', 'numeric', 'max_digits:10', 'min_digits:2'],
+            'creditCard.cvv'        => ['required', 'numeric', 'max_digits:3', 'min_digits:3'],
+            'creditCard.limit'      => ['required', 'numeric', 'max_digits:10', 'min_digits:2'],
         ];
     }
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\CoupleSpendings;
 
-use App\Http\Livewire\CoupleSpendings;
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseMissing};
 use function Pest\Livewire\livewire;
 

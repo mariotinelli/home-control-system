@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\BankAccounts;
 
-use App\Http\Livewire\BankAccounts;
 use App\Models\{BankAccount, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -41,13 +41,13 @@ it('should be able to update a bank account', function () {
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
         'agency_number' => $newData->agency_number,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
-        'balance' => $newData->balance,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'balance'       => $newData->balance,
     ]);
 
 });
@@ -90,9 +90,9 @@ it('should be not able to update a balance when exists entries', function () {
     $newData = BankAccount::factory()->makeOne();
 
     $this->bankAccount->entries()->create([
-        'value' => 1000,
+        'value'       => 1000,
         'description' => 'Entrance 1',
-        'date' => now(),
+        'date'        => now(),
     ]);
 
     // Act
@@ -108,9 +108,9 @@ it('should be not able to update a balance when exists withdraws', function () {
     $newData = BankAccount::factory()->makeOne();
 
     $this->bankAccount->withdrawals()->create([
-        'value' => 1000,
+        'value'       => 1000,
         'description' => 'Withdraw 1',
-        'date' => now(),
+        'date'        => now(),
     ]);
 
     // Act
@@ -143,13 +143,13 @@ it('should be able to update a balance when not exists entries and withdraws', f
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
         'agency_number' => $newData->agency_number,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
-        'balance' => $newData->balance,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'balance'       => $newData->balance,
     ]);
 
 });
@@ -212,7 +212,7 @@ test('number should be unique', function () {
 
     $newData = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
-        'number' => '123456',
+        'number'  => '123456',
     ]);
 
     livewire(\App\Http\Livewire\Banks\Accounts\Update::class, ['bankAccount' => $this->bankAccount])
@@ -226,7 +226,7 @@ test('ignore number unique only when updating same bank account', function () {
     // Arrange
     $newData = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
-        'number' => '123456',
+        'number'  => '123456',
     ]);
 
     // Act - Error

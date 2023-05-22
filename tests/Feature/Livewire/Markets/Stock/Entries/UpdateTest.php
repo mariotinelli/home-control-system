@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Livewire\MarketStock\Entries;
 
-use App\Http\Livewire\MarketStock;
 use App\Models\{Market, MarketStockEntry, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -21,7 +21,7 @@ beforeEach(function () {
 
     $this->marketStockEntry = MarketStockEntry::factory()->create([
         'market_stock_id' => $this->marketStock->id,
-        'quantity' => 10,
+        'quantity'        => 10,
     ]);
 
     $this->marketStock->increment('quantity', $this->marketStockEntry->quantity);
@@ -42,7 +42,7 @@ it('should be able to update a entry of the market item in to market stock', fun
 
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_id', $market2->id)
         ->set('marketStockEntry.price', 20)
@@ -55,14 +55,14 @@ it('should be able to update a entry of the market item in to market stock', fun
 
     assertDatabaseHas('market_stock_entries', [
         'market_stock_id' => $this->marketStock->id,
-        'market_id' => $market2->id,
-        'price' => 20,
-        'quantity' => 20,
+        'market_id'       => $market2->id,
+        'price'           => 20,
+        'quantity'        => 20,
     ]);
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketStock->market_item_id,
-        'quantity' => 120,
+        'quantity'       => 120,
     ]);
 
 });
@@ -82,7 +82,7 @@ it('should be able to change market stock that entry', function () {
     // Act
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_stock_id', $marketStock2->id)
         ->set('marketStockEntry.market_id', $market2->id)
@@ -96,19 +96,19 @@ it('should be able to change market stock that entry', function () {
 
     assertDatabaseHas('market_stock_entries', [
         'market_stock_id' => $marketStock2->id,
-        'market_id' => $market2->id,
-        'price' => 20,
-        'quantity' => 20,
+        'market_id'       => $market2->id,
+        'price'           => 20,
+        'quantity'        => 20,
     ]);
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $this->marketStock->market_item_id,
-        'quantity' => 100,
+        'quantity'       => 100,
     ]);
 
     assertDatabaseHas('market_stocks', [
         'market_item_id' => $marketStock2->market_item_id,
-        'quantity' => 40,
+        'quantity'       => 40,
     ]);
 
 });
@@ -118,7 +118,7 @@ test('market stock id is required', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_stock_id', '')
         ->call('save');
@@ -133,7 +133,7 @@ test('market stock id should be a integer', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_stock_id', 'test')
         ->call('save');
@@ -147,7 +147,7 @@ test('market stock id should be exists in to market stocks table', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_stock_id', 999)
         ->call('save');
@@ -162,7 +162,7 @@ test('market id is required', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_id', '')
         ->call('save');
@@ -177,7 +177,7 @@ test('market id should be a integer', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_id', 'test')
         ->call('save');
@@ -191,7 +191,7 @@ test('market id should be exists in to markets table', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.market_id', 999)
         ->call('save');
@@ -206,7 +206,7 @@ test('price is required', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.price', '')
         ->call('save');
@@ -221,7 +221,7 @@ test('price must be a numeric', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.price', 'test')
         ->call('save');
@@ -236,7 +236,7 @@ test('price must be greater than zero', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.price', 0)
         ->call('save');
@@ -251,7 +251,7 @@ test('quantity is required', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.quantity', '')
         ->call('save');
@@ -266,7 +266,7 @@ test('quantity must be integer', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.quantity', 'test')
         ->call('save');
@@ -281,7 +281,7 @@ test('quantity must be greater than zero', function () {
     // Arrange
     $lw = livewire(\App\Http\Livewire\Markets\Stock\Entries\Update::class, [
         'marketStockEntry' => $this->marketStockEntry,
-        'marketStock' => $this->marketStock,
+        'marketStock'      => $this->marketStock,
     ])
         ->set('marketStockEntry.quantity', 0)
         ->call('save');

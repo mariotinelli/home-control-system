@@ -3,8 +3,8 @@
 namespace Tests\Feature\Livewire\MarketItems;
 
 use App\Enums\TypeOfWeightEnum;
-use App\Http\Livewire\MarketItems;
 use App\Models\{MarketItem, MarketItemCategory, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
 use function Pest\Livewire\livewire;
 
@@ -41,11 +41,11 @@ it('should be able to create market item', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'user_id' => $this->user->id,
-        'name' => 'Test Market Item',
+        'user_id'                 => $this->user->id,
+        'name'                    => 'Test Market Item',
         'market_item_category_id' => $this->marketItemCategory->id,
-        'type_weight' => TypeOfWeightEnum::GRAM,
-        'weight' => 10,
+        'type_weight'             => TypeOfWeightEnum::GRAM,
+        'weight'                  => 10,
     ]);
 
 });
@@ -61,7 +61,7 @@ it('unique name for market item, but ignore if market item category is different
 
     $this->user->marketItems()->save(
         $marketItem = MarketItem::factory()->create([
-            'name' => 'Test Market Item',
+            'name'                    => 'Test Market Item',
             'market_item_category_id' => $marketItemCategory2->id,
         ])
     );
@@ -90,11 +90,11 @@ it('unique name for market item, but ignore if market item category is different
         ->assertHasNoErrors();
 
     assertDatabaseHas('market_items', [
-        'user_id' => $this->user->id,
-        'name' => $marketItem->name,
+        'user_id'                 => $this->user->id,
+        'name'                    => $marketItem->name,
         'market_item_category_id' => $this->marketItemCategory->id,
-        'type_weight' => TypeOfWeightEnum::GRAM,
-        'weight' => 10,
+        'type_weight'             => TypeOfWeightEnum::GRAM,
+        'weight'                  => 10,
     ]);
 
 });
