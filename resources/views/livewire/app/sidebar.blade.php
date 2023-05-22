@@ -7,15 +7,7 @@
 
         <x-app.icons.menu-hamburger/>
 
-        <div class="flex items-center justify-between">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <img class="h-8 w-8"
-                         src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                         alt="Your Company">
-                </div>
-            </div>
-        </div>
+        <x-app.logo/>
 
     </div>
 
@@ -23,9 +15,9 @@
     <nav
         aria-label="sidebar"
         class="
-            px-3 py-4 overflow-y-auto bg-white border-r
-            dark:bg-gray-800 h-[calc(100vh-64px)] flex-1 divide-y
-            transition-all duration-200 ease-in-out
+            px-3 py-4 overflow-y-auto bg-white border-r dark:border-r-gray-500
+            dark:bg-gray-800 h-[calc(100vh-64px)] flex-1 divide-y dark:divide-gray-500
+            transition-all duration-200 ease-in-out dark:border-t dark:border-gray-500
         "
         x-bind:class=" sidebarCollapse ? 'w-16' : 'w-64' "
     >

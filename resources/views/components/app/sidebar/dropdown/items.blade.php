@@ -7,7 +7,7 @@
     x-collapse
     role="menu"
     x-show="open"
-    class="mt-2 space-y-2 px-2"
+    class="mt-2 space-y-2"
     aria-label="{{  $menu->name }}"
 >
 
