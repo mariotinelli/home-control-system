@@ -6,7 +6,7 @@ use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpendingCategory, User};
 use Filament\Tables;
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -42,6 +42,15 @@ it('cannot render page if not has permission', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertForbidden();
+
+})->group('canRenderPage');
+
+it('can redirect to login if not authenticated', function () {
+
+    \Auth::logout();
+
+    get(route('couple.spending.categories.index'))
+        ->assertRedirect(route('login'));
 
 })->group('canRenderPage');
 
