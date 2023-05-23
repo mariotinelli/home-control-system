@@ -352,3 +352,15 @@ it('can disable edit action button if not has permission', function () {
         ->assertTableActionDisabled(Tables\Actions\EditAction::class);
 
 })->group('cannotHasPermission');
+
+it('can disable delete action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_update');
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    // Act
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
+
+})->group('cannotHasPermission');
