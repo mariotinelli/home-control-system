@@ -8,9 +8,12 @@ use Filament\{Forms, Tables};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends ComponentWithFilamentModal
 {
+    use AuthorizesRequests;
+
     protected static ?string $resourceMenuLabel = 'Categorias de Gastos';
 
     protected static ?string $resourceLabel = 'categoria';
@@ -19,6 +22,8 @@ class Index extends ComponentWithFilamentModal
 
     public function render(): View
     {
+        $this->authorize('viewAny', CoupleSpendingCategory::class);
+
         return view('livewire.couple.spending.categories.index');
     }
 

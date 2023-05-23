@@ -15,16 +15,35 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
+    $this->user->givePermissionTo('couple_spending_category_read');
+
     $this->user->givePermissionTo('couple_spending_category_create');
+
+    $this->user->givePermissionTo('couple_spending_category_update');
+
+    $this->user->givePermissionTo('couple_spending_category_delete');
 
     actingAs($this->user);
 
 });
 
+todo('criar testes para permissões, autenticação e owner');
+
 it('can render page', function () {
+
     livewire(Couple\Spending\Categories\Index::class)
         ->assertSuccessful();
-});
+
+})->group('canRenderPage');
+
+it('cannot render page if not has permission', function () {
+
+    $this->user->revokePermissionTo('couple_spending_category_read');
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertForbidden();
+
+})->group('canRenderPage');
 
 it('can display all categories in table', function () {
     $categories = CoupleSpendingCategory::factory()->count(10)->create();
