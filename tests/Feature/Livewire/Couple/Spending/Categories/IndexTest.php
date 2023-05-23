@@ -154,6 +154,16 @@ it('can delete categories', function () {
     assertModelMissing($category);
 })->group('tableActions');
 
+it('can display correctly category information in edit action', function () {
+    $category = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category)
+        ->assertTableActionDataSet([
+            'title' => $category->title,
+        ]);
+})->group('tableActions');
+
 it('can validate category name in creating', function () {
 
     // Required
