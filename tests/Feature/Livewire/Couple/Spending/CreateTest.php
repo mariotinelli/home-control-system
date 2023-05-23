@@ -24,29 +24,6 @@ beforeEach(function () {
 
 });
 
-it('can render page', function () {
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertSuccessful();
-});
-
-it('can render category id table column', function () {
-    CoupleSpendingCategory::factory()->count(1)->create();
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertCanRenderTableColumn('id');
-})
-    ->group('canRenderTableColumn');
-
-it('can render category name table column', function () {
-
-    CoupleSpendingCategory::factory()->count(1)->create();
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertCanRenderTableColumn('name');
-
-})
-    ->group('canRenderTableColumn');
-
 todo('should be able to create couple spending', function () {
     // Arrange
     $newData = CoupleSpending::factory()->makeOne();
