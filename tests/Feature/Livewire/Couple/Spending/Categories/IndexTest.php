@@ -124,4 +124,17 @@ it('can delete categories', function () {
         ->callTableAction(Tables\Actions\DeleteAction::class, $category);
 
     assertModelMissing($category);
-});
+})->group('tableActions');
+
+it('can edit categories', function () {
+    $category = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
+
+    expect($category->refresh())
+        ->name->toBe($name);
+})->group('tableActions');
