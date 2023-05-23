@@ -50,3 +50,20 @@ it('can render category name table column', function () {
         ->assertCanRenderTableColumn('name');
 
 })->group('canRenderTableColumn');
+
+it('categories are sorted by default in desc order', function () {
+    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
+});
+
+todo('can sort categories by 2id', function () {
+    $posts = Post::factory()->count(10)->create();
+
+    livewire(PostResource\Pages\ListPosts::class)
+        ->sortTable('title')
+        ->assertCanSeeTableRecords($posts->sortBy('title'), inOrder: true)
+        ->sortTable('title', 'desc')
+        ->assertCanSeeTableRecords($posts->sortByDesc('title'), inOrder: true);
+});
