@@ -6,7 +6,7 @@ use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpendingCategory, User};
 use Filament\Tables;
 
-use function Pest\Laravel\{actingAs, assertModelMissing};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -137,4 +137,19 @@ it('can edit categories', function () {
 
     expect($category->refresh())
         ->name->toBe($name);
+})->group('tableActions');
+
+it('can create categories', function () {
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
+
+    assertDatabaseHas('couple_spending_categories', [
+        'user_id' => $this->user->id,
+        'name'    => $name,
+    ]);
+
 })->group('tableActions');
