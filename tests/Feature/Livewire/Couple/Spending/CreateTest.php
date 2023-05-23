@@ -30,11 +30,22 @@ it('can render page', function () {
 });
 
 it('can render category id table column', function () {
-    CoupleSpendingCategory::factory()->count(10)->create();
+    CoupleSpendingCategory::factory()->count(1)->create();
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertCanRenderTableColumn('id');
-})->group('canRenderTableColumn');
+})
+    ->group('canRenderTableColumn');
+
+it('can render category name table column', function () {
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertCanRenderTableColumn('name');
+
+})
+    ->group('canRenderTableColumn');
 
 todo('should be able to create couple spending', function () {
     // Arrange
