@@ -364,3 +364,14 @@ it('can disable delete action button if not has permission', function () {
         ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
 
 })->group('cannotHasPermission');
+
+it('can disable edit action button if not is owner', function () {
+
+    // Arrange
+    $category = CoupleSpendingCategory::factory()->create();
+
+    // Act
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class, $category);
+
+})->group('cannotOwner');
