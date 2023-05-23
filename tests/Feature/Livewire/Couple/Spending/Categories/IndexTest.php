@@ -172,6 +172,18 @@ it('can delete categories', function () {
     assertModelMissing($category);
 })->group('tableActions');
 
+it('can render all table row actions', function () {
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionExists(Tables\Actions\EditAction::class);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionExists(Tables\Actions\DeleteAction::class);
+
+})->group('tableActions');
+
 it('can display correctly category information in edit action', function () {
     $category = CoupleSpendingCategory::factory()->create();
 
