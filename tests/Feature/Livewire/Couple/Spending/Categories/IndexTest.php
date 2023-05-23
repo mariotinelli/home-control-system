@@ -43,7 +43,7 @@ it('cannot render page if not has permission', function () {
     livewire(Couple\Spending\Categories\Index::class)
         ->assertForbidden();
 
-})->group('canRenderPage');
+})->group('cannotHasPermission');
 
 it('can redirect to login if not authenticated', function () {
 
@@ -77,6 +77,18 @@ it('can render create action button', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertTableActionExists('create');
+
+})->group('canRenderTableHeader');
+
+it('cannot render create action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_create');
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    // Act
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertDontSeeHtml('Criar categoria');
 
 })->group('canRenderTableHeader');
 

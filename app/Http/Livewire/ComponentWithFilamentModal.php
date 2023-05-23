@@ -17,6 +17,8 @@ class ComponentWithFilamentModal extends Component implements HasForms, HasTable
     use HasFilamentModalForms;
     use HasFilamentModalTables;
 
+    protected static ?string $model = null;
+
     protected static ?string $resourceMenuLabel = null;
 
     protected static ?string $resourceLabel = null;

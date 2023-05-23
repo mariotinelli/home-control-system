@@ -46,7 +46,8 @@ trait HasFilamentModalTables
                 ->label('Criar ' . static::$resourceLabel)
                 ->color(static::$createActionColor ?? 'primary')
                 ->modalHeading(view('components.app.filament.resources.modal.heading', ['title' => 'Criar ' . static::$resourceLabel]))
-                ->form($this->getFormSchema()),
+                ->form($this->getFormSchema())
+                ->visible(fn (): bool => auth()->user()->can('create', static::$model)),
         ];
     }
 

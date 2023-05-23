@@ -14,6 +14,8 @@ class Index extends ComponentWithFilamentModal
 {
     use AuthorizesRequests;
 
+    protected static ?string $model = CoupleSpendingCategory::class;
+
     protected static ?string $resourceMenuLabel = 'Categorias de Gastos';
 
     protected static ?string $resourceLabel = 'categoria';
