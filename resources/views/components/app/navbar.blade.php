@@ -111,9 +111,10 @@
                     x-bind:class=" sidebarCollapse ? 'w-16' : 'w-64' "
                 >
 
-                    @foreach($menus as $menu)
+                    @foreach($menus as $key => $menu)
 
-                        <div class="py-2">
+                        <div class="py-2"
+                             wire:key="{{ 'navbar-items' . $key }}">
 
                             @if($menu->isGroup)
 

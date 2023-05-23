@@ -30,8 +30,11 @@
         x-bind:class=" sidebarCollapse ? 'w-16' : 'w-64' "
     >
 
-        @foreach($menus as $menu)
-            <div class="py-2">
+        @foreach($menus as $key => $menu)
+
+            <div class="py-2"
+                 wire:key="{{ 'sidebar-items' . $key }}">
+
                 @if(isset($menu->dropdown))
 
                     <x-app.sidebar.dropdown

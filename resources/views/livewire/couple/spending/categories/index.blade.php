@@ -1,3 +1,5 @@
-<div>
-    {{-- Success is as dangerous as failure. --}}
-</div>
+<x-app.layouts.list
+    header-title="Categorias de Gastos"
+    resource-label="Criar categoria"
+    action-save="submit"
+/>

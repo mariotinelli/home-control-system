@@ -1,3 +1,1 @@
-<div>
-    {{-- Stop trying to control. --}}
-</div>
+<div></div>

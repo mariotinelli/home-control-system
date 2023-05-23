@@ -21,6 +21,10 @@
     @livewireStyles
 
     @wireUiScripts
+
+    @livewireScripts
+
+    @stack('scripts')
 </head>
 
 <body
@@ -37,7 +41,7 @@
 
         <livewire:app.navbar/>
 
-        <div class="p-4 w-full h-[calc(100vh-64px)] overflow-y-auto">
+        <div class="py-4 px-6 w-full h-[calc(100vh-64px)] overflow-y-auto">
             {{ $slot }}
         </div>
 
@@ -45,7 +49,7 @@
 
 </div>
 
-@livewireScripts
+@livewire('notifications')
 
 </body>
 
