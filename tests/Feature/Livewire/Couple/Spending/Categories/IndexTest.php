@@ -34,6 +34,15 @@ it('can display all categories in table', function () {
         ->assertCountTableRecords($categories->count());
 });
 
+it('can render table heading', function () {
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertSeeHtml('Categorias de Gastos');
+
+})->group('canRenderTableHeader');
+
 it('can render category id table column', function () {
 
     CoupleSpendingCategory::factory()->count(1)->create();
