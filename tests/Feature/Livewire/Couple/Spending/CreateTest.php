@@ -25,16 +25,16 @@ beforeEach(function () {
 });
 
 it('can render page', function () {
-    livewire(Couple\Spending\Index::class)
+    livewire(Couple\Spending\Categories\Index::class)
         ->assertSuccessful();
 });
 
-//it('can render category id table column', function () {
-//    Post::factory()->count(10)->create();
-//
-//    livewire(PostResource\Pages\ListPosts::class)
-//        ->assertCanRenderTableColumn('title');
-//});
+it('can render category id table column', function () {
+    CoupleSpendingCategory::factory()->count(10)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertCanRenderTableColumn('id');
+})->group('canRenderTableColumn');
 
 todo('should be able to create couple spending', function () {
     // Arrange
