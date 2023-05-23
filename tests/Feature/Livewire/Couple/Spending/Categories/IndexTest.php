@@ -48,7 +48,7 @@ it('can render create action button', function () {
     CoupleSpendingCategory::factory()->count(1)->create();
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->assertSeeHtml('Criar categoria');
+        ->assertTableActionExists('create');
 
 })->group('canRenderTableHeader');
 
