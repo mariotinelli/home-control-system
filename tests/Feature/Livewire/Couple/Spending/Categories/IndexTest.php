@@ -76,4 +76,23 @@ it('can sort categories by name', function () {
         ->assertCanSeeTableRecords($categories->sortBy('name'), inOrder: true)
         ->sortTable('name', 'desc')
         ->assertCanSeeTableRecords($categories->sortByDesc('name'), inOrder: true);
-});
+})->group('canSortTable');
+
+it('can search categories by id', function () {
+    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    $id = $categories->first()->id;
+
+    $canSeeCategories = $categories->filter(function ($item) use ($id) {
+        return false !== stripos($item->id, $id);
+    });
+
+    $cannotSeeCategories = $categories->filter(function ($item) use ($id) {
+        return false === stripos($item->id, $id);
+    });
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->searchTable($id)
+        ->assertCanSeeTableRecords($canSeeCategories)
+        ->assertCanNotSeeTableRecords($cannotSeeCategories);
+})->group('canSearchTable');
