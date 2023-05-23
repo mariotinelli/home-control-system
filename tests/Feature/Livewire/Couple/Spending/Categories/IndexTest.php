@@ -4,8 +4,9 @@ namespace Livewire\Couple\Spending\Categories;
 
 use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpendingCategory, User};
+use Filament\Tables;
 
-use function Pest\Laravel\{actingAs};
+use function Pest\Laravel\{actingAs, assertModelMissing};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -115,3 +116,12 @@ it('can search categories by name', function () {
         ->assertCanSeeTableRecords($canSeeCategories)
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
 })->group('canSearchTable');
+
+it('can delete categories', function () {
+    $category = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $category);
+
+    assertModelMissing($category);
+});
