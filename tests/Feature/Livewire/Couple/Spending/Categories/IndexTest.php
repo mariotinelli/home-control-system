@@ -154,7 +154,7 @@ it('can delete categories', function () {
     assertModelMissing($category);
 })->group('tableActions');
 
-it('can validate category creating data', function () {
+it('can validate category name in creating', function () {
 
     // Required
     livewire(Couple\Spending\Categories\Index::class)
@@ -195,12 +195,52 @@ it('can validate category creating data', function () {
 
 })->group('creatingDataValidation');
 
-//it('can validate category creating data', function () {
-//
-//    livewire(Couple\Spending\Categories\Index::class)
-//        ->callTableAction(Tables\Actions\CreateAction::class, data: [
-//            'name' => null,
-//        ])
-//        ->assertHasTableActionErrors(['name' => ['required']]);
-//
-//})->group('creatingDataValidation');
+it('can validate category name in updating', function () {
+    // Arrange
+    $category = CoupleSpendingCategory::factory()->create();
+
+    // Required
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => null,
+        ])
+        ->assertHasTableActionErrors(['name' => ['required']]);
+
+    // String
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => 12,
+        ])
+        ->assertHasTableActionErrors(['name' => ['string']]);
+
+    // Min
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => 'a',
+        ])
+        ->assertHasTableActionErrors(['name' => ['min']]);
+
+    // Max
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => str_repeat('a', 256),
+        ])
+        ->assertHasTableActionErrors(['name' => ['max']]);
+
+    // Unique
+    $category2 = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => $category2->name,
+        ])
+        ->assertHasTableActionErrors(['name' => ['unique']]);
+
+    // Ignore unique rule for current category
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => $category->name,
+        ])
+        ->assertHasNoTableActionErrors(['name' => ['unique']]);
+
+})->group('updatingDataValidation');
