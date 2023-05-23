@@ -156,10 +156,51 @@ it('can delete categories', function () {
 
 it('can validate category creating data', function () {
 
+    // Required
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => null,
         ])
         ->assertHasTableActionErrors(['name' => ['required']]);
 
+    // String
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => 12,
+        ])
+        ->assertHasTableActionErrors(['name' => ['string']]);
+
+    // Min
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => 'a',
+        ])
+        ->assertHasTableActionErrors(['name' => ['min']]);
+
+    // Max
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => str_repeat('a', 256),
+        ])
+        ->assertHasTableActionErrors(['name' => ['max']]);
+
+    // Unique
+    $category = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $category->name,
+        ])
+        ->assertHasTableActionErrors(['name' => ['unique']]);
+
 })->group('creatingDataValidation');
+
+//it('can validate category creating data', function () {
+//
+//    livewire(Couple\Spending\Categories\Index::class)
+//        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+//            'name' => null,
+//        ])
+//        ->assertHasTableActionErrors(['name' => ['required']]);
+//
+//})->group('creatingDataValidation');
