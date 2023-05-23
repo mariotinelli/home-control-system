@@ -68,7 +68,7 @@ it('can sort categories by id', function () {
         ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
 })->group('canSortTable');
 
-todo('can sort categories by name', function () {
+it('can sort categories by name', function () {
     $categories = CoupleSpendingCategory::factory()->count(10)->create();
 
     livewire(Couple\Spending\Categories\Index::class)
