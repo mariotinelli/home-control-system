@@ -57,11 +57,12 @@ trait HasFilamentModalTables
         return [
 
             Tables\Actions\EditAction::make()
+                ->disabled(fn ($record): bool => !auth()->user()->can('update', $record))
                 ->button()
                 ->tooltip('Editar ' . static::$resourceLabel)
-                ->icon('heroicon-s-pencil-alt')
                 ->modalHeading(view('components.app.filament.resources.modal.heading', ['title' => 'Editar ' . static::$resourceLabel]))
                 ->form($this->getFormSchema())
+                ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt')
                 ->successNotification(
                     Notification::make()
                         ->title(static::$resourceMenuLabel)
@@ -70,14 +71,22 @@ trait HasFilamentModalTables
                 ),
 
             Tables\Actions\DeleteAction::make()
+                ->disabled(fn ($record): bool => !auth()->user()->can('delete', $record))
                 ->button()
+                ->tooltip(function ($action) {
+                    if ($action->isDisabled()) {
+                        $action->icon('heroicon-s-lock-closed');
+                    }
+
+                    return 'Deletar ' . static::$resourceLabel;
+                })
                 ->modalHeading('Deletar ' . static::$resourceLabel)
                 ->successNotification(
                     Notification::make()
                         ->title(static::$resourceMenuLabel)
                         ->body(static::$successDeleteNotification)
                         ->success()
-                )->tooltip('Deletar ' . static::$resourceLabel),
+                ),
 
         ];
     }

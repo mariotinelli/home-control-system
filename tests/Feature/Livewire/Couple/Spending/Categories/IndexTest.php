@@ -36,15 +36,6 @@ it('can render page', function () {
 
 })->group('canRenderPage');
 
-it('cannot render page if not has permission', function () {
-
-    $this->user->revokePermissionTo('couple_spending_category_read');
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertForbidden();
-
-})->group('cannotHasPermission');
-
 it('can redirect to login if not authenticated', function () {
 
     \Auth::logout();
@@ -77,18 +68,6 @@ it('can render create action button', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertTableActionExists('create');
-
-})->group('canRenderTableHeader');
-
-it('cannot render create action button if not has permission', function () {
-    // Arrange
-    $this->user->revokePermissionTo('couple_spending_category_create');
-
-    CoupleSpendingCategory::factory()->count(1)->create();
-
-    // Act
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertDontSeeHtml('Criar categoria');
 
 })->group('canRenderTableHeader');
 
@@ -191,7 +170,10 @@ it('can create categories', function () {
 })->group('tableActions');
 
 it('can edit categories', function () {
-    $category = CoupleSpendingCategory::factory()->create();
+    // Arrange
+    $category = CoupleSpendingCategory::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
@@ -201,20 +183,27 @@ it('can edit categories', function () {
 
     expect($category->refresh())
         ->name->toBe($name);
+
 })->group('tableActions');
 
 it('can delete categories', function () {
-    $category = CoupleSpendingCategory::factory()->create();
+
+    $category = CoupleSpendingCategory::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\DeleteAction::class, $category);
 
     assertModelMissing($category);
+
 })->group('tableActions');
 
 it('can render all table row actions', function () {
 
-    CoupleSpendingCategory::factory()->count(1)->create();
+    CoupleSpendingCategory::factory()->count(1)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertTableActionExists(Tables\Actions\EditAction::class);
@@ -225,7 +214,9 @@ it('can render all table row actions', function () {
 })->group('tableActions');
 
 it('can display correctly category information in edit action', function () {
-    $category = CoupleSpendingCategory::factory()->create();
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category)
@@ -265,7 +256,9 @@ it('can validate category name in creating', function () {
         ->assertHasTableActionErrors(['name' => ['max']]);
 
     // Unique
-    $category = CoupleSpendingCategory::factory()->create();
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
@@ -277,7 +270,9 @@ it('can validate category name in creating', function () {
 
 it('can validate category name in updating', function () {
     // Arrange
-    $category = CoupleSpendingCategory::factory()->create();
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
     // Required
     livewire(Couple\Spending\Categories\Index::class)
@@ -324,3 +319,36 @@ it('can validate category name in updating', function () {
         ->assertHasNoTableActionErrors(['name' => ['unique']]);
 
 })->group('updatingDataValidation');
+
+it('cannot render page if not has permission', function () {
+
+    $this->user->revokePermissionTo('couple_spending_category_read');
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertForbidden();
+
+})->group('cannotHasPermission');
+
+it('cannot render create action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_create');
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    // Act
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertDontSeeHtml('Criar categoria');
+
+})->group('cannotHasPermission');
+
+it('can disable edit action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_category_update');
+
+    CoupleSpendingCategory::factory()->count(1)->create();
+
+    // Act
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class);
+
+})->group('cannotHasPermission');
