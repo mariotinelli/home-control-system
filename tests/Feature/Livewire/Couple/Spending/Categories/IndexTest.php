@@ -96,3 +96,22 @@ it('can search categories by id', function () {
         ->assertCanSeeTableRecords($canSeeCategories)
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
 })->group('canSearchTable');
+
+it('can search categories by name', function () {
+    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    $name = $categories->first()->name;
+
+    $canSeeCategories = $categories->filter(function ($item) use ($name) {
+        return false !== stripos($item->name, $name);
+    });
+
+    $cannotSeeCategories = $categories->filter(function ($item) use ($name) {
+        return false === stripos($item->name, $name);
+    });
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->searchTable($name)
+        ->assertCanSeeTableRecords($canSeeCategories)
+        ->assertCanNotSeeTableRecords($cannotSeeCategories);
+})->group('canSearchTable');
