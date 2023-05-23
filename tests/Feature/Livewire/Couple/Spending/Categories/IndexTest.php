@@ -58,12 +58,22 @@ it('categories are sorted by default in desc order', function () {
         ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
 });
 
-todo('can sort categories by 2id', function () {
-    $posts = Post::factory()->count(10)->create();
+it('can sort categories by id', function () {
+    $categories = CoupleSpendingCategory::factory()->count(10)->create();
 
-    livewire(PostResource\Pages\ListPosts::class)
-        ->sortTable('title')
-        ->assertCanSeeTableRecords($posts->sortBy('title'), inOrder: true)
-        ->sortTable('title', 'desc')
-        ->assertCanSeeTableRecords($posts->sortByDesc('title'), inOrder: true);
+    livewire(Couple\Spending\Categories\Index::class)
+        ->sortTable('id')
+        ->assertCanSeeTableRecords($categories->sortBy('id'), inOrder: true)
+        ->sortTable('id', 'desc')
+        ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
+})->group('canSortTable');
+
+todo('can sort categories by name', function () {
+    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->sortTable('name')
+        ->assertCanSeeTableRecords($categories->sortBy('name'), inOrder: true)
+        ->sortTable('name', 'desc')
+        ->assertCanSeeTableRecords($categories->sortByDesc('name'), inOrder: true);
 });
