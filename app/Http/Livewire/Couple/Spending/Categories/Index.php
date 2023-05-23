@@ -2,67 +2,50 @@
 
 namespace App\Http\Livewire\Couple\Spending\Categories;
 
+use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\CoupleSpendingCategory;
-use Exception;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Filament\{Forms, Tables};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Livewire\Component;
 
-/**
- * @property Forms\ComponentContainer|View|mixed|null $form
- */
-class Index extends Component implements HasForms, HasTable
+class Index extends ComponentWithFilamentModal
 {
-    use InteractsWithTable;
-    use InteractsWithForms;
+    protected static ?string $resourceMenuLabel = 'Categorias de Gastos';
 
-    public CoupleSpendingCategory $category;
+    protected static ?string $resourceLabel = 'categoria';
 
-    public $data;
-
-    public function mount(): void
-    {
-        $this->category = new CoupleSpendingCategory();
-
-        $this->form->fill([
-            'name' => $this->category->name,
-        ]);
-    }
+    protected static ?string $createActionColor = 'success';
 
     public function render(): View
     {
         return view('livewire.couple.spending.categories.index');
     }
 
-    public function submit(): void
+    protected static function create(array $data): void
     {
         auth()
             ->user()
             ->coupleSpendingCategories()
-            ->create($this->form->getState());
-
-        $this->dispatchBrowserEvent('close-modal', ['id' => 'newResourceModal']);
-
-        Notification::make()
-            ->title('Categorias')
-            ->body('Categoria criada com sucesso!')
-            ->success()
-            ->send();
+            ->create($data);
     }
 
-    protected function getFormStatePath(): string
+    protected function getFormSchema(): array
     {
-        return 'data';
-    }
+        return [
 
-    /** ############### TABLE ############### */
+            Forms\Components\TextInput::make('name')
+                ->label('Nome')
+                ->placeholder('Digite o nome da categoria')
+                ->string()
+                ->required()
+                ->unique('couple_spending_categories', 'name', ignoreRecord: true)
+                ->minLength(3)
+                ->maxLength(255)
+                ->validationAttribute('nome')
+                ->autofocus(),
+        ];
+    }
 
     protected function getTableQuery(): Builder|Relation
     {
@@ -74,56 +57,25 @@ class Index extends Component implements HasForms, HasTable
         return [
 
             Tables\Columns\TextColumn::make('id')
-                ->label('ID'),
+                ->label('ID')
+                ->sortable()
+                ->searchable(),
 
             Tables\Columns\TextColumn::make('name')
-                ->label('Nome'),
-
-        ];
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function getTableActions(): array
-    {
-        return [
-
-            Tables\Actions\EditAction::make()
-                ->modalHeading('Editar categoria')
-                ->form($this->getFormSchema())
-                ->successNotification(
-                    Notification::make()->title('Categorias')
-                        ->body('Categoria atualizada com sucesso!')
-                        ->success()
-                ),
-
-            Tables\Actions\DeleteAction::make()
-                ->modalHeading('Deletar categoria')
-                ->successNotification(
-                    Notification::make()->title('Categorias')
-                        ->body('Categoria excluída com sucesso!')
-                        ->success()
-                ),
-
-        ];
-    }
-
-    /** ############### FORM ############### */
-
-    protected function getFormSchema(): array
-    {
-        return [
-            Forms\Components\TextInput::make('name')
                 ->label('Nome')
-                ->placeholder('Digite o nome da categoria')
-                ->string()
-                ->required()
-                ->unique('couple_spending_categories', 'name')
-                ->minLength(3)
-                ->maxLength(255)
-                ->validationAttribute('nome')
-                ->autofocus(),
+                ->sortable()
+                ->searchable()
+                ->limit(50)
+                ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
+                    $state = $column->getState();
+
+                    if (strlen($state) <= $column->getLimit()) {
+                        return null;
+                    }
+
+                    return $state;
+                }),
+
         ];
     }
 

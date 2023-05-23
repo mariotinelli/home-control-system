@@ -15,6 +15,9 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
           rel="stylesheet"/>
 
+    <link rel="stylesheet"
+          href="https://unpkg.com/tippy.js@6/dist/tippy.css"/>
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -41,7 +44,7 @@
 
         <livewire:app.navbar/>
 
-        <div class="py-4 px-6 w-full h-[calc(100vh-64px)] overflow-y-auto">
+        <div class="p-6 w-full h-[calc(100vh-64px)] overflow-y-auto">
             {{ $slot }}
         </div>
 

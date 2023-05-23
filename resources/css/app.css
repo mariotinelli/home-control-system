@@ -8,3 +8,25 @@
 [x-cloak] {
     display: none !important;
 }
+
+.filament-tables-table tbody tr .filament-tables-actions-container {
+    gap: 10px !important;
+}
+
+.filament-tables-table tbody tr .filament-tables-actions-container button span {
+    display: none;
+}
+
+.filament-tables-table tbody tr .filament-tables-actions-container button svg {
+    margin: 0 !important;
+}
+
+.filament-tables-table tbody tr .filament-tables-actions-container button {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

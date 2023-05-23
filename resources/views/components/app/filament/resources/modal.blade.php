@@ -5,31 +5,32 @@
 
 <x-forms::modal
     id="resourceModal"
+    width="4xl"
 >
 
     <x-slot name="header">
-        <h2 class="filament-modal-heading text-xl font-bold tracking-tight">
-            {{ $title }}
-        </h2>
+        <x-app.filament.resources.modal-heading :title="$title"/>
     </x-slot>
 
     {{ $this->form }}
 
     <x-slot name="footer">
 
-        <x-forms::button
-            wire:click.prevent="{{ $actionSave }}"
-        >
-            Salvar
-        </x-forms::button>
+        <x-forms::modal.actions>
+            <x-forms::button
+                wire:click.prevent="{{ $actionSave }}"
+            >
+                Salvar
+            </x-forms::button>
 
-        <x-forms::button
-            @click="$dispatch('close-modal', { id: 'resourceModal' })"
-            type="button"
-            color="secondary"
-        >
-            Cancelar
-        </x-forms::button>
+            <x-forms::button
+                @click="$dispatch('close-modal', { id: 'resourceModal' })"
+                type="button"
+                color="secondary"
+            >
+                Cancelar
+            </x-forms::button>
+        </x-forms::modal.actions>
 
     </x-slot>
 

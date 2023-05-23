@@ -7,9 +7,12 @@ import FormsAlpinePlugin from '../../vendor/filament/forms/dist/module.esm'
 import NotificationsAlpinePlugin from '../../vendor/filament/notifications/dist/module.esm'
 import collapse from '@alpinejs/collapse'
 import persist from '@alpinejs/persist'
+import Tooltip from "@ryangjchandler/alpine-tooltip";
+
 
 window.Alpine = Alpine;
 
+Alpine.plugin(Tooltip);
 Alpine.plugin(collapse)
 Alpine.plugin(persist)
 Alpine.plugin(Focus)

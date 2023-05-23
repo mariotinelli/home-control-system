@@ -17,7 +17,6 @@ return [
         'actions' => [
 
             'modal' => [
-
                 'actions' => [
                     'alignment' => 'left',
                 ],
