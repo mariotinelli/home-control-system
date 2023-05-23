@@ -117,13 +117,19 @@ it('can search categories by name', function () {
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
 })->group('canSearchTable');
 
-it('can delete categories', function () {
-    $category = CoupleSpendingCategory::factory()->create();
+it('can create categories', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\DeleteAction::class, $category);
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
 
-    assertModelMissing($category);
+    assertDatabaseHas('couple_spending_categories', [
+        'user_id' => $this->user->id,
+        'name'    => $name,
+    ]);
+
 })->group('tableActions');
 
 it('can edit categories', function () {
@@ -139,17 +145,21 @@ it('can edit categories', function () {
         ->name->toBe($name);
 })->group('tableActions');
 
-it('can create categories', function () {
+it('can delete categories', function () {
+    $category = CoupleSpendingCategory::factory()->create();
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $category);
+
+    assertModelMissing($category);
+})->group('tableActions');
+
+it('can validate category creating data', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
-            'name' => $name = fake()->words(asText: true),
+            'name' => null,
         ])
-        ->assertHasNoTableActionErrors();
+        ->assertHasTableActionErrors(['name' => ['required']]);
 
-    assertDatabaseHas('couple_spending_categories', [
-        'user_id' => $this->user->id,
-        'name'    => $name,
-    ]);
-
-})->group('tableActions');
+})->group('creatingDataValidation');
