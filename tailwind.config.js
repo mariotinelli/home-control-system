@@ -1,7 +1,10 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
+    darkMode: 'class',
     presets: [
         require('./vendor/wireui/wireui/tailwind.config.js')
     ],
@@ -12,13 +15,21 @@ module.exports = {
         "./resources/**/*.blade.php",
         './vendor/wireui/wireui/resources/**/*.blade.php',
         './vendor/wireui/wireui/ts/**/*.ts',
-        './vendor/wireui/wireui/src/View/**/*.php'
+        './vendor/wireui/wireui/src/View/**/*.php',
+        './resources/**/*.blade.php',
+        './vendor/filament/**/*.blade.php',
     ],
 
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                danger: colors.rose,
+                primary: colors.blue,
+                success: colors.green,
+                warning: colors.yellow,
             },
         },
     },

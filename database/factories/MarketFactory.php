@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Market;
+use App\Models\{Market, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MarketFactory extends Factory
@@ -12,7 +12,8 @@ class MarketFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name,
+            'user_id' => User::factory(),
+            'name'    => $this->faker->name,
         ];
     }
 }

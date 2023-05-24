@@ -29,7 +29,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->goal->save();
+        auth()->user()->goals()->save($this->goal);
 
         $this->emit('goal::created');
     }

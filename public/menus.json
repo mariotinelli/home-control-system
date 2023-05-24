@@ -1,0 +1,106 @@
+{
+    "Dashboard": {
+        "isGroup": false,
+        "isActive": false,
+        "name": "Dashboard",
+        "route": "dashboard",
+        "icon": "chart-square-bar"
+    },
+    "Couple": {
+        "isGroup": true,
+        "isExpanded": false,
+        "name": "Gastos do Casal",
+        "group": {
+            "Spending": {
+                "name": "Gastos",
+                "route": "couple.spending.index",
+                "icon": "clipboard-list",
+                "isActive": false
+            },
+            "Categories": {
+                "name": "Categorias",
+                "route": "couple.spending.categories.index",
+                "icon": "tag",
+                "isActive": false
+            }
+        }
+    },
+    "Banks": {
+        "isGroup": true,
+        "isExpanded": false,
+        "name": "Bancos",
+        "group": {
+            "Accounts": {
+                "name": "Contas",
+                "route": "banks.accounts.index",
+                "icon": "library",
+                "isActive": false
+            },
+            "CreditCards": {
+                "name": "Cartões de Crédito",
+                "route": "banks.credit-cards.index",
+                "icon": "credit-card",
+                "isActive": false
+            }
+        }
+    },
+    "Stocks": {
+        "isGroup": true,
+        "isExpanded": false,
+        "name": "Mercado",
+        "group": {
+            "Stock": {
+                "name": "Estoque",
+                "route": "markets.stocks.index",
+                "icon": "table",
+                "isActive": false
+            },
+            "Markets": {
+                "name": "Mercados",
+                "route": "markets.index",
+                "icon": "office-building",
+                "isActive": false
+            },
+            "MarketItems": {
+                "name": "Itens",
+                "route": "markets.items.index",
+                "icon": "shopping-cart",
+                "isActive": false
+            },
+            "MarketItemsCategories": {
+                "name": "Categorias de Itens",
+                "route": "markets.items.categories.index",
+                "icon": "tag",
+                "isActive": false
+            }
+        }
+    },
+    "Investments": {
+        "isGroup": false,
+        "name": "Investimentos",
+        "route": "investments.index",
+        "icon": "chart-bar",
+        "isActive": false
+    },
+    "Goals": {
+        "isGroup": false,
+        "name": "Metas",
+        "route": "goals.index",
+        "icon": "badge-check",
+        "isActive": false
+    },
+    "Trips": {
+        "isGroup": false,
+        "name": "Viagens",
+        "route": "trips.index",
+        "icon": "globe",
+        "isActive": false
+    },
+    "Settings": {
+        "isGroup": false,
+        "name": "Configurações",
+        "route": "settings",
+        "icon": "cog",
+        "isActive": false
+    }
+}

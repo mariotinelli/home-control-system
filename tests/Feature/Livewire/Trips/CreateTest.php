@@ -35,6 +35,7 @@ it('should be able to create a new trip', function () {
         ->assertEmitted('trip::created');
 
     assertDatabaseHas('trips', [
+        'user_id'     => $this->user->id,
         'city_id'     => 2,
         'month'       => '12/2020',
         'description' => 'Test Description',

@@ -16,7 +16,8 @@ class CoupleSpendingCategoryPolicy
 
     public function view(User $user, CoupleSpendingCategory $coupleSpendingCategory): bool
     {
-        return $user->hasPermissionTo('couple_spending_category_read');
+        return $user->hasPermissionTo('couple_spending_category_read')
+            && $user->id === $coupleSpendingCategory->user_id;
     }
 
     public function create(User $user): bool
@@ -26,11 +27,14 @@ class CoupleSpendingCategoryPolicy
 
     public function update(User $user, CoupleSpendingCategory $coupleSpendingCategory): bool
     {
-        return $user->hasPermissionTo('couple_spending_category_update');
+        return $user->hasPermissionTo('couple_spending_category_update')
+            && $user->id === $coupleSpendingCategory->user_id;
     }
 
     public function delete(User $user, CoupleSpendingCategory $coupleSpendingCategory): bool
     {
-        return $user->hasPermissionTo('couple_spending_category_delete');
+        return $user->hasPermissionTo('couple_spending_category_delete')
+            && $user->id === $coupleSpendingCategory->user_id
+            && $coupleSpendingCategory->spendings()->count() === 0;
     }
 }

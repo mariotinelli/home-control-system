@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\BankAccountTypeEnum;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,12 +19,14 @@ class BankAccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'bank_name'     => $this->faker->sentence,
-            'type'          => $this->faker->randomElement(['Conta Corrente', 'Conta Poupança']),
-            'number'        => $this->faker->randomNumber(8),
-            'agency_number' => $this->faker->randomNumber(4),
-            'digit'         => $this->faker->randomNumber(2),
-            'balance'       => $this->faker->randomFloat(2, 0, 100000),
+            'user_id'       => User::factory(),
+            'bank_name'     => fake()->sentence(1),
+            'type'          => fake()->randomElement(BankAccountTypeEnum::toArray()),
+            'number'        => rand(10000, 99999),
+            'digit'         => rand(0, 9),
+            'agency_number' => rand(1000, 9999),
+            'agency_digit'  => rand(0, 9),
+            'balance'       => fake()->randomFloat(2, 0, 15000),
         ];
     }
 }

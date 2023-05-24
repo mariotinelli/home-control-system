@@ -16,7 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserPermissions());
 
-    $this->goal = Goal::factory()->create();
+    $this->user->goals()->save(
+        $this->goal = Goal::factory()->create()
+    );
 
     actingAs($this->user);
 
@@ -31,7 +33,8 @@ it('should be able to delete a goal', function () {
         ->assertEmitted('goal::deleted');
 
     $this->assertDatabaseMissing('goals', [
-        'id' => $this->goal->id,
+        'id'      => $this->goal->id,
+        'user_id' => $this->user->id,
     ]);
 
 });

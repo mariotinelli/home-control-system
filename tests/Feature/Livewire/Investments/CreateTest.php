@@ -35,6 +35,7 @@ it('should be able to create a new investments', function () {
         ->assertEmitted('investment::created');
 
     assertDatabaseHas('investments', [
+        'user_id'     => $this->user->id,
         'name'        => 'Test Investment',
         'description' => 'Test Description',
         'owner'       => 'Mário',

@@ -16,7 +16,9 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserPermissions());
 
-    $this->goal = Goal::factory()->create();
+    $this->user->goals()->save(
+        $this->goal = Goal::factory()->create()
+    );
 
     actingAs($this->user);
 
@@ -35,6 +37,8 @@ it('should be able to update a goal', function () {
         ->assertEmitted('goal::updated');
 
     assertDatabaseHas('goals', [
+        'id'          => $this->goal->id,
+        'user_id'     => $this->user->id,
         'name'        => 'Test Goal Updated',
         'to_reach'    => 200,
         'owner'       => 'Mario Updated',

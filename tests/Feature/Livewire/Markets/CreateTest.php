@@ -32,7 +32,8 @@ it('should be to create a new market', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('markets', [
-        'name' => 'Test Market',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market',
     ]);
 
 });
@@ -48,7 +49,8 @@ it('should not be able to create a new market without a name', function () {
     $lw->assertHasErrors(['market.name' => 'required']);
 
     assertDatabaseMissing('markets', [
-        'name' => 'Test Market',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market',
     ]);
 
 });
@@ -64,7 +66,8 @@ it('should not be able to create a new market with a name longer than 255 charac
     $lw->assertHasErrors(['market.name' => 'max']);
 
     assertDatabaseMissing('markets', [
-        'name' => 'Test Market',
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market',
     ]);
 
 });
@@ -72,9 +75,13 @@ it('should not be able to create a new market with a name longer than 255 charac
 it('should not be able to create a new market with a name that already exists', function () {
 
     // Arrange
-    $market = Market::factory()->create([
-        'name' => 'Test Market',
-    ]);
+    $this->user->markets()->save(
+        $market = Market::factory()->create(
+            [
+                'name' => 'Test Market',
+            ]
+        )
+    );
 
     // Act
     $lw = livewire(Markets\Create::class)
@@ -83,6 +90,33 @@ it('should not be able to create a new market with a name that already exists', 
 
     // Assert
     $lw->assertHasErrors(['market.name' => 'unique']);
+
+});
+
+it('ignore unique name for different user', function () {
+
+    // Arrange
+    User::factory()->create()->markets()->save(
+        $market = Market::factory()->create(
+            [
+                'name' => 'Test Market',
+            ]
+        )
+    );
+
+    // Act
+    $lw = livewire(Markets\Create::class)
+        ->set('market.name', $market->name)
+        ->call('save');
+
+    // Assert
+    $lw->assertEmitted('market::created')
+        ->assertHasNoErrors();
+
+    assertDatabaseHas('markets', [
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market',
+    ]);
 
 });
 
@@ -96,7 +130,4 @@ test('name should be a string', function () {
     // Assert
     $lw->assertHasErrors(['market.name' => 'string']);
 
-    assertDatabaseMissing('markets', [
-        'name' => 'Test Market',
-    ]);
 });

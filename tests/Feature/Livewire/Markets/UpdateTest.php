@@ -16,9 +16,11 @@ beforeEach(function () {
 
     $this->user->givePermissionTo(getUserGoldPermissions());
 
-    $this->market = Market::factory()->create([
-        'name' => 'Test Market',
-    ]);
+    $this->user->markets()->save(
+        $this->market = Market::factory()->create([
+            'name' => 'Test Market',
+        ])
+    );
 
     actingAs($this->user);
 
@@ -36,7 +38,9 @@ it('should be to update market', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('markets', [
-        'name' => 'Test Market Update',
+        'id'      => $this->market->id,
+        'user_id' => $this->user->id,
+        'name'    => 'Test Market Update',
     ]);
 
 });

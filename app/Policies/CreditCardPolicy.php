@@ -13,7 +13,8 @@ class CreditCardPolicy
 
     public function view(User $user, CreditCard $creditCard): bool
     {
-        return $user->hasPermissionTo('credit_card_read');
+        return $user->hasPermissionTo('credit_card_read')
+            && $user->id === $creditCard->user_id;
     }
 
     public function create(User $user): bool
@@ -23,12 +24,14 @@ class CreditCardPolicy
 
     public function update(User $user, CreditCard $creditCard): bool
     {
-        return $user->hasPermissionTo('credit_card_update') && $creditCard->user_id === $user->id;
+        return $user->hasPermissionTo('credit_card_update')
+            && $creditCard->user_id === $user->id;
     }
 
     public function delete(User $user, CreditCard $creditCard): bool
     {
-        return $user->hasPermissionTo('credit_card_delete') && $creditCard->user_id === $user->id;
+        return $user->hasPermissionTo('credit_card_delete')
+            && $creditCard->user_id === $user->id;
     }
 
 }

@@ -30,7 +30,7 @@ class Create extends Component
 
         $this->validate();
 
-        $this->investment->save();
+        auth()->user()->investments()->save($this->investment);
 
         $this->emit('investment::created');
     }
