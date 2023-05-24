@@ -7,7 +7,7 @@ use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 use Carbon\Carbon;
 use Filament\{Tables};
 
-use function Pest\Laravel\{actingAs, get};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -310,7 +310,7 @@ it('can search spending by description', function () {
     // Arrange
     $category = CoupleSpendingCategory::factory()->createOne([
         'user_id' => $this->user->id,
-        'name'    => 'category',
+        'name'    => 'couple_spending_category_id',
     ]);
 
     $spending = CoupleSpending::factory()->count(5)->create([
@@ -398,7 +398,7 @@ it('has a form', function () {
 it('has a category field', function () {
 
     livewire(Couple\Spending\Index::class)
-        ->assertFormFieldExists('category');
+        ->assertFormFieldExists('couple_spending_category_id');
 
 })->group('renderFormFields');
 
@@ -432,23 +432,23 @@ it('can validate category in creating', function () {
     // Required
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
-            'category' => null,
+            'couple_spending_category_id' => null,
         ])
-        ->assertHasTableActionErrors(['category' => ['required']]);
+        ->assertHasTableActionErrors(['couple_spending_category_id' => ['required']]);
 
     // Exists
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
-            'category' => CoupleSpendingCategory::count() + 1,
+            'couple_spending_category_id' => CoupleSpendingCategory::count() + 1,
         ])
-        ->assertHasTableActionErrors(['category' => ['exists']]);
+        ->assertHasTableActionErrors(['couple_spending_category_id' => ['exists']]);
 
     // Belongs to user
     $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
 
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
-            'category' => $categoryNotOwner->id,
+            'couple_spending_category_id' => $categoryNotOwner->id,
         ])
         ->assertForbidden();
 
@@ -529,23 +529,23 @@ it('can validate category in updating', function () {
     // Required
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
-            'category' => null,
+            'couple_spending_category_id' => null,
         ])
-        ->assertHasTableActionErrors(['category' => ['required']]);
+        ->assertHasTableActionErrors(['couple_spending_category_id' => ['required']]);
 
     // Exists
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
-            'category' => CoupleSpendingCategory::count() + 1,
+            'couple_spending_category_id' => CoupleSpendingCategory::count() + 1,
         ])
-        ->assertHasTableActionErrors(['category' => ['exists']]);
+        ->assertHasTableActionErrors(['couple_spending_category_id' => ['exists']]);
 
     // Belongs to user
     $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
 
     livewire(Couple\Spending\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
-            'category' => $categoryNotOwner->id,
+            'couple_spending_category_id' => $categoryNotOwner->id,
         ])
         ->assertForbidden();
 
@@ -626,6 +626,117 @@ it('can validate date in updating', function () {
         ->assertHasTableActionErrors(['date' => ['date']]);
 
 })->group('updatingDataValidation');
+
+/* ###################################################################### */
+/* TABLE ACTIONS CRUD */
+/* ###################################################################### */
+it('can render all table row actions', function () {
+
+    CoupleSpending::factory()->count(1)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionExists(Tables\Actions\EditAction::class);
+
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionExists(Tables\Actions\DeleteAction::class);
+
+})->group('tableActionsCrud');
+
+it('can display correctly spending information in edit action', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->mountTableAction(Tables\Actions\EditAction::class, $spending)
+        ->assertTableActionDataSet([
+            'couple_spending_category_id' => $spending->category->id,
+            'description'                 => $spending->description,
+            'amount'                      => number_format($spending->amount, 2, ',', '.'), // 1.000,00
+            //            'date' => $spending->date . ' ' . now()->format('H:i:s'), Bug in filament
+        ]);
+
+})->group('tableActionsCrud');
+
+it('can create spending', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->makeOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'couple_spending_category_id' => $this->category->id,
+            'description'                 => $spending->description,
+            'amount'                      => $spending->amount,
+            'date'                        => $spending->date,
+        ])
+        ->assertHasNoTableActionErrors();
+
+    assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+        'description'                 => $spending->description,
+        'amount'                      => $spending->amount,
+        'date'                        => $spending->date,
+    ]);
+
+})->group('tableActionsCrud');
+
+it('can edit spending', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    $newCategory = CoupleSpendingCategory::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    $newData = CoupleSpending::factory()->makeOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'couple_spending_category_id' => $newCategory->id,
+            'description'                 => $newData->description,
+            'amount'                      => $newData->amount,
+            'date'                        => $newData->date,
+        ])
+        ->assertHasNoTableActionErrors();
+
+    assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $newCategory->id,
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
+    ]);
+
+})->group('tableActionsCrud');
+
+it('can delete categories', function () {
+
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $spending);
+
+    assertModelMissing($spending);
+
+})->group('tableActionsCrud');
 
 /* ###################################################################### */
 /* Permission */

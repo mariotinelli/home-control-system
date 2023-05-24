@@ -36,7 +36,7 @@ class Index extends ComponentWithFilamentModal
     {
         auth()
             ->user()
-            ->coupleSpendingCategories()
+            ->coupleSpendings()
             ->create($data);
     }
 
@@ -46,7 +46,7 @@ class Index extends ComponentWithFilamentModal
 
             Grid::make()
                 ->schema([
-                    Select::make('category')
+                    Select::make('couple_spending_category_id')
                         ->label('Categoria')
                         ->preload()
                         ->relationship('category', 'name', function (Builder $query): void {
@@ -72,7 +72,6 @@ class Index extends ComponentWithFilamentModal
                     DatePicker::make('date')
                         ->label('Data')
                         ->required()
-                        ->timezone('America/Sao_Paulo')
                         ->displayFormat('d/m/Y'),
                 ]),
         ];

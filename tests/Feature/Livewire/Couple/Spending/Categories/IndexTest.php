@@ -346,9 +346,9 @@ it('can display correctly category information in edit action', function () {
     ]);
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\EditAction::class, $category)
+        ->mountTableAction(Tables\Actions\EditAction::class, $category)
         ->assertTableActionDataSet([
-            'title' => $category->title,
+            'name' => $category->name,
         ]);
 })->group('tableActions');
 
