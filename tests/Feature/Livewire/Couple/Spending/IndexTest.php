@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\Couple\Spending;
 
 use App\Http\Livewire\Couple;
-use App\Models\{CoupleSpending, User};
+use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 
 use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
@@ -15,7 +15,7 @@ beforeEach(function () {
     ]);
 
     $this->user->coupleSpendingCategories()->save(
-        $this->category = CoupleSpending::factory()->makeOne()
+        $this->category = CoupleSpendingCategory::factory()->makeOne()
     );
 
     $this->user->givePermissionTo('couple_spending_read');
@@ -120,6 +120,19 @@ it('can display all spending in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanSeeTableRecords($spending)
         ->assertCountTableRecords(CoupleSpending::count());
+});
+
+it('spending are sorted by default in desc order', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(10)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->assertCanSeeTableRecords($spending->sortByDesc('id'), inOrder: true);
+
 });
 
 it('cannot render page if not has permission', function () {
