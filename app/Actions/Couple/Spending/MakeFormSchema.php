@@ -31,7 +31,11 @@ class MakeFormSchema
                         ->createOptionAction(function (Action $action) {
                             return $action
                                 ->action(fn (array $data) => Couple\Spending\Categories\CreateFromAuthUser::execute($data))
-                                ->modalHeading('Criar categoria')
+                                ->modalHeading(
+                                    view('components.app.filament.resources.modal.heading', [
+                                        'title' => 'Criar categoria',
+                                    ])
+                                )
                                 ->modalButton('Criar')
                                 ->color('success')
                                 ->modalWidth('lg');
