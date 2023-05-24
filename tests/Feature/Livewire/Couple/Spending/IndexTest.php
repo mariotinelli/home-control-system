@@ -46,6 +46,15 @@ it('can redirect to login if not authenticated', function () {
 
 })->group('renderPage');
 
+it('can render table heading', function () {
+
+    CoupleSpending::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Index::class)
+        ->assertSeeHtml('Gastos');
+
+})->group('canRenderTableHeader');
+
 it('can render spending id column in table', function () {
 
     CoupleSpending::factory()->count(1)->create();
