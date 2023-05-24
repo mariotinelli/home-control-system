@@ -198,6 +198,22 @@ it('can sort spending by amount', function () {
 
 })->group('canSortTable');
 
+it('can sort spending by date', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(10)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->sortTable('date')
+        ->assertCanSeeTableRecords($spending->sortBy('date'), inOrder: true)
+        ->sortTable('date', 'desc')
+        ->assertCanSeeTableRecords($spending->sortByDesc('date'), inOrder: true);
+
+})->group('canSortTable');
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
