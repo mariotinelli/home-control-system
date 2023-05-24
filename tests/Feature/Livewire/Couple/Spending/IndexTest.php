@@ -739,12 +739,42 @@ it('can delete categories', function () {
 })->group('tableActionsCrud');
 
 /* ###################################################################### */
-/* Permission */
+/* CANNOT HAS PERMISSION */
 /* ###################################################################### */
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
     livewire(Couple\Spending\Index::class)
         ->assertForbidden();
+
+})->group('cannotHasPermission');
+
+it('cannot render create action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_create');
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertDontSeeHtml('Criar gasto');
+
+})->group('cannotHasPermission');
+
+it('can disable edit action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_update');
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class);
+
+})->group('cannotHasPermission');
+
+it('can disable delete action button if not has permission', function () {
+    // Arrange
+    $this->user->revokePermissionTo('couple_spending_update');
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
 
 })->group('cannotHasPermission');
