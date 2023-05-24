@@ -15,6 +15,7 @@
     href="{{ route($item->route) }}"
     role="menuitem"
     class="block py-2 text-sm px-2 font-semibold transition-colors duration-200 rounded-md {{ $classes }}"
+    wire:key="{{ 'dropdown-link-' . $item->name }}"
 >
 
     <div class="flex space-x-2">

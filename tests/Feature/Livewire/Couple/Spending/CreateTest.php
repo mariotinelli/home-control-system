@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Livewire\CoupleSpendings;
 
+use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas};
@@ -23,7 +24,33 @@ beforeEach(function () {
 
 });
 
-it('should be able to create couple spending', function () {
+todo('should be able to create couple spending', function () {
+    // Arrange
+    $newData = CoupleSpending::factory()->makeOne();
+
+    // Act
+    $lw = livewire(Couple\Spending\Index::class)
+        ->set('coupleSpending.couple_spending_category_id', $this->category->id)
+        ->set('coupleSpending.description', $newData->description)
+        ->set('coupleSpending.amount', $newData->amount)
+        ->set('coupleSpending.date', $newData->date)
+        ->call('save');
+
+    // Assert
+    $lw->assertHasNoErrors()
+        ->assertEmitted('couple-spending::created');
+
+    assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
+    ]);
+
+});
+
+todo('should be able to create couple spending2', function () {
     // Arrange
     $newData = CoupleSpending::factory()->makeOne();
 
