@@ -32,6 +32,9 @@ beforeEach(function () {
 
 });
 
+/* ###################################################################### */
+/* RENDER PAGE */
+/* ###################################################################### */
 it('can render page', function () {
 
     livewire(Couple\Spending\Index::class)
@@ -48,6 +51,9 @@ it('can redirect to login if not authenticated', function () {
 
 })->group('renderPage');
 
+/* ###################################################################### */
+/* CAN RENDER TABLE HEADER */
+/* ###################################################################### */
 it('can render table heading', function () {
 
     CoupleSpending::factory()->count(1)->create([
@@ -72,6 +78,9 @@ it('can render create action button', function () {
 
 })->group('canRenderTableHeader');
 
+/* ###################################################################### */
+/* CAN RENDER TABLE COLUMNS */
+/* ###################################################################### */
 it('can render spending id column in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
@@ -82,7 +91,7 @@ it('can render spending id column in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('id');
 
-})->group('canRenderTableColumn');
+})->group('canRenderTableColumns');
 
 it('can render spending category name column in table', function () {
 
@@ -94,7 +103,7 @@ it('can render spending category name column in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('category.name');
 
-})->group('canRenderTableColumn');
+})->group('canRenderTableColumns');
 
 it('can render spending description column in table', function () {
 
@@ -106,7 +115,7 @@ it('can render spending description column in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('description');
 
-})->group('canRenderTableColumn');
+})->group('canRenderTableColumns');
 
 it('can render spending amount column in table', function () {
 
@@ -118,7 +127,7 @@ it('can render spending amount column in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('amount');
 
-})->group('canRenderTableColumn');
+})->group('canRenderTableColumns');
 
 it('can render spending amount date in table', function () {
 
@@ -130,8 +139,11 @@ it('can render spending amount date in table', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('date');
 
-})->group('canRenderTableColumn');
+})->group('canRenderTableColumns');
 
+/* ###################################################################### */
+/* RENDER DEFAULT */
+/* ###################################################################### */
 it('can display all my spending in table', function () {
 
     // Arrange
@@ -148,7 +160,7 @@ it('can display all my spending in table', function () {
         ->assertCountTableRecords(CoupleSpending::where('user_id', $this->user->id)->count())
         ->assertCanNotSeeTableRecords($otherSpending);
 
-})->group('default');
+})->group('renderDefault');
 
 it('spending are sorted by default in desc order', function () {
 
@@ -161,8 +173,11 @@ it('spending are sorted by default in desc order', function () {
     livewire(Couple\Spending\Index::class)
         ->assertCanSeeTableRecords($spending->sortByDesc('id'), inOrder: true);
 
-})->group('default');
+})->group('renderDefault');
 
+/* ###################################################################### */
+/* SORT COLUMN TABLE */
+/* ###################################################################### */
 it('can sort spending by id', function () {
 
     // Arrange
@@ -248,6 +263,9 @@ it('can sort spending by date', function () {
 
 })->group('canSortTable');
 
+/* ###################################################################### */
+/* HEADER SEARCH TABLE */
+/* ###################################################################### */
 it('can search spending by id', function () {
 
     // Arrange
@@ -273,7 +291,7 @@ it('can search spending by id', function () {
         ->assertCanSeeTableRecords($canSeeSpending)
         ->assertCanNotSeeTableRecords($cannotSeeSpending);
 
-})->group('canSearchTable');
+})->group('canHeaderSearchTable');
 
 it('can search spending by category name', function () {
 
@@ -303,7 +321,7 @@ it('can search spending by category name', function () {
         ->assertCanSeeTableRecords($canSeeSpending)
         ->assertCanNotSeeTableRecords($cannotSeeSpending);
 
-})->group('canSearchTable');
+})->group('canHeaderSearchTable');
 
 it('can search spending by description', function () {
 
@@ -333,7 +351,7 @@ it('can search spending by description', function () {
         ->assertCanSeeTableRecords($canSeeSpending)
         ->assertCanNotSeeTableRecords($cannotSeeSpending);
 
-})->group('canSearchTable');
+})->group('canHeaderSearchTable');
 
 it('can search spending by amount', function () {
 
@@ -358,7 +376,7 @@ it('can search spending by amount', function () {
         ->assertCanSeeTableRecords($canSeeSpending)
         ->assertCanNotSeeTableRecords($cannotSeeSpending);
 
-})->group('canSearchTable');
+})->group('canHeaderSearchTable');
 
 it('can search spending by date in format d/m/Y', function () {
 
@@ -383,10 +401,10 @@ it('can search spending by date in format d/m/Y', function () {
         ->assertCanSeeTableRecords($canSeeSpending)
         ->assertCanNotSeeTableRecords($cannotSeeSpending);
 
-})->group('canSearchTable');
+})->group('canHeaderSearchTable');
 
 /* ###################################################################### */
-/* Form */
+/* RENDER FORM */
 /* ###################################################################### */
 it('has a form', function () {
 
@@ -395,6 +413,9 @@ it('has a form', function () {
 
 })->group('renderForm');
 
+/* ###################################################################### */
+/* RENDER FORM FIELDS */
+/* ###################################################################### */
 it('has a category field', function () {
 
     livewire(Couple\Spending\Index::class)
@@ -423,6 +444,9 @@ it('has a date field', function () {
 
 })->group('renderFormFields');
 
+/* ###################################################################### */
+/* VALIDATE FORM FIELDS - CREATING */
+/* ###################################################################### */
 it('can validate category in creating', function () {
     // Arrange
     CoupleSpendingCategory::factory()->count(5)->create([
@@ -515,6 +539,9 @@ it('can validate date in creating', function () {
 
 })->group('creatingDataValidation');
 
+/* ###################################################################### */
+/* VALIDATE FORM FIELDS - UPDATING */
+/* ###################################################################### */
 it('can validate category in updating', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
@@ -778,3 +805,28 @@ it('can disable delete action button if not has permission', function () {
         ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
 
 })->group('cannotHasPermission');
+
+/* ###################################################################### */
+/* CANNOT OWNER */
+/* ###################################################################### */
+it('can disable edit action button if not is owner', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->create();
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class, $spending);
+
+})->group('cannotOwner');
+
+it('can disable delete action button if not is owner', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->create();
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $spending);
+
+})->group('cannotOwner');

@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire\Couple\Spending;
 
+use App\Actions\Couple;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending};
-use App\Rules\CoupleSpendingCategoryOwnerRule;
-use Filament\Forms\Components\{DatePicker, Grid, Select, TextInput};
+use Exception;
 use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Leandrocfe\FilamentPtbrFormFields\PtbrMoney;
 
 class Index extends ComponentWithFilamentModal
 {
@@ -34,47 +33,13 @@ class Index extends ComponentWithFilamentModal
 
     protected static function create(array $data): void
     {
-        auth()
-            ->user()
-            ->coupleSpendings()
-            ->create($data);
+        Couple\Spending\CreateFromAuthUser::execute($data);
     }
 
+    /** @throws Exception */
     protected function getFormSchema(): array
     {
-        return [
-
-            Grid::make()
-                ->schema([
-                    Select::make('couple_spending_category_id')
-                        ->label('Categoria')
-                        ->preload()
-                        ->relationship('category', 'name', function (Builder $query): void {
-                            $query->where('user_id', auth()->id());
-                        })
-                        ->required()
-                        ->exists('couple_spending_categories', 'id')
-                        ->rule(new CoupleSpendingCategoryOwnerRule())
-                        ->columnSpan(2),
-
-                    TextInput::make('description')
-                        ->label('Descrição')
-                        ->required()
-                        ->string()
-                        ->minLength(3)
-                        ->maxLength(255)
-                        ->columnSpan(2),
-
-                    PtbrMoney::make('amount')
-                        ->label('Valor')
-                        ->required(),
-
-                    DatePicker::make('date')
-                        ->label('Data')
-                        ->required()
-                        ->displayFormat('d/m/Y'),
-                ]),
-        ];
+        return Couple\Spending\MakeFormSchema::execute();
     }
 
     protected function getTableQuery(): Builder|Relation
@@ -85,38 +50,8 @@ class Index extends ComponentWithFilamentModal
 
     protected function getTableColumns(): array
     {
-        return [
-
-            TextColumn::make('id')
-                ->label('ID')
-                ->sortable()
-                ->searchable(),
-
-            TextColumn::make('category.name')
-                ->label('Categoria')
-                ->sortable()
-                ->searchable(),
-
-            TextColumn::make('description')
-                ->label('Descrição')
-                ->sortable()
-                ->searchable(),
-
-            TextColumn::make('amount')
-                ->label('Valor')
-                ->money('BRL')
-                ->sortable()
-                ->searchable(),
-
-            TextColumn::make('date')
-                ->label('Data')
-                ->date('d/m/Y')
-                ->sortable()
-                ->searchable(query: function (Builder $query, string $search): Builder {
-                    return $query
-                        ->whereRaw("DATE_FORMAT(date, '%d/%m/%Y') LIKE ?", ["%$search%"]);
-                }),
-
-        ];
+        return Couple\Spending\MakeTableColumns::execute(
+            closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
+        );
     }
 }
