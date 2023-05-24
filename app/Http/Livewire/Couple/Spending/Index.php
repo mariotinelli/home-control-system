@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Couple\Spending;
 
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending};
+use App\Rules\CoupleSpendingCategoryOwnerRule;
 use Filament\Forms\Components\{Select, TextInput};
 use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
@@ -42,7 +43,15 @@ class Index extends ComponentWithFilamentModal
     {
         return [
 
-            Select::make('category_id'),
+            Select::make('category')
+                ->label('Categoria')
+                ->preload()
+                ->relationship('category', 'name', function (Builder $query): void {
+                    $query->where('user_id', auth()->id());
+                })
+                ->required()
+                ->exists('couple_spending_categories', 'id')
+                ->rule(new CoupleSpendingCategoryOwnerRule()),
 
             TextInput::make('description'),
 

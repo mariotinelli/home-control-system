@@ -5,6 +5,7 @@ namespace Tests\Feature\Livewire\Couple\Spending;
 use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 use Carbon\Carbon;
+use Filament\{Tables};
 
 use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
@@ -397,7 +398,7 @@ it('has a form', function () {
 it('has a category field', function () {
 
     livewire(Couple\Spending\Index::class)
-        ->assertFormFieldExists('category_id');
+        ->assertFormFieldExists('category');
 
 })->group('renderFormFields');
 
@@ -421,6 +422,39 @@ it('has a date field', function () {
         ->assertFormFieldExists('date');
 
 })->group('renderFormFields');
+
+todo('teste para carregar apenas as minahs categorias no select');
+
+it('can validate category in creating', function () {
+    // Arrange
+    $categories = CoupleSpendingCategory::factory()->count(5)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'category' => null,
+        ])
+        ->assertHasTableActionErrors(['category' => ['required']]);
+
+    // Exists
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'category' => CoupleSpendingCategory::count() + 1,
+        ])
+        ->assertHasTableActionErrors(['category' => ['exists']]);
+
+    // Belongs to user
+    $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
+
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'category' => $categoryNotOwner->id,
+        ])
+        ->assertForbidden();
+
+})->group('creatingDataValidation');
 
 /* ###################################################################### */
 /* Permission */
