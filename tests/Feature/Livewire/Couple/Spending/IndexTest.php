@@ -456,6 +456,38 @@ it('can validate category in creating', function () {
 
 })->group('creatingDataValidation');
 
+it('can validate description in creating', function () {
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'description' => null,
+        ])
+        ->assertHasTableActionErrors(['description' => ['required']]);
+
+    // String
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'description' => 123,
+        ])
+        ->assertHasTableActionErrors(['description' => ['string']]);
+
+    // Min 3
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'description' => \Str::random(2),
+        ])
+        ->assertHasTableActionErrors(['description' => ['min']]);
+
+    // Max 255
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'description' => \Str::random(256),
+        ])
+        ->assertHasTableActionErrors(['description' => ['max']]);
+
+})->group('creatingDataValidation');
+
 /* ###################################################################### */
 /* Permission */
 /* ###################################################################### */

@@ -53,7 +53,12 @@ class Index extends ComponentWithFilamentModal
                 ->exists('couple_spending_categories', 'id')
                 ->rule(new CoupleSpendingCategoryOwnerRule()),
 
-            TextInput::make('description'),
+            TextInput::make('description')
+                ->label('Descrição')
+                ->required()
+                ->string()
+                ->minLength(3)
+                ->maxLength(255),
 
             TextInput::make('amount'),
 
