@@ -167,6 +167,7 @@ todo('can sort spending by category', function () {
 })->group('canSortTable');
 
 it('can sort spending by description', function () {
+
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
         'user_id'                     => $this->user->id,
@@ -178,6 +179,22 @@ it('can sort spending by description', function () {
         ->assertCanSeeTableRecords($spending->sortBy('description'), inOrder: true)
         ->sortTable('description', 'desc')
         ->assertCanSeeTableRecords($spending->sortByDesc('description'), inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by amount', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(10)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    livewire(Couple\Spending\Index::class)
+        ->sortTable('amount')
+        ->assertCanSeeTableRecords($spending->sortBy('amount'), inOrder: true)
+        ->sortTable('amount', 'desc')
+        ->assertCanSeeTableRecords($spending->sortByDesc('amount'), inOrder: true);
 
 })->group('canSortTable');
 
