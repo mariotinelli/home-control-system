@@ -36,3 +36,11 @@ it('can render page', function () {
         ->assertSuccessful();
 
 })->group('canRenderPage');
+
+it('cannot render page if not has permission', function () {
+    $this->user->revokePermissionTo('couple_spending_read');
+
+    livewire(Couple\Spending\Index::class)
+        ->assertForbidden();
+
+})->group('cannotHasPermission');
