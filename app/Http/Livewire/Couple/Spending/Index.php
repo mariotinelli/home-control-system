@@ -5,12 +5,13 @@ namespace App\Http\Livewire\Couple\Spending;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending};
 use App\Rules\CoupleSpendingCategoryOwnerRule;
-use Filament\Forms\Components\{Select, TextInput};
+use Filament\Forms\Components\{Grid, Select, TextInput};
 use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Leandrocfe\FilamentPtbrFormFields\PtbrMoney;
 
 class Index extends ComponentWithFilamentModal
 {
@@ -43,27 +44,33 @@ class Index extends ComponentWithFilamentModal
     {
         return [
 
-            Select::make('category')
-                ->label('Categoria')
-                ->preload()
-                ->relationship('category', 'name', function (Builder $query): void {
-                    $query->where('user_id', auth()->id());
-                })
-                ->required()
-                ->exists('couple_spending_categories', 'id')
-                ->rule(new CoupleSpendingCategoryOwnerRule()),
+            Grid::make()
+                ->schema([
+                    Select::make('category')
+                        ->label('Categoria')
+                        ->preload()
+                        ->relationship('category', 'name', function (Builder $query): void {
+                            $query->where('user_id', auth()->id());
+                        })
+                        ->required()
+                        ->exists('couple_spending_categories', 'id')
+                        ->rule(new CoupleSpendingCategoryOwnerRule())
+                        ->columnSpan(2),
 
-            TextInput::make('description')
-                ->label('Descrição')
-                ->required()
-                ->string()
-                ->minLength(3)
-                ->maxLength(255),
+                    TextInput::make('description')
+                        ->label('Descrição')
+                        ->required()
+                        ->string()
+                        ->minLength(3)
+                        ->maxLength(255)
+                        ->columnSpan(2),
 
-            TextInput::make('amount'),
+                    PtbrMoney::make('amount')
+                        ->label('Valor')
+                        ->required(), // Max value for MySQL DECIMAL(10,2)
 
-            TextInput::make('date'),
-
+                    TextInput::make('date'),
+                ]),
         ];
     }
 

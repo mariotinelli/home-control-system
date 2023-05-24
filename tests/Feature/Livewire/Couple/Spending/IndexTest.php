@@ -488,6 +488,17 @@ it('can validate description in creating', function () {
 
 })->group('creatingDataValidation');
 
+it('can validate amount in creating', function () {
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'amount' => null,
+        ])
+        ->assertHasTableActionErrors(['amount' => ['required']]);
+
+})->group('creatingDataValidation');
+
 /* ###################################################################### */
 /* Permission */
 /* ###################################################################### */
