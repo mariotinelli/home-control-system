@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Couple\Spending\Categories;
 
+use App\Actions\Couple;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\CoupleSpendingCategory;
-use Filament\{Forms, Tables};
+use Filament\{Tables\Columns\TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -24,10 +25,6 @@ class Index extends ComponentWithFilamentModal
 
     public function render(): View
     {
-        //        auth()->user()->givePermissionTo('couple_spending_category_read');
-        //        auth()->user()->givePermissionTo('couple_spending_category_create');
-        //        auth()->user()->givePermissionTo('couple_spending_category_update');
-        //        auth()->user()->revokePermissionTo('couple_spending_category_update');
         $this->authorize('viewAny', CoupleSpendingCategory::class);
 
         return view('livewire.couple.spending.categories.index');
@@ -35,59 +32,25 @@ class Index extends ComponentWithFilamentModal
 
     protected static function create(array $data): void
     {
-        auth()
-            ->user()
-            ->coupleSpendingCategories()
-            ->create($data);
+        Couple\Spending\Categories\CreateFromAuthUser::execute($data);
     }
 
     protected function getFormSchema(): array
     {
-        return [
-
-            Forms\Components\TextInput::make('name')
-                ->label('Nome')
-                ->placeholder('Digite o nome da categoria')
-                ->string()
-                ->required()
-                ->unique('couple_spending_categories', 'name', ignoreRecord: true)
-                ->minLength(3)
-                ->maxLength(255)
-                ->validationAttribute('nome')
-                ->autofocus(),
-        ];
+        return Couple\Spending\Categories\MakeFormSchema::execute();
     }
 
     protected function getTableQuery(): Builder|Relation
     {
-        return CoupleSpendingCategory::query();
+        return CoupleSpendingCategory::query()
+            ->where('user_id', auth()->id());
     }
 
     protected function getTableColumns(): array
     {
-        return [
-
-            Tables\Columns\TextColumn::make('id')
-                ->label('ID')
-                ->sortable()
-                ->searchable(),
-
-            Tables\Columns\TextColumn::make('name')
-                ->label('Nome')
-                ->sortable()
-                ->searchable()
-                ->limit(50)
-                ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
-                    $state = $column->getState();
-
-                    if (strlen($state) <= $column->getLimit()) {
-                        return null;
-                    }
-
-                    return $state;
-                }),
-
-        ];
+        return Couple\Spending\Categories\MakeTableColumns::execute(
+            closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
+        );
     }
 
 }

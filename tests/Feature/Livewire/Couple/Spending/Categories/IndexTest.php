@@ -27,8 +27,6 @@ beforeEach(function () {
 
 });
 
-todo('criar testes para permissões, autenticação e owner');
-
 it('can render page', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
@@ -45,12 +43,20 @@ it('can redirect to login if not authenticated', function () {
 
 })->group('canRenderPage');
 
-it('can display all categories in table', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+it('can display all my categories in the table', function () {
+
+    // Arrange
+    $myCategories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    $otherCategories = CoupleSpendingCategory::factory()->count(10)->create();
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->assertCanSeeTableRecords($categories)
-        ->assertCountTableRecords($categories->count());
+        ->assertCanSeeTableRecords($myCategories)
+        ->assertCountTableRecords(CoupleSpendingCategory::where('user_id', $this->user->id)->count())
+        ->assertCanNotSeeTableRecords($otherCategories);
+
 });
 
 it('can render table heading', function () {
@@ -90,14 +96,18 @@ it('can render category name table column', function () {
 })->group('canRenderTableColumn');
 
 it('categories are sorted by default in desc order', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
 });
 
 it('can sort categories by id', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->sortTable('id')
@@ -107,17 +117,23 @@ it('can sort categories by id', function () {
 })->group('canSortTable');
 
 it('can sort categories by name', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->sortTable('name')
         ->assertCanSeeTableRecords($categories->sortBy('name'), inOrder: true)
         ->sortTable('name', 'desc')
         ->assertCanSeeTableRecords($categories->sortByDesc('name'), inOrder: true);
+
 })->group('canSortTable');
 
 it('can search categories by id', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     $id = $categories->first()->id;
 
@@ -136,7 +152,9 @@ it('can search categories by id', function () {
 })->group('canSearchTable');
 
 it('can search categories by name', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     $name = $categories->first()->name;
 
@@ -154,76 +172,19 @@ it('can search categories by name', function () {
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
 })->group('canSearchTable');
 
-it('can create categories', function () {
+it('has a form', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\CreateAction::class, data: [
-            'name' => $name = fake()->words(asText: true),
-        ])
-        ->assertHasNoTableActionErrors();
+        ->assertFormExists();
 
-    assertDatabaseHas('couple_spending_categories', [
-        'user_id' => $this->user->id,
-        'name'    => $name,
-    ]);
+})->group('renderForm');
 
-})->group('tableActions');
-
-it('can edit categories', function () {
-    // Arrange
-    $category = CoupleSpendingCategory::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
+it('has a name field', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
-            'name' => $name = fake()->words(asText: true),
-        ])
-        ->assertHasNoTableActionErrors();
+        ->assertFormFieldExists('name');
 
-    expect($category->refresh())
-        ->name->toBe($name);
-
-})->group('tableActions');
-
-it('can delete categories', function () {
-
-    $category = CoupleSpendingCategory::factory()->createOne([
-        'user_id' => $this->user->id,
-    ]);
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\DeleteAction::class, $category);
-
-    assertModelMissing($category);
-
-})->group('tableActions');
-
-it('can render all table row actions', function () {
-
-    CoupleSpendingCategory::factory()->count(1)->create([
-        'user_id' => $this->user->id,
-    ]);
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertTableActionExists(Tables\Actions\EditAction::class);
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->assertTableActionExists(Tables\Actions\DeleteAction::class);
-
-})->group('tableActions');
-
-it('can display correctly category information in edit action', function () {
-    $category = CoupleSpendingCategory::factory()->create([
-        'user_id' => $this->user->id,
-    ]);
-
-    livewire(Couple\Spending\Categories\Index::class)
-        ->callTableAction(Tables\Actions\EditAction::class, $category)
-        ->assertTableActionDataSet([
-            'title' => $category->title,
-        ]);
-})->group('tableActions');
+})->group('renderFormFields');
 
 it('can validate category name in creating', function () {
 
@@ -319,6 +280,77 @@ it('can validate category name in updating', function () {
         ->assertHasNoTableActionErrors(['name' => ['unique']]);
 
 })->group('updatingDataValidation');
+
+it('can create categories', function () {
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
+
+    assertDatabaseHas('couple_spending_categories', [
+        'user_id' => $this->user->id,
+        'name'    => $name,
+    ]);
+
+})->group('tableActions');
+
+it('can edit categories', function () {
+    // Arrange
+    $category = CoupleSpendingCategory::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
+
+    expect($category->refresh())
+        ->name->toBe($name);
+
+})->group('tableActions');
+
+it('can delete categories', function () {
+
+    $category = CoupleSpendingCategory::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $category);
+
+    assertModelMissing($category);
+
+})->group('tableActions');
+
+it('can render all table row actions', function () {
+
+    CoupleSpendingCategory::factory()->count(1)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionExists(Tables\Actions\EditAction::class);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->assertTableActionExists(Tables\Actions\DeleteAction::class);
+
+})->group('tableActions');
+
+it('can display correctly category information in edit action', function () {
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->mountTableAction(Tables\Actions\EditAction::class, $category)
+        ->assertTableActionDataSet([
+            'name' => $category->name,
+        ]);
+})->group('tableActions');
 
 it('cannot render page if not has permission', function () {
 

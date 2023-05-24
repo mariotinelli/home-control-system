@@ -11,7 +11,7 @@ class CoupleSpendingCategoryOwnerRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($value
-            && CoupleSpendingCategory::find($value)
+            && (auth()->check() && CoupleSpendingCategory::find($value))
             && (auth()->id() != CoupleSpendingCategory::find($value)->user_id)
         ) {
             abort(403);
