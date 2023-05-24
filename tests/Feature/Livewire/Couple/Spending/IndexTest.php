@@ -423,11 +423,9 @@ it('has a date field', function () {
 
 })->group('renderFormFields');
 
-todo('teste para carregar apenas as minahs categorias no select');
-
 it('can validate category in creating', function () {
     // Arrange
-    $categories = CoupleSpendingCategory::factory()->count(5)->create([
+    CoupleSpendingCategory::factory()->count(5)->create([
         'user_id' => $this->user->id,
     ]);
 
@@ -516,6 +514,118 @@ it('can validate date in creating', function () {
         ->assertHasTableActionErrors(['date' => ['date']]);
 
 })->group('creatingDataValidation');
+
+it('can validate category in updating', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    CoupleSpendingCategory::factory()->count(5)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'category' => null,
+        ])
+        ->assertHasTableActionErrors(['category' => ['required']]);
+
+    // Exists
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'category' => CoupleSpendingCategory::count() + 1,
+        ])
+        ->assertHasTableActionErrors(['category' => ['exists']]);
+
+    // Belongs to user
+    $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
+
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'category' => $categoryNotOwner->id,
+        ])
+        ->assertForbidden();
+
+})->group('updatingDataValidation');
+
+it('can validate description in updating', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'description' => null,
+        ])
+        ->assertHasTableActionErrors(['description' => ['required']]);
+
+    // String
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'description' => 123,
+        ])
+        ->assertHasTableActionErrors(['description' => ['string']]);
+
+    // Min 3
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'description' => \Str::random(2),
+        ])
+        ->assertHasTableActionErrors(['description' => ['min']]);
+
+    // Max 255
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'description' => \Str::random(256),
+        ])
+        ->assertHasTableActionErrors(['description' => ['max']]);
+
+})->group('updatingDataValidation');
+
+it('can validate amount in updating', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'amount' => null,
+        ])
+        ->assertHasTableActionErrors(['amount' => ['required']]);
+
+})->group('updatingDataValidation');
+
+it('can validate date in updating', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->createOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'date' => null,
+        ])
+        ->assertHasTableActionErrors(['date' => ['required']]);
+
+    // Date
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
+            'date' => 'abc',
+        ])
+        ->assertHasTableActionErrors(['date' => ['date']]);
+
+})->group('updatingDataValidation');
 
 /* ###################################################################### */
 /* Permission */

@@ -67,7 +67,7 @@ class Index extends ComponentWithFilamentModal
 
                     PtbrMoney::make('amount')
                         ->label('Valor')
-                        ->required(), // Max value for MySQL DECIMAL(10,2)
+                        ->required(),
 
                     DatePicker::make('date')
                         ->label('Data')
