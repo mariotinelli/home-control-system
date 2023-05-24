@@ -5,7 +5,7 @@ namespace Tests\Feature\Livewire\Couple\Spending;
 use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpendingCategory, User};
 
-use function Pest\Laravel\actingAs;
+use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -35,7 +35,16 @@ it('can render page', function () {
     livewire(Couple\Spending\Index::class)
         ->assertSuccessful();
 
-})->group('canRenderPage');
+})->group('renderPage');
+
+it('can redirect to login if not authenticated', function () {
+
+    \Auth::logout();
+
+    get(route('couple.spending.index'))
+        ->assertRedirect(route('login'));
+
+})->group('renderPage');
 
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
