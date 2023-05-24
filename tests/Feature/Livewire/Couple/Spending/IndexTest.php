@@ -3,7 +3,7 @@
 namespace Tests\Feature\Livewire\Couple\Spending;
 
 use App\Http\Livewire\Couple;
-use App\Models\{CoupleSpendingCategory, User};
+use App\Models\{CoupleSpending, User};
 
 use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
@@ -15,7 +15,7 @@ beforeEach(function () {
     ]);
 
     $this->user->coupleSpendingCategories()->save(
-        $this->category = CoupleSpendingCategory::factory()->makeOne()
+        $this->category = CoupleSpending::factory()->makeOne()
     );
 
     $this->user->givePermissionTo('couple_spending_read');
@@ -45,6 +45,15 @@ it('can redirect to login if not authenticated', function () {
         ->assertRedirect(route('login'));
 
 })->group('renderPage');
+
+it('can render spending id column in table', function () {
+
+    CoupleSpending::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Index::class)
+        ->assertCanRenderTableColumn('id');
+
+})->group('canRenderTableColumn');
 
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
