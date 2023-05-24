@@ -499,6 +499,24 @@ it('can validate amount in creating', function () {
 
 })->group('creatingDataValidation');
 
+it('can validate date in creating', function () {
+
+    // Required
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'date' => null,
+        ])
+        ->assertHasTableActionErrors(['date' => ['required']]);
+
+    // Date
+    livewire(Couple\Spending\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'date' => 'abc',
+        ])
+        ->assertHasTableActionErrors(['date' => ['date']]);
+
+})->group('creatingDataValidation');
+
 /* ###################################################################### */
 /* Permission */
 /* ###################################################################### */

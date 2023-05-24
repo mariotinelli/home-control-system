@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Couple\Spending;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending};
 use App\Rules\CoupleSpendingCategoryOwnerRule;
-use Filament\Forms\Components\{Grid, Select, TextInput};
+use Filament\Forms\Components\{DatePicker, Grid, Select, TextInput};
 use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -69,7 +69,11 @@ class Index extends ComponentWithFilamentModal
                         ->label('Valor')
                         ->required(), // Max value for MySQL DECIMAL(10,2)
 
-                    TextInput::make('date'),
+                    DatePicker::make('date')
+                        ->label('Data')
+                        ->required()
+                        ->timezone('America/Sao_Paulo')
+                        ->displayFormat('d/m/Y'),
                 ]),
         ];
     }
