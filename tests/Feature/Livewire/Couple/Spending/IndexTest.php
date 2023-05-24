@@ -48,7 +48,10 @@ it('can redirect to login if not authenticated', function () {
 
 it('can render table heading', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertSeeHtml('Gastos');
@@ -57,7 +60,10 @@ it('can render table heading', function () {
 
 it('can render create action button', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertTableActionExists('create');
@@ -66,25 +72,34 @@ it('can render create action button', function () {
 
 it('can render spending id column in table', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('id');
 
 })->group('canRenderTableColumn');
 
-it('can render spending category_id column in table', function () {
+it('can render spending category name column in table', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
-        ->assertCanRenderTableColumn('category_id');
+        ->assertCanRenderTableColumn('category.name');
 
 })->group('canRenderTableColumn');
 
 it('can render spending description column in table', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('description');
@@ -93,7 +108,10 @@ it('can render spending description column in table', function () {
 
 it('can render spending amount column in table', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('amount');
@@ -102,7 +120,10 @@ it('can render spending amount column in table', function () {
 
 it('can render spending amount date in table', function () {
 
-    CoupleSpending::factory()->count(1)->create();
+    CoupleSpending::factory()->count(1)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
 
     livewire(Couple\Spending\Index::class)
         ->assertCanRenderTableColumn('date');
@@ -151,18 +172,24 @@ it('can sort spending by id', function () {
 
 })->group('canSortTable');
 
-todo('can sort spending by category', function () {
+it('can sort spending by category name', function () {
+
     // Arrange
-    $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id'                     => $this->user->id,
-        'couple_spending_category_id' => $this->category->id,
+    $categories = CoupleSpendingCategory::factory()->count(5)->create([
+        'user_id' => $this->user->id,
     ]);
 
+    $spending = CoupleSpending::factory()->count(10)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $categories->random()->id,
+    ]);
+
+    // Act
     livewire(Couple\Spending\Index::class)
-        ->sortTable('category')
-        ->assertCanSeeTableRecords($spending->sortBy('category'), inOrder: true)
-        ->sortTable('category', 'desc')
-        ->assertCanSeeTableRecords($spending->sortByDesc('category'), inOrder: true);
+        ->sortTable('category.name')
+        ->assertCanSeeTableRecords($spending->sortBy('category.name'), inOrder: true)
+        ->sortTable('category.name', 'desc')
+        ->assertCanSeeTableRecords($spending->sortByDesc('category.name'), inOrder: true);
 
 })->group('canSortTable');
 

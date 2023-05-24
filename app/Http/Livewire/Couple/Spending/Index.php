@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Couple\Spending;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending, CoupleSpendingCategory};
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\{BadgeColumn, TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -66,22 +66,29 @@ class Index extends ComponentWithFilamentModal
         return [
 
             TextColumn::make('id')
+                ->label('ID')
                 ->sortable()
                 ->searchable(),
 
-            TextColumn::make('category_id')
+            BadgeColumn::make('category.name')
+                ->label('Categoria')
                 ->sortable()
                 ->searchable(),
 
             TextColumn::make('description')
+                ->label('Descrição')
                 ->sortable()
                 ->searchable(),
 
             TextColumn::make('amount')
+                ->label('Valor')
+                ->money('BRL')
                 ->sortable()
                 ->searchable(),
 
             TextColumn::make('date')
+                ->label('Data')
+                ->date('d/m/Y')
                 ->sortable()
                 ->searchable(),
 
