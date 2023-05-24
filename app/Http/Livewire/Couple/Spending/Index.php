@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Couple\Spending;
 
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending};
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\{Select, TextInput};
 use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,6 +41,8 @@ class Index extends ComponentWithFilamentModal
     protected function getFormSchema(): array
     {
         return [
+
+            Select::make('category_id'),
 
             TextInput::make('name')
                 ->label('Nome')
