@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Couple\Spending;
 use App\Http\Livewire\ComponentWithFilamentModal;
 use App\Models\{CoupleSpending, CoupleSpendingCategory};
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\{BadgeColumn, TextColumn};
+use Filament\Tables\Columns\{TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -26,6 +26,9 @@ class Index extends ComponentWithFilamentModal
     public function render(): View
     {
         //        auth()->user()->givePermissionTo('couple_spending_read');
+        //        auth()->user()->givePermissionTo('couple_spending_create');
+        //        auth()->user()->givePermissionTo('couple_spending_update');
+        //        auth()->user()->givePermissionTo('couple_spending_delete');
         $this->authorize('viewAny', [CoupleSpending::class]);
 
         return view('livewire.couple.spending.index');
@@ -70,7 +73,7 @@ class Index extends ComponentWithFilamentModal
                 ->sortable()
                 ->searchable(),
 
-            BadgeColumn::make('category.name')
+            TextColumn::make('category.name')
                 ->label('Categoria')
                 ->sortable()
                 ->searchable(),

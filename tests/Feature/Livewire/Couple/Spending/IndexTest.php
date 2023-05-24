@@ -241,6 +241,33 @@ it('can sort spending by date', function () {
 
 })->group('canSortTable');
 
+it('can search spending by id', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(5)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+        'amount'                      => 3333,
+        'date'                        => '2023-03-03',
+    ]);
+
+    $search = $spending->first()->id;
+
+    $canSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false !== stripos($item->id, $search);
+    });
+
+    $cannotSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false === stripos($item->id, $search);
+    });
+
+    livewire(Couple\Spending\Index::class)
+        ->searchTable($search)
+        ->assertCanSeeTableRecords($canSeeSpending)
+        ->assertCanNotSeeTableRecords($cannotSeeSpending);
+
+})->group('canSearchTable');
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
