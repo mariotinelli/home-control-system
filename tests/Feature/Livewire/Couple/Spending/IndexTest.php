@@ -73,6 +73,15 @@ it('can render spending amount column in table', function () {
 
 })->group('canRenderTableColumn');
 
+it('can render spending amount date in table', function () {
+
+    CoupleSpending::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Index::class)
+        ->assertCanRenderTableColumn('date');
+
+})->group('canRenderTableColumn');
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
