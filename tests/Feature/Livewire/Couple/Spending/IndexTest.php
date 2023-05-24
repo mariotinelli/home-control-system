@@ -55,6 +55,15 @@ it('can render table heading', function () {
 
 })->group('canRenderTableHeader');
 
+it('can render create action button', function () {
+
+    CoupleSpending::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Index::class)
+        ->assertTableActionExists('create');
+
+})->group('canRenderTableHeader');
+
 it('can render spending id column in table', function () {
 
     CoupleSpending::factory()->count(1)->create();
