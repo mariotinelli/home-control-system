@@ -91,6 +91,19 @@ it('can render spending amount date in table', function () {
 
 })->group('canRenderTableColumn');
 
+it('can display all spending in table', function () {
+    // Arrange
+    $spending = CoupleSpending::factory()->count(10)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    // Act
+    livewire(Couple\Spending\Index::class)
+        ->assertCanSeeTableRecords($spending)
+        ->assertCountTableRecords(CoupleSpending::count());
+});
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
