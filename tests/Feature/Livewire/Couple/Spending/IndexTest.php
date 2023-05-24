@@ -385,6 +385,16 @@ it('can search spending by date in format d/m/Y', function () {
 })->group('canSearchTable');
 
 /* ###################################################################### */
+/* Form */
+/* ###################################################################### */
+it('has a form', function () {
+
+    livewire(Couple\Spending\Index::class)
+        ->assertFormExists();
+
+})->group('renderForm');
+
+/* ###################################################################### */
 /* Permission */
 /* ###################################################################### */
 it('cannot render page if not has permission', function () {
