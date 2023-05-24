@@ -24,10 +24,6 @@ class Index extends ComponentWithFilamentModal
 
     public function render(): View
     {
-        //        auth()->user()->givePermissionTo('couple_spending_category_read');
-        //        auth()->user()->givePermissionTo('couple_spending_category_create');
-        //        auth()->user()->givePermissionTo('couple_spending_category_update');
-        //        auth()->user()->revokePermissionTo('couple_spending_category_update');
         $this->authorize('viewAny', CoupleSpendingCategory::class);
 
         return view('livewire.couple.spending.categories.index');
@@ -60,7 +56,8 @@ class Index extends ComponentWithFilamentModal
 
     protected function getTableQuery(): Builder|Relation
     {
-        return CoupleSpendingCategory::query();
+        return CoupleSpendingCategory::query()
+            ->where('user_id', auth()->id());
     }
 
     protected function getTableColumns(): array

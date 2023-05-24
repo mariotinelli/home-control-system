@@ -43,12 +43,20 @@ it('can redirect to login if not authenticated', function () {
 
 })->group('canRenderPage');
 
-it('can display all categories in table', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+it('can display all my categories in the table', function () {
+
+    // Arrange
+    $myCategories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    $otherCategories = CoupleSpendingCategory::factory()->count(10)->create();
 
     livewire(Couple\Spending\Categories\Index::class)
-        ->assertCanSeeTableRecords($categories)
-        ->assertCountTableRecords($categories->count());
+        ->assertCanSeeTableRecords($myCategories)
+        ->assertCountTableRecords(CoupleSpendingCategory::where('user_id', $this->user->id)->count())
+        ->assertCanNotSeeTableRecords($otherCategories);
+
 });
 
 it('can render table heading', function () {
@@ -88,14 +96,18 @@ it('can render category name table column', function () {
 })->group('canRenderTableColumn');
 
 it('categories are sorted by default in desc order', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
 });
 
 it('can sort categories by id', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->sortTable('id')
@@ -105,17 +117,23 @@ it('can sort categories by id', function () {
 })->group('canSortTable');
 
 it('can sort categories by name', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->sortTable('name')
         ->assertCanSeeTableRecords($categories->sortBy('name'), inOrder: true)
         ->sortTable('name', 'desc')
         ->assertCanSeeTableRecords($categories->sortByDesc('name'), inOrder: true);
+
 })->group('canSortTable');
 
 it('can search categories by id', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     $id = $categories->first()->id;
 
@@ -134,7 +152,9 @@ it('can search categories by id', function () {
 })->group('canSearchTable');
 
 it('can search categories by name', function () {
-    $categories = CoupleSpendingCategory::factory()->count(10)->create();
+    $categories = CoupleSpendingCategory::factory()->count(10)->create([
+        'user_id' => $this->user->id,
+    ]);
 
     $name = $categories->first()->name;
 

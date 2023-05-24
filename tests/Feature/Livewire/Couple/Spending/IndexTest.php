@@ -131,7 +131,7 @@ it('can render spending amount date in table', function () {
 
 })->group('canRenderTableColumn');
 
-it('can display all spending in table', function () {
+it('can display all my spending in table', function () {
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
         'user_id'                     => $this->user->id,
@@ -379,6 +379,9 @@ it('can search spending by date in format d/m/Y', function () {
 
 })->group('canSearchTable');
 
+/* ###################################################################### */
+/* Permission */
+/* ###################################################################### */
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
