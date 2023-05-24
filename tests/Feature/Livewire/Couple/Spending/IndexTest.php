@@ -268,6 +268,36 @@ it('can search spending by id', function () {
 
 })->group('canSearchTable');
 
+it('can search spending by category name', function () {
+
+    // Arrange
+    $categories = CoupleSpendingCategory::factory()->count(5)->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    $spending = CoupleSpending::factory()->count(5)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $categories->random()->id,
+        'description'                 => 'description',
+    ]);
+
+    $search = $spending->first()->category()->first()->name;
+
+    $canSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false !== stripos($item->category->name, $search);
+    });
+
+    $cannotSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false === stripos($item->category->name, $search);
+    });
+
+    livewire(Couple\Spending\Index::class)
+        ->searchTable($search)
+        ->assertCanSeeTableRecords($canSeeSpending)
+        ->assertCanNotSeeTableRecords($cannotSeeSpending);
+
+})->group('canSearchTable');
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
