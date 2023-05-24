@@ -44,6 +44,8 @@ class Index extends ComponentWithFilamentModal
 
             Select::make('category_id'),
 
+            TextInput::make('description'),
+
             TextInput::make('name')
                 ->label('Nome')
                 ->placeholder('Digite o nome da categoria')

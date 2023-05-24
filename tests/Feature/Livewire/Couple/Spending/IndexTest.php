@@ -401,6 +401,13 @@ it('has a category field', function () {
 
 })->group('renderFormFields');
 
+it('has a description field', function () {
+
+    livewire(Couple\Spending\Index::class)
+        ->assertFormFieldExists('description');
+
+})->group('renderFormFields');
+
 /* ###################################################################### */
 /* Permission */
 /* ###################################################################### */
