@@ -114,4 +114,14 @@ trait HasFilamentModalTables
             ->send();
     }
 
+    protected function closureTooltip(Tables\Columns\TextColumn $column): ?string
+    {
+        $state = $column->getState();
+
+        if (strlen($state) <= $column->getLimit()) {
+            return null;
+        }
+
+        return $state;
+    }
 }
