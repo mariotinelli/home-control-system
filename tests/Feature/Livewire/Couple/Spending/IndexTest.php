@@ -328,6 +328,31 @@ it('can search spending by description', function () {
 
 })->group('canSearchTable');
 
+it('can search spending by amount', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(5)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    $search = $spending->first()->amount;
+
+    $canSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false !== stripos($item->amount, $search);
+    });
+
+    $cannotSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false === stripos($item->amount, $search);
+    });
+
+    livewire(Couple\Spending\Index::class)
+        ->searchTable($search)
+        ->assertCanSeeTableRecords($canSeeSpending)
+        ->assertCanNotSeeTableRecords($cannotSeeSpending);
+
+})->group('canSearchTable');
+
 it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_read');
 
