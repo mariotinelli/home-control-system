@@ -415,6 +415,13 @@ it('has a amount field', function () {
 
 })->group('renderFormFields');
 
+it('has a date field', function () {
+
+    livewire(Couple\Spending\Index::class)
+        ->assertFormFieldExists('date');
+
+})->group('renderFormFields');
+
 /* ###################################################################### */
 /* Permission */
 /* ###################################################################### */

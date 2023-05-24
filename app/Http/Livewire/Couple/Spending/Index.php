@@ -48,16 +48,8 @@ class Index extends ComponentWithFilamentModal
 
             TextInput::make('amount'),
 
-            TextInput::make('name')
-                ->label('Nome')
-                ->placeholder('Digite o nome da categoria')
-                ->string()
-                ->required()
-                ->unique('couple_spending_categories', 'name', ignoreRecord: true)
-                ->minLength(3)
-                ->maxLength(255)
-                ->validationAttribute('nome')
-                ->autofocus(),
+            TextInput::make('date'),
+
         ];
     }
 
