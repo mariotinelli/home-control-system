@@ -93,7 +93,10 @@ class Index extends ComponentWithFilamentModal
                 ->label('Data')
                 ->date('d/m/Y')
                 ->sortable()
-                ->searchable(),
+                ->searchable(query: function (Builder $query, string $search): Builder {
+                    return $query
+                        ->whereRaw("DATE_FORMAT(date, '%d/%m/%Y') LIKE ?", ["%$search%"]);
+                }),
 
         ];
     }

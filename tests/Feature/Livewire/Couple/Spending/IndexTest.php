@@ -4,6 +4,7 @@ namespace Tests\Feature\Livewire\Couple\Spending;
 
 use App\Http\Livewire\Couple;
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
+use Carbon\Carbon;
 
 use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
@@ -344,6 +345,31 @@ it('can search spending by amount', function () {
 
     $cannotSeeSpending = $spending->filter(function ($item) use ($search) {
         return false === stripos($item->amount, $search);
+    });
+
+    livewire(Couple\Spending\Index::class)
+        ->searchTable($search)
+        ->assertCanSeeTableRecords($canSeeSpending)
+        ->assertCanNotSeeTableRecords($cannotSeeSpending);
+
+})->group('canSearchTable');
+
+it('can search spending by date in format d/m/Y', function () {
+
+    // Arrange
+    $spending = CoupleSpending::factory()->count(5)->create([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $this->category->id,
+    ]);
+
+    $search = Carbon::parse($spending->first()->date)->format('d/m/Y');
+
+    $canSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false !== stripos(Carbon::parse($item->date)->format('d/m/Y'), $search);
+    });
+
+    $cannotSeeSpending = $spending->filter(function ($item) use ($search) {
+        return false === stripos(Carbon::parse($item->date)->format('d/m/Y'), $search);
     });
 
     livewire(Couple\Spending\Index::class)
