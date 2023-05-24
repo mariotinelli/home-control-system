@@ -132,16 +132,21 @@ it('can render spending amount date in table', function () {
 })->group('canRenderTableColumn');
 
 it('can display all my spending in table', function () {
+
     // Arrange
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $mySpending = CoupleSpending::factory()->count(10)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
+    $otherSpending = CoupleSpending::factory()->count(10)->create();
+
     // Act
     livewire(Couple\Spending\Index::class)
-        ->assertCanSeeTableRecords($spending)
-        ->assertCountTableRecords(CoupleSpending::count());
+        ->assertCanSeeTableRecords($mySpending)
+        ->assertCountTableRecords(CoupleSpending::where('user_id', $this->user->id)->count())
+        ->assertCanNotSeeTableRecords($otherSpending);
+
 })->group('default');
 
 it('spending are sorted by default in desc order', function () {

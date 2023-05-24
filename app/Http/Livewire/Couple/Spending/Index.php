@@ -57,7 +57,8 @@ class Index extends ComponentWithFilamentModal
 
     protected function getTableQuery(): Builder|Relation
     {
-        return CoupleSpending::query();
+        return CoupleSpending::query()
+            ->where('user_id', auth()->id());
     }
 
     protected function getTableColumns(): array
