@@ -27,8 +27,6 @@ beforeEach(function () {
 
 });
 
-todo('criar testes para permissões, autenticação e owner');
-
 it('can render page', function () {
 
     livewire(Couple\Spending\Categories\Index::class)
