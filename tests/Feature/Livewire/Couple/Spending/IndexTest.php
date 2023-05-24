@@ -55,6 +55,15 @@ it('can render spending id column in table', function () {
 
 })->group('canRenderTableColumn');
 
+it('can render spending category_id column in table', function () {
+
+    CoupleSpending::factory()->count(1)->create();
+
+    livewire(Couple\Spending\Index::class)
+        ->assertCanRenderTableColumn('category_id');
+
+})->group('canRenderTableColumn');
+
 it('can render spending description column in table', function () {
 
     CoupleSpending::factory()->count(1)->create();
