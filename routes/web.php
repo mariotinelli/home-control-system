@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Stock, Trips};
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $user = User::factory()->create();
-
-    Auth::login($user);
+    Auth::loginUsingId(3);
 
     return redirect()->route('dashboard');
 });

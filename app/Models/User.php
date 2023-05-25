@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -57,12 +58,12 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('Administrador');
+        return $this->hasRole(RoleEnum::AD->value);
     }
 
     public function canAccessFilament(): bool
     {
-        return $this->hasPermissionTo('access_admin');
+        return $this->isAdmin() || $this->hasPermissionTo('access_admin');
     }
 
     public function filamentRoles(): Attribute

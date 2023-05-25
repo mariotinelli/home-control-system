@@ -13,7 +13,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->admin->givePermissionTo(getAdminPermissions());
+    $this->admin->givePermissionTo(getManagerPermissions());
 
     actingAs($this->admin);
 
@@ -63,6 +63,11 @@ it('can create a new user', function () {
             'model_type' => User::class,
             'model_id'   => User::where('email', $databaseUser->email)->first()->id,
         ]);
+
+        foreach (Role::find($role)->permissions as $permission) {
+            expect($databaseUser->hasPermissionTo($permission->name))
+                ->toBeTrue();
+        }
     }
 
 });

@@ -6,6 +6,8 @@ enum RoleEnum: string
 {
     case AD = 'Administrador';
 
+    case M = 'Manager';
+
     case UO = 'Usuário Ouro';
 
     case UP = 'Usuário Prata';
