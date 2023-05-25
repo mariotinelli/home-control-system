@@ -15,28 +15,7 @@
 
     <div class="flex flex-col">
 
-        {{-- Dark Mode --}}
-        {{--        <x-app.navbar.dropdown.content-link--}}
-        {{--            @click="$store.darkMode.toggle(); showProfileDropdown = false"--}}
-        {{--            role="button"--}}
-        {{--        >--}}
-
-        {{--            <x-heroicon-o-moon--}}
-        {{--                x-show="!$store.darkMode.on"--}}
-        {{--                x-cloak--}}
-        {{--                class="w-5 h-5 mr-2"--}}
-        {{--            />--}}
-
-        {{--            <x-heroicon-o-sun--}}
-        {{--                x-show="$store.darkMode.on"--}}
-        {{--                x-cloak--}}
-        {{--                class="w-5 h-5 mr-2"--}}
-        {{--            />--}}
-
-        {{--            <span>Modo Escuro</span>--}}
-
-        {{--        </x-app.navbar.dropdown.content-link>--}}
-
+        {{-- Sun Mode --}}
         <x-app.navbar.dropdown.content-link
             @click="$store.darkMode.toggle()"
             role="button"
@@ -52,6 +31,7 @@
 
         </x-app.navbar.dropdown.content-link>
 
+        {{-- Dark Mode --}}
         <x-app.navbar.dropdown.content-link
             @click="$store.darkMode.toggle()"
             role="button"
