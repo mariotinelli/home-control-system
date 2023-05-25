@@ -1,7 +1,7 @@
 <?php
 
 use App\Filament\Resources;
-use App\Models\{Permission, Role};
+use App\Models\{Permission, Role, User};
 use Filament\Tables\Actions\{AttachAction,
     CreateAction,
     DeleteAction,
@@ -83,12 +83,24 @@ it('can create a new permission', function () {
 });
 
 it('can attach permissions', function () {
+
     // Arrange
-    $role = Role::factory()
-        ->has(Permission::factory()->count(1))
-        ->create();
+    $permissionToRole = Permission::factory()->create();
+    $role             = Role::factory()->create();
+    $role->givePermissionTo($permissionToRole->name);
+
+    $user = User::factory()->create()
+        ->assignRole($role);
+
+    foreach ($role->permissions as $permission) {
+        expect($user->hasPermissionTo($permission->name))
+            ->toBeTrue();
+    }
 
     $permission = Permission::factory()->create();
+
+    expect($user->hasPermissionTo($permission->name))
+        ->toBeFalse();
 
     // Act
     livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
@@ -100,12 +112,74 @@ it('can attach permissions', function () {
         ->assertHasNoTableActionErrors();
 
     // Assert
-    expect($role->refresh()->permissions->count())
+    expect($user->refresh()->hasPermissionTo($permission->name))
+        ->toBeTrue()
+        ->and($role->refresh()->permissions->count())
         ->toBe(2);
 
 });
 
 it('can detach permissions', function () {
+    // Arrange
+    $permissionToRole = Permission::factory()->create();
+    $role             = Role::factory()->create();
+    $role->givePermissionTo($permissionToRole->name);
+
+    $user = User::factory()->create()
+        ->assignRole($role);
+
+    $permission = $role->permissions->first();
+
+    expect($user->hasPermissionTo($permission->name))
+        ->toBeTrue();
+
+    // Act
+    livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
+        'ownerRecord' => $role,
+    ])
+        ->callTableAction(DetachAction::class, $permission)
+        ->assertHasNoTableActionErrors();
+
+    // Assert
+    expect($user->hasPermissionTo($permission->name))
+        ->toBeFalse()
+        ->and($role->refresh()->permissions->count())
+        ->toBe(0);
+
+});
+
+it('can edit permissions', function () {
+    // Arrange
+    $role = Role::factory()
+        ->has(Permission::factory()->count(1))
+        ->create();
+
+    $user = User::factory()->create()
+        ->assignRole($role);
+
+    $permission = $role->permissions->first();
+
+    expect($user->hasPermissionTo($permission->name))
+        ->toBeTrue();
+
+    // Act
+    livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
+        'ownerRecord' => $role,
+    ])
+        ->callTableAction(EditAction::class, $permission, data: [
+            'name' => $name = fake()->words(asText: true),
+        ])
+        ->assertHasNoTableActionErrors();
+
+    // Assert
+    expect($user->hasPermissionTo($permission->refresh()->name))
+        ->toBeTrue()
+        ->and($permission->refresh())
+        ->name->toBe($name);
+
+});
+
+it('can delete permissions', function () {
     // Arrange
     $role = Role::factory()
         ->has(Permission::factory()->count(1))
@@ -117,47 +191,11 @@ it('can detach permissions', function () {
     livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
         'ownerRecord' => $role,
     ])
-        ->callTableAction(DetachAction::class, $permission)
-        ->assertHasNoTableActionErrors();
+        ->callTableAction(DeleteAction::class, $permission);
 
     // Assert
-    expect($role->refresh()->permissions->count())
-        ->toBe(0);
-
-});
-
-it('can edit permissions', function () {
-    $role = Role::factory()
-        ->has(Permission::factory()->count(1))
-        ->create();
-
-    $permission = $role->permissions->first();
-
-    livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
-        'ownerRecord' => $role,
-    ])
-        ->callTableAction(EditAction::class, $permission, data: [
-            'name' => $name = fake()->words(asText: true),
-        ])
-        ->assertHasNoTableActionErrors();
-
-    expect($permission->refresh())
-        ->name->toBe($name);
-});
-
-it('can delete permissions', function () {
-    $role = Role::factory()
-        ->has(Permission::factory()->count(1))
-        ->create();
-
-    $permission = $role->permissions->first();
-
-    livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
-        'ownerRecord' => $role,
-    ])
-    ->callTableAction(DeleteAction::class, $permission);
-
     assertModelMissing($permission);
+
 });
 
 it('can bulk delete permissions', function () {
@@ -186,7 +224,15 @@ it('can bulk detach permissions', function () {
         ->has(Permission::factory()->count(3))
         ->create();
 
+    $user = User::factory()->create()
+        ->assignRole($role);
+
     $permissions = $role->permissions;
+
+    foreach ($permissions as $permission) {
+        expect($user->hasPermissionTo($permission->name))
+            ->toBeTrue();
+    }
 
     // Act
     livewire(Resources\RoleResource\RelationManagers\PermissionsRelationManager::class, [
@@ -196,6 +242,11 @@ it('can bulk detach permissions', function () {
         ->assertHasNoTableActionErrors();
 
     // Assert
+    foreach ($permissions as $permission) {
+        expect($user->hasPermissionTo($permission->name))
+            ->toBeFalse();
+    }
+
     expect($role->refresh()->permissions->count())
         ->toBe(0);
 

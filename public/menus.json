@@ -8,6 +8,10 @@
     },
     "Couple": {
         "isGroup": true,
+        "canGroup": [
+            "couple_spending_read",
+            "couple_spending_category_read"
+        ],
         "isExpanded": false,
         "name": "Gastos do Casal",
         "group": {
@@ -15,18 +19,24 @@
                 "name": "Gastos",
                 "route": "couple.spending.index",
                 "icon": "clipboard-list",
+                "can": "couple_spending_read",
                 "isActive": false
             },
             "Categories": {
                 "name": "Categorias",
                 "route": "couple.spending.categories.index",
                 "icon": "tag",
+                "can": "couple_spending_category_read",
                 "isActive": false
             }
         }
     },
     "Banks": {
         "isGroup": true,
+        "canGroup": [
+            "bank_account_read",
+            "credit_card_read"
+        ],
         "isExpanded": false,
         "name": "Bancos",
         "group": {
@@ -34,18 +44,26 @@
                 "name": "Contas",
                 "route": "banks.accounts.index",
                 "icon": "library",
+                "can": "bank_account_read",
                 "isActive": false
             },
             "CreditCards": {
                 "name": "Cartões de Crédito",
                 "route": "banks.credit-cards.index",
                 "icon": "credit-card",
+                "can": "credit_card_read",
                 "isActive": false
             }
         }
     },
     "Stocks": {
         "isGroup": true,
+        "canGroup": [
+            "market_stock_read",
+            "market_read",
+            "market_item_read",
+            "market_item_category_read"
+        ],
         "isExpanded": false,
         "name": "Mercado",
         "group": {
@@ -53,24 +71,28 @@
                 "name": "Estoque",
                 "route": "markets.stocks.index",
                 "icon": "table",
+                "can": "market_stock_read",
                 "isActive": false
             },
             "Markets": {
                 "name": "Mercados",
                 "route": "markets.index",
                 "icon": "office-building",
+                "can": "market_read",
                 "isActive": false
             },
             "MarketItems": {
                 "name": "Itens",
                 "route": "markets.items.index",
                 "icon": "shopping-cart",
+                "can": "market_item_read",
                 "isActive": false
             },
             "MarketItemsCategories": {
                 "name": "Categorias de Itens",
                 "route": "markets.items.categories.index",
                 "icon": "tag",
+                "can": "market_item_category_read",
                 "isActive": false
             }
         }
@@ -80,6 +102,7 @@
         "name": "Investimentos",
         "route": "investments.index",
         "icon": "chart-bar",
+        "can": "investment_read",
         "isActive": false
     },
     "Goals": {
@@ -87,6 +110,7 @@
         "name": "Metas",
         "route": "goals.index",
         "icon": "badge-check",
+        "can": "goal_read",
         "isActive": false
     },
     "Trips": {
@@ -94,6 +118,7 @@
         "name": "Viagens",
         "route": "trips.index",
         "icon": "globe",
+        "can": "trip_read",
         "isActive": false
     },
     "Settings": {

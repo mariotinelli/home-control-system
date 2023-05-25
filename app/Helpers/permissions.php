@@ -1,8 +1,8 @@
 <?php
 
-function getAdminPermissions(): array
+function getManagerPermissions(): array
 {
-    return array_merge(getUserGoldPermissions(), [
+    return [
         'access_admin',
 
         // User Permissions
@@ -24,12 +24,12 @@ function getAdminPermissions(): array
         'permission_read',
         'permission_update',
         'permission_delete',
-    ]);
+    ];
 }
 
 function getUserGoldPermissions(): array
 {
-    return array_merge(getUserSilverPermissions(), [
+    return [
 
         // Market Permissions
         'market_create',
@@ -65,12 +65,12 @@ function getUserGoldPermissions(): array
         'market_stock_withdraw_update',
         'market_stock_withdraw_delete',
 
-    ]);
+    ];
 }
 
 function getUserSilverPermissions(): array
 {
-    return array_merge(getUserPermissions(), [
+    return [
 
         // Investment Permissions
         'investment_create',
@@ -113,7 +113,7 @@ function getUserSilverPermissions(): array
         'couple_spending_read',
         'couple_spending_update',
         'couple_spending_delete',
-    ]);
+    ];
 }
 
 function getUserPermissions(): array

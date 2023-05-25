@@ -27,10 +27,14 @@ class MakeFormSchema
                         ->exists('couple_spending_categories', 'id')
                         ->rule(new CoupleSpendingCategoryOwnerRule())
                         ->columnSpan(2)
-                        ->createOptionForm(Couple\Spending\Categories\MakeFormSchema::execute())
+                        ->createOptionForm(
+                            Couple\Spending\Categories\MakeFormSchema::execute()
+                        )
                         ->createOptionAction(function (Action $action) {
                             return $action
-                                ->action(fn (array $data) => Couple\Spending\Categories\CreateFromAuthUser::execute($data))
+                                ->action(
+                                    fn (array $data) => Couple\Spending\Categories\CreateFromAuthUser::execute($data)
+                                )
                                 ->modalHeading(
                                     view('components.app.filament.resources.modal.heading', [
                                         'title' => 'Criar categoria',

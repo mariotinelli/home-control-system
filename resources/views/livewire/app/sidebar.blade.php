@@ -22,26 +22,23 @@
         x-bind:class=" sidebarCollapse ? 'w-16' : 'w-64' "
     >
 
-        @foreach($menus as $key => $menu)
+        @foreach($menus as $index => $menu)
 
-            <div class="py-2"
-                 wire:key="{{ 'sidebar-items' . $key }}">
+            @if($menu->isGroup)
 
-                @if($menu->isGroup)
+                <x-app.sidebar.dropdown
+                    :menu="$menu"
+                    :index="$index"
+                />
 
-                    <x-app.sidebar.dropdown
-                        :menu="$menu"
-                    />
+            @else
 
-                @else
+                <x-app.sidebar.menu.item
+                    :menu="$menu"
+                    :index="$index"
+                />
 
-                    <x-app.sidebar.menu.item
-                        :menu="$menu"
-                    />
-
-                @endif
-
-            </div>
+            @endif
 
         @endforeach
 

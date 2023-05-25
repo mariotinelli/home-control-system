@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\PermissionResource\RelationManagers;
 
+use App\Models\Role;
+use Exception;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\{Form, Table};
 use Filament\{Forms, Tables};
@@ -28,9 +30,7 @@ class RolesRelationManager extends RelationManager
             ])->columns(1);
     }
 
-    /**
-     * @throws \Exception
-     */
+    /** @throws Exception */
     public static function table(Table $table): Table
     {
         return $table
@@ -52,17 +52,41 @@ class RolesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+
                 Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make(),
+
+                Tables\Actions\AttachAction::make()
+                    ->after(function (Tables\Actions\AttachAction $action, RelationManager $livewire) {
+                        Role::find($action->getFormData()['recordId'])
+                            ->givePermissionTo($livewire->ownerRecord);
+                    }),
+
             ])
             ->actions([
+
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make(),
+
+                Tables\Actions\DetachAction::make()
+                    ->after(function (Tables\Actions\DetachAction $action, RelationManager $livewire) {
+                        /** @var Role $record */
+                        $record = $action->getRecord();
+                        $record->revokePermissionTo($livewire->ownerRecord);
+                    }),
+
                 Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+
+                Tables\Actions\DetachBulkAction::make()
+                    ->after(function (Tables\Actions\DetachBulkAction $action, RelationManager $livewire) {
+                        foreach ($action->getRecords() as $record) {
+                            $record->revokePermissionTo($livewire->ownerRecord);
+                        }
+                    }),
+
                 Tables\Actions\DeleteBulkAction::make(),
+
             ]);
     }
 }
