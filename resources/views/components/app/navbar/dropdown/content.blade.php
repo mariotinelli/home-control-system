@@ -15,36 +15,81 @@
 
     <div class="flex flex-col">
 
-        {{-- Dark --}}
-        <a
-            href="#"
-            @click="$store.darkMode.toggle(); showProfileDropdown = false"
-            class="flex items-center rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-700 hover:text-white"
+        {{-- Dark Mode --}}
+        {{--        <x-app.navbar.dropdown.content-link--}}
+        {{--            @click="$store.darkMode.toggle(); showProfileDropdown = false"--}}
+        {{--            role="button"--}}
+        {{--        >--}}
+
+        {{--            <x-heroicon-o-moon--}}
+        {{--                x-show="!$store.darkMode.on"--}}
+        {{--                x-cloak--}}
+        {{--                class="w-5 h-5 mr-2"--}}
+        {{--            />--}}
+
+        {{--            <x-heroicon-o-sun--}}
+        {{--                x-show="$store.darkMode.on"--}}
+        {{--                x-cloak--}}
+        {{--                class="w-5 h-5 mr-2"--}}
+        {{--            />--}}
+
+        {{--            <span>Modo Escuro</span>--}}
+
+        {{--        </x-app.navbar.dropdown.content-link>--}}
+
+        <x-app.navbar.dropdown.content-link
+            @click="$store.darkMode.toggle()"
+            role="button"
+            x-show="$store.darkMode.on"
+            x-cloak
+        >
+
+            <x-heroicon-o-sun
+                class="w-5 h-5 mr-2"
+            />
+
+            <span>Modo Claro</span>
+
+        </x-app.navbar.dropdown.content-link>
+
+        <x-app.navbar.dropdown.content-link
+            @click="$store.darkMode.toggle()"
+            role="button"
+            x-show="!$store.darkMode.on"
+            x-cloak
         >
 
             <x-heroicon-o-moon
-                x-show="!$store.darkMode.on"
-                x-cloak
                 class="w-5 h-5 mr-2"
             />
 
-            <x-heroicon-o-sun
-                x-show="$store.darkMode.on"
-                x-cloak
-                class="w-5 h-5 mr-2"
-            />
+            <span>Modo Escuro</span>
 
-            <span>Dark Mode</span>
-        </a>
+        </x-app.navbar.dropdown.content-link>
 
-        <a
-            href="#"
-            @click="showProfileDropdown = false"
-            class="flex items-center rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-700 hover:text-white"
+        {{-- Logout --}}
+        <form
+            method="POST"
+            action="{{ route('logout') }}"
         >
-            <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
-            <span>Logout</span>
-        </a>
+            @csrf
+
+            <x-app.navbar.dropdown.content-link
+                :href="route('logout')"
+                @click="showProfileDropdown = false"
+                onclick="
+                    event.preventDefault();
+                    this.closest('form').submit();
+                "
+            >
+                <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
+
+                <span>Logout</span>
+
+            </x-app.navbar.dropdown.content-link>
+
+        </form>
+
     </div>
 
 </div>

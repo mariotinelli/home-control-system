@@ -1,28 +1,52 @@
-<a
-    href="#"
+<x-app.navbar.mobile.menu-items-link
     @click="$store.darkMode.toggle()"
-    class="flex items-center rounded-md px-3 py-2 text-base font-medium"
+    role="button"
+    x-show="$store.darkMode.on"
+    x-cloak
+>
+
+    <x-heroicon-o-sun
+        class="w-5 h-5 mr-2"
+    />
+
+    <span>Modo Claro</span>
+
+</x-app.navbar.mobile.menu-items-link>
+
+<x-app.navbar.mobile.menu-items-link
+    @click="$store.darkMode.toggle()"
+    role="button"
+    x-show="!$store.darkMode.on"
+    x-cloak
 >
 
     <x-heroicon-o-moon
-        x-show="!$store.darkMode.on"
-        x-cloak
         class="w-5 h-5 mr-2"
     />
 
-    <x-heroicon-o-sun
-        x-show="$store.darkMode.on"
-        x-cloak
-        class="w-5 h-5 mr-2"
-    />
+    <span>Modo Escuro</span>
 
-    <span>Dark Mode</span>
-</a>
+</x-app.navbar.mobile.menu-items-link>
 
-<a
-    href="#"
-    class="flex items-center rounded-md px-3 py-2 text-base font-medium"
+<form
+    method="POST"
+    action="{{ route('logout') }}"
 >
-    <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
-    <span>Logout</span>
-</a>
+    @csrf
+
+    <x-app.navbar.mobile.menu-items-link
+        :href="route('logout')"
+        @click="showProfileDropdown = false"
+        onclick="
+            event.preventDefault();
+            this.closest('form').submit();
+        "
+    >
+
+        <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
+
+        <span>Logout</span>
+
+    </x-app.navbar.mobile.menu-items-link>
+
+</form>
