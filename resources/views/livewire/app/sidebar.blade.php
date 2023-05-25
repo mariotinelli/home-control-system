@@ -22,20 +22,18 @@
         x-bind:class=" sidebarCollapse ? 'w-16' : 'w-64' "
     >
 
-        @foreach($menus as $index => $menu)
+        @foreach($menus as $menu)
 
             @if($menu->isGroup)
 
                 <x-app.sidebar.dropdown
                     :menu="$menu"
-                    :index="$index"
                 />
 
             @else
 
                 <x-app.sidebar.menu.item
                     :menu="$menu"
-                    :index="$index"
                 />
 
             @endif

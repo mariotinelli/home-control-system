@@ -9,7 +9,7 @@
     id="mobile-menu"
 >
 
-    <div class="border-b border-t dark:border-gray-400 pb-3 pt-5 sticky top-0 z-50">
+    <div class="border-b border-t dark:border-gray-400 pb-3 pt-5 bg-white dark:bg-gray-800 sticky top-0 z-50">
 
         <div class="flex items-center px-5 border-b dark:border-gray-400 pb-3">
 
@@ -40,30 +40,26 @@
             "
         >
 
-            @foreach($menus as $key => $menu)
+            @foreach($menus as $menu)
 
-                <div class="py-2"
-                     wire:key="{{ 'mobile-sidebar-items' . $key }}">
+                @if($menu->isGroup)
 
-                    @if($menu->isGroup)
+                    <x-app.sidebar.dropdown
+                        :menu="$menu"
+                    />
 
-                        <x-app.sidebar.dropdown
-                            :menu="$menu"
-                        />
+                @else
 
-                    @else
+                    <x-app.sidebar.menu.item
+                        :menu="$menu"
+                    />
 
-                        <x-app.sidebar.menu.item
-                            :menu="$menu"
-                        />
-
-                    @endif
-
-                </div>
+                @endif
 
             @endforeach
 
         </nav>
+
     </div>
 
 </div>

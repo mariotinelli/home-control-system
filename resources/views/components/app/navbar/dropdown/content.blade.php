@@ -1,5 +1,9 @@
 <div
-    class="absolute right-0 z-50 mt-2 w-fit p-3 divide-y origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+    class="
+        absolute right-0 z-50 mt-2 w-64 max-w-xs p-3 divide-y origin-top-right
+        rounded-md bg-white dark:bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5
+        focus:outline-none dark:divide-gray-600
+    "
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="user-menu-button"
@@ -9,42 +13,67 @@
 >
 
     <div class="space-y-2 mb-2 px-4">
-        <div class="text-base whitespace-nowrap font-medium leading-none text-gray-500"> {{ auth()->user()->name }} </div>
+        <div class="text-base whitespace-nowrap font-medium leading-none text-gray-500 dark:text-white"> {{ auth()->user()->name }} </div>
         <div class="text-sm font-medium leading-none text-gray-400"> {{ auth()->user()->email  }} </div>
     </div>
 
-    <div class="flex flex-col">
+    <div class="flex flex-col pt-2">
 
-        {{-- Dark --}}
-        <a
-            href="#"
-            @click="$store.darkMode.toggle(); showProfileDropdown = false"
-            class="flex items-center rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-700 hover:text-white"
+        {{-- Sun Mode --}}
+        <x-app.navbar.dropdown.content-link
+            @click="$store.darkMode.toggle()"
+            role="button"
+            x-show="$store.darkMode.on"
+            x-cloak
+        >
+
+            <x-heroicon-o-sun
+                class="w-5 h-5 mr-2"
+            />
+
+            <span>Modo Claro</span>
+
+        </x-app.navbar.dropdown.content-link>
+
+        {{-- Dark Mode --}}
+        <x-app.navbar.dropdown.content-link
+            @click="$store.darkMode.toggle()"
+            role="button"
+            x-show="!$store.darkMode.on"
+            x-cloak
         >
 
             <x-heroicon-o-moon
-                x-show="!$store.darkMode.on"
-                x-cloak
                 class="w-5 h-5 mr-2"
             />
 
-            <x-heroicon-o-sun
-                x-show="$store.darkMode.on"
-                x-cloak
-                class="w-5 h-5 mr-2"
-            />
+            <span>Modo Escuro</span>
 
-            <span>Dark Mode</span>
-        </a>
+        </x-app.navbar.dropdown.content-link>
 
-        <a
-            href="#"
-            @click="showProfileDropdown = false"
-            class="flex items-center rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-700 hover:text-white"
+        {{-- Logout --}}
+        <form
+            method="POST"
+            action="{{ route('logout') }}"
         >
-            <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
-            <span>Logout</span>
-        </a>
+            @csrf
+
+            <x-app.navbar.dropdown.content-link
+                :href="route('logout')"
+                @click="showProfileDropdown = false"
+                onclick="
+                    event.preventDefault();
+                    this.closest('form').submit();
+                "
+            >
+                <x-heroicon-o-logout class="w-5 h-5 mr-2"/>
+
+                <span>Logout</span>
+
+            </x-app.navbar.dropdown.content-link>
+
+        </form>
+
     </div>
 
 </div>
