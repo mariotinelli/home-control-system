@@ -1,8 +1,8 @@
 <div
     class="
         absolute right-0 z-50 mt-2 w-64 max-w-xs p-3 divide-y origin-top-right
-        rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5
-        focus:outline-none
+        rounded-md bg-white dark:bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5
+        focus:outline-none dark:divide-gray-600
     "
     role="menu"
     aria-orientation="vertical"
@@ -13,11 +13,11 @@
 >
 
     <div class="space-y-2 mb-2 px-4">
-        <div class="text-base whitespace-nowrap font-medium leading-none text-gray-500"> {{ auth()->user()->name }} </div>
+        <div class="text-base whitespace-nowrap font-medium leading-none text-gray-500 dark:text-white"> {{ auth()->user()->name }} </div>
         <div class="text-sm font-medium leading-none text-gray-400"> {{ auth()->user()->email  }} </div>
     </div>
 
-    <div class="flex flex-col">
+    <div class="flex flex-col pt-2">
 
         {{-- Sun Mode --}}
         <x-app.navbar.dropdown.content-link
