@@ -2,7 +2,7 @@
 
 function getManagerPermissions(): array
 {
-    return [
+    return array_merge(getUserGoldPermissions(), [
         'access_admin',
 
         // User Permissions
@@ -24,12 +24,12 @@ function getManagerPermissions(): array
         'permission_read',
         'permission_update',
         'permission_delete',
-    ];
+    ]);
 }
 
 function getUserGoldPermissions(): array
 {
-    return [
+    return array_merge(getUserSilverPermissions(), [
 
         // Market Permissions
         'market_create',
@@ -65,12 +65,12 @@ function getUserGoldPermissions(): array
         'market_stock_withdraw_update',
         'market_stock_withdraw_delete',
 
-    ];
+    ]);
 }
 
 function getUserSilverPermissions(): array
 {
-    return [
+    return array_merge(getUserPermissions(), [
 
         // Investment Permissions
         'investment_create',
@@ -113,7 +113,7 @@ function getUserSilverPermissions(): array
         'couple_spending_read',
         'couple_spending_update',
         'couple_spending_delete',
-    ];
+    ]);
 }
 
 function getUserPermissions(): array
