@@ -28,7 +28,9 @@ class MakeFormSchema
                         ->rule(new CoupleSpendingCategoryOwnerRule())
                         ->columnSpan(2)
                         ->createOptionForm(
-                            Couple\Spending\Categories\MakeFormSchema::execute()
+                            auth()->user()->can('couple_spending_category_create')
+                                ? Couple\Spending\Categories\MakeFormSchema::execute()
+                                : null
                         )
                         ->createOptionAction(function (Action $action) {
                             return $action
@@ -42,6 +44,7 @@ class MakeFormSchema
                                 )
                                 ->modalButton('Criar')
                                 ->color('success')
+                                ->tooltip('Criar categoria')
                                 ->modalWidth('lg');
                         }),
 
