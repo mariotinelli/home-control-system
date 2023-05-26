@@ -216,7 +216,7 @@ it('can validate category name in creating', function () {
         ])
         ->assertHasTableActionErrors(['name' => ['max']]);
 
-    // Unique
+    // Rule unique is only for owner category
     $category = CoupleSpendingCategory::factory()->create([
         'user_id' => $this->user->id,
     ]);
@@ -226,6 +226,17 @@ it('can validate category name in creating', function () {
             'name' => $category->name,
         ])
         ->assertHasTableActionErrors(['name' => ['unique']]);
+
+    // Ignore rule unique only for not category owner
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => User::factory()->create()->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $category->name,
+        ])
+        ->assertHasNoTableActionErrors(['name' => ['unique']]);
 
 })->group('creatingDataValidation');
 
@@ -263,8 +274,10 @@ it('can validate category name in updating', function () {
         ])
         ->assertHasTableActionErrors(['name' => ['max']]);
 
-    // Unique
-    $category2 = CoupleSpendingCategory::factory()->create();
+    // Rule unique is only for owner category
+    $category2 = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
@@ -276,6 +289,17 @@ it('can validate category name in updating', function () {
     livewire(Couple\Spending\Categories\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => $category->name,
+        ])
+        ->assertHasNoTableActionErrors(['name' => ['unique']]);
+
+    // Ignore rule unique for not category owner
+    $category3 = CoupleSpendingCategory::factory()->create([
+        'user_id' => User::factory()->create()->id,
+    ]);
+
+    livewire(Couple\Spending\Categories\Index::class)
+        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+            'name' => $category3->name,
         ])
         ->assertHasNoTableActionErrors(['name' => ['unique']]);
 
