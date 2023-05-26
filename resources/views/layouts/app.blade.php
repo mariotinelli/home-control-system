@@ -33,6 +33,7 @@
 <body
     class="font-sans antialiased"
     x-data
+    x-cloak
     :class="$store.darkMode.on ? 'dark bg-gray-900' : 'bg-gray-100'"
 >
 

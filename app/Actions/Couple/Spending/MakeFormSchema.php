@@ -44,6 +44,7 @@ class MakeFormSchema
                                 )
                                 ->modalButton('Criar')
                                 ->color('success')
+                                ->tooltip('Criar categoria')
                                 ->modalWidth('lg');
                         }),
 
