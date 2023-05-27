@@ -27,11 +27,11 @@ class MakeFormSchema
                     Select::make('type')
                         ->label('Tipo')
                         ->placeholder('Tipo da conta')
-                        ->options(BankAccountTypeEnum::getValues())
+                        ->options(BankAccountTypeEnum::toArray())
                         ->required()
                         ->string()
                         ->rules([
-                            'in:' . implode(',', BankAccountTypeEnum::toArray()),
+                            'in:' . implode(',', BankAccountTypeEnum::getValues()),
                         ]),
 
                     TextInput::make('number')
@@ -39,6 +39,7 @@ class MakeFormSchema
                         ->placeholder('Número da conta')
                         ->required()
                         ->numeric()
+                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('00000000000000000000'))
                         ->unique(
                             table: 'bank_accounts',
                             column: 'number',
@@ -54,6 +55,7 @@ class MakeFormSchema
                         ->placeholder('Dígito da conta')
                         ->required()
                         ->numeric()
+                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
                         ->rules([
                             'max_digits:1',
                         ]),
@@ -63,6 +65,7 @@ class MakeFormSchema
                         ->placeholder('Número da agência')
                         ->required()
                         ->numeric()
+                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0000'))
                         ->rules([
                             'min_digits:4',
                             'max_digits:4',
@@ -72,6 +75,7 @@ class MakeFormSchema
                         ->label('Dígito da agência')
                         ->placeholder('Dígito da agência')
                         ->numeric()
+                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
                         ->rules([
                             'max_digits:1',
                         ]),

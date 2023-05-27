@@ -6,7 +6,7 @@ use App\Http\Livewire\Banks;
 use App\Models\{BankAccount, User};
 use Auth;
 
-use function Pest\Laravel\{actingAs, get};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
 
 use Str;
@@ -354,7 +354,87 @@ it("cannot able to create a bank account if not has permission", function () {
 
 })->group('cannotHasPermission');
 
-//
+/* ###################################################################### */
+/* CREATE BANK ACCOUNT */
+/* ###################################################################### */
+it('can create a bank accounts', function () {
+
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    // Act
+    livewire(Banks\Accounts\Create::class)
+        ->fillForm([
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
+            'agency_number' => $newData->agency_number,
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertNotified()
+        ->assertRedirect(route('banks.accounts.index'));
+
+    // Assert
+    assertDatabaseHas('bank_accounts', [
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'agency_number' => $newData->agency_number,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
+    ]);
+
+})->group('createBankAccount');
+
+it('can create a bank accounts and continue in this page', function () {
+
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    // Act
+    livewire(Banks\Accounts\Create::class)
+        ->fillForm([
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
+            'agency_number' => $newData->agency_number,
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
+        ])
+        ->call('saveAndStay')
+        ->assertHasNoFormErrors()
+        ->assertNotified()
+        ->assertFormSet([
+            'bank_name'     => null,
+            'type'          => null,
+            'number'        => null,
+            'digit'         => null,
+            'agency_number' => null,
+            'agency_digit'  => null,
+            'balance'       => '0,00',
+        ]);
+
+    // Assert
+    assertDatabaseHas('bank_accounts', [
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'agency_number' => $newData->agency_number,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
+    ]);
+
+})->group('createBankAccount');
+
 //it('should be able to create a bank account', function () {
 //    // Arrange
 //    $newData = BankAccount::factory()->makeOne();
