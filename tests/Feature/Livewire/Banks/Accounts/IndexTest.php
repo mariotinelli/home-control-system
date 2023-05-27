@@ -5,7 +5,7 @@ namespace Livewire\Banks\Accounts;
 use App\Http\Livewire\Banks;
 use App\Models\{BankAccount, User};
 
-use function Pest\Laravel\actingAs;
+use function Pest\Laravel\{actingAs, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -37,5 +37,14 @@ it('can render page', function () {
 
     livewire(Banks\Accounts\Index::class)
         ->assertSuccessful();
+
+})->group('renderPage');
+
+it('can redirect to login if not authenticated', function () {
+
+    \Auth::logout();
+
+    get(route('banks.accounts.index'))
+        ->assertRedirect(route('login'));
 
 })->group('renderPage');
