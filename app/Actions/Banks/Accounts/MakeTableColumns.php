@@ -5,6 +5,7 @@ namespace App\Actions\Banks\Accounts;
 use App\Enums\BankAccountTypeEnum;
 use Closure;
 use Filament\Tables\Columns\{BadgeColumn, TextColumn};
+use Illuminate\Database\Eloquent\Builder;
 
 class MakeTableColumns
 {
@@ -36,18 +37,26 @@ class MakeTableColumns
 
             TextColumn::make('formatted_agency')
                 ->label('Agência')
-                ->sortable()
+                ->sortable(query: function (Builder $query, string $direction): Builder {
+                    return $query
+                        ->orderBy('agency_number', $direction)
+                        ->orderBy('agency_digit', $direction);
+                })
                 ->searchable(),
 
             TextColumn::make('formatted_number')
                 ->label('Número')
-                ->sortable()
+                ->sortable(query: function (Builder $query, string $direction): Builder {
+                    return $query
+                        ->orderBy('number', $direction)
+                        ->orderBy('digit', $direction);
+                })
                 ->searchable(),
 
             TextColumn::make('formatted_balance')
                 ->prefix('R$ ')
                 ->label('Saldo Atual')
-                ->sortable()
+                ->sortable(['balance'])
                 ->searchable(),
 
         ];

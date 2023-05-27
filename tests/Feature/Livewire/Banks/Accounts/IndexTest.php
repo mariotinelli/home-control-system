@@ -14,10 +14,6 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->user->bankAccounts()->save(
-        $this->bankAccount = BankAccount::factory()->makeOne()
-    );
-
     $this->user->givePermissionTo('bank_account_read');
 
     $this->user->givePermissionTo('bank_account_create');
@@ -144,7 +140,7 @@ it('bank accounts are sorted by default in desc order', function () {
 
 })->group('renderDefault');
 
-it('bank account number display should be formatted to number-digit', function () {
+it('bank account number display in format number-digit', function () {
 
     // Arrange
     $this->user->bankAccounts()->save(
@@ -159,7 +155,7 @@ it('bank account number display should be formatted to number-digit', function (
 
 })->group('renderDefault');
 
-it('bank account agency display should be formatted to agency_number-agency_digit', function () {
+it('bank account agency display in format agency_number-agency_digit', function () {
 
     // Arrange
     $this->user->bankAccounts()->save(
@@ -176,7 +172,7 @@ it('bank account agency display should be formatted to agency_number-agency_digi
 
 })->group('renderDefault');
 
-it('bank account agency display should be formatted to agency_number when agency_digit is null', function () {
+it('bank account agency display in format agency_number when agency_digit is null', function () {
 
     // Arrange
     $this->user->bankAccounts()->save(
@@ -193,7 +189,7 @@ it('bank account agency display should be formatted to agency_number when agency
 
 })->group('renderDefault');
 
-it('bank account balance display should be formatted to format R$ 9.999,99', function () {
+it('bank account balance display in format R$ 9.999,99', function () {
 
     // Arrange
     $this->user->bankAccounts()->save(
@@ -207,3 +203,128 @@ it('bank account balance display should be formatted to format R$ 9.999,99', fun
         ->assertTableColumnFormattedStateSet('formatted_balance', $formattedBalance, record: $bankAccount);
 
 })->group('renderDefault');
+
+/* ###################################################################### */
+/* SORT COLUMN TABLE */
+/* ###################################################################### */
+it('can sort spending by id', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        $bankAccounts = BankAccount::factory()->count(3)->make()
+    );
+
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('id')
+        ->assertCanSeeTableRecords($bankAccounts->sortBy('id'), inOrder: true)
+        ->sortTable('id', 'desc')
+        ->assertCanSeeTableRecords($bankAccounts->sortByDesc('id'), inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by bank name', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        $bankAccounts = BankAccount::factory()->count(5)->make()
+    );
+
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('bank_name')
+        ->assertCanSeeTableRecords($bankAccounts->sortBy('bank_name'), inOrder: true)
+        ->sortTable('bank_name', 'desc')
+        ->assertCanSeeTableRecords($bankAccounts->sortByDesc('bank_name'), inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by type', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        BankAccount::factory()->count(5)->make()
+    );
+
+    $bankAccountsAsc = BankAccount::whereUserId($this->user->id)
+        ->orderBy('type')
+        ->get();
+
+    $bankAccountsDesc = BankAccount::whereUserId($this->user->id)
+        ->orderByDesc('type')
+        ->get();
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('type')
+        ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
+        ->sortTable('type', 'desc')
+        ->assertCanSeeTableRecords($bankAccountsDesc, inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by formatted agency', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        BankAccount::factory()->count(5)->make()
+    );
+
+    $bankAccountsAsc = BankAccount::whereUserId($this->user->id)
+        ->orderBy('agency_number')
+        ->orderBy('agency_digit')
+        ->get();
+
+    $bankAccountsDesc = BankAccount::whereUserId($this->user->id)
+        ->orderByDesc('agency_number')
+        ->orderByDesc('agency_digit')
+        ->get();
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('formatted_agency')
+        ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
+        ->sortTable('formatted_agency', 'desc')
+        ->assertCanSeeTableRecords($bankAccountsDesc, inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by formatted number', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        BankAccount::factory()->count(5)->make()
+    );
+
+    $bankAccountsAsc = BankAccount::whereUserId($this->user->id)
+        ->orderBy('number')
+        ->orderBy('digit')
+        ->get();
+
+    $bankAccountsDesc = BankAccount::whereUserId($this->user->id)
+        ->orderByDesc('number')
+        ->orderByDesc('digit')
+        ->get();
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('formatted_number')
+        ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
+        ->sortTable('formatted_number', 'desc')
+        ->assertCanSeeTableRecords($bankAccountsDesc, inOrder: true);
+
+})->group('canSortTable');
+
+it('can sort spending by formatted balance', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        $bankAccounts = BankAccount::factory()->count(5)->make()
+    );
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->sortTable('formatted_balance')
+        ->assertCanSeeTableRecords($bankAccounts->sortBy('balance'), inOrder: true)
+        ->sortTable('formatted_balance', 'desc')
+        ->assertCanSeeTableRecords($bankAccounts->sortByDesc('balance'), inOrder: true);
+
+})->group('canSortTable');
