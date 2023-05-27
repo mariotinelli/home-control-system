@@ -2,8 +2,9 @@
 
 namespace App\Actions\Banks\Accounts;
 
+use App\Enums\BankAccountTypeEnum;
 use Closure;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\{BadgeColumn, TextColumn};
 
 class MakeTableColumns
 {
@@ -23,12 +24,15 @@ class MakeTableColumns
                 ->limit(50)
                 ->tooltip($closureTooltip),
 
-            TextColumn::make('type')
+            BadgeColumn::make('type')
                 ->label('Tipo de Conta')
+                ->colors([
+                    'success' => BankAccountTypeEnum::CP->value,
+                    'warning' => BankAccountTypeEnum::CR->value,
+                    'danger'  => BankAccountTypeEnum::PJ->value,
+                ])
                 ->sortable()
-                ->searchable()
-                ->limit(50)
-                ->tooltip($closureTooltip),
+                ->searchable(),
 
             TextColumn::make('formatted_agency')
                 ->label('Agência')
@@ -40,7 +44,8 @@ class MakeTableColumns
                 ->sortable()
                 ->searchable(),
 
-            TextColumn::make('balance')
+            TextColumn::make('formatted_balance')
+                ->prefix('R$ ')
                 ->label('Saldo Atual')
                 ->sortable()
                 ->searchable(),

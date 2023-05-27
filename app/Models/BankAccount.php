@@ -18,6 +18,7 @@ class BankAccount extends Model
     protected $appends = [
         'formatted_number',
         'formatted_agency',
+        'formatted_balance',
     ];
 
     public function getFormattedNumberAttribute(): string
@@ -28,6 +29,11 @@ class BankAccount extends Model
     public function getFormattedAgencyAttribute(): string
     {
         return $this->agency_number >= 0 ? "{$this->agency_number}-{$this->agency_digit}" : $this->agency_number;
+    }
+
+    public function getFormattedBalanceAttribute(): string
+    {
+        return number_format($this->balance, 2, ',', '.');
     }
 
     public function entries(): HasMany

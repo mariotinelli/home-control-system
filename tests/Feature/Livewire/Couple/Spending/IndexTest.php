@@ -129,7 +129,7 @@ it('can render spending amount column in table', function () {
 
 })->group('canRenderTableColumns');
 
-it('can render spending amount date in table', function () {
+it('can render spending date in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
         'user_id'                     => $this->user->id,

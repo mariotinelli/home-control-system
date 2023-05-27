@@ -65,3 +65,48 @@ it('can render create action button', function () {
         ->assertTableActionExists('create');
 
 })->group('canRenderTableHeader');
+
+/* ###################################################################### */
+/* CAN RENDER TABLE COLUMNS */
+/* ###################################################################### */
+it('can render bank account id column in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('id');
+
+})->group('canRenderTableColumns');
+
+it('can render bank account name column in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('bank_name');
+
+})->group('canRenderTableColumns');
+
+it('can render bank account type column in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('type');
+
+})->group('canRenderTableColumns');
+
+it('can render bank account formatted agency column in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('formatted_agency');
+
+})->group('canRenderTableColumns');
+
+it('can render bank account formatted number in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('formatted_number');
+
+})->group('canRenderTableColumns');
+
+it('can render bank account formatted balance in table', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanRenderTableColumn('formatted_balance');
+
+})->group('canRenderTableColumns');

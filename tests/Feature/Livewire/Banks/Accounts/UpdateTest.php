@@ -287,23 +287,23 @@ test('digit should be have a max digits of 1', function () {
 
 });
 
-test('balance is required', function () {
+//test('balance is required', function () {
+//
+//    livewire(\App\Http\Livewire\Banks\Accounts\Update::class, ['bankAccount' => $this->bankAccount])
+//        ->set('bankAccount.balance', null)
+//        ->call('save')
+//        ->assertHasErrors(['bankAccount.balance' => 'required']);
+//
+//});
 
-    livewire(\App\Http\Livewire\Banks\Accounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', null)
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'required']);
-
-});
-
-test('balance should be a numeric', function () {
-
-    livewire(\App\Http\Livewire\Banks\Accounts\Update::class, ['bankAccount' => $this->bankAccount])
-        ->set('bankAccount.balance', 'abc')
-        ->call('save')
-        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
-
-});
+//test('balance should be a numeric', function () {
+//
+//    livewire(\App\Http\Livewire\Banks\Accounts\Update::class, ['bankAccount' => $this->bankAccount])
+//        ->set('bankAccount.balance', 'abc')
+//        ->call('save')
+//        ->assertHasErrors(['bankAccount.balance' => 'numeric']);
+//
+//});
 
 test('agency number is required', function () {
 

@@ -6,9 +6,9 @@ enum BankAccountTypeEnum: string
 {
     case CR = 'Corrente';
 
-    case PO = 'Poupança';
+    case CP = 'Poupança';
 
-    case PJ = 'Pessoa Jurídica';
+    case PJ = 'Jurídica';
 
     public static function toArray(): array
     {
