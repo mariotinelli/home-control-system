@@ -48,3 +48,20 @@ it('can redirect to login if not authenticated', function () {
         ->assertRedirect(route('login'));
 
 })->group('renderPage');
+
+/* ###################################################################### */
+/* CAN RENDER TABLE HEADER */
+/* ###################################################################### */
+it('can render table heading', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertSeeHtml('Contas Bancárias');
+
+})->group('canRenderTableHeader');
+
+it('can render create action button', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionExists('create');
+
+})->group('canRenderTableHeader');

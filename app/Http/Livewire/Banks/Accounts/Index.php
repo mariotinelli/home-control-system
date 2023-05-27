@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Banks\Accounts;
 use App\Actions;
 use App\Models\BankAccount;
 use App\Traits\HasLimitColumnWithTooltip;
+use Exception;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -27,6 +29,10 @@ class Index extends Component implements HasTable
     protected static ?string $model = BankAccount::class;
 
     protected static ?string $resourceMenuLabel = 'Contas Bancárias';
+
+    protected static ?string $resourceLabel = 'conta bancária';
+
+    protected static ?string $createActionColor = 'success';
 
     public function render(): View
     {
@@ -67,5 +73,19 @@ class Index extends Component implements HasTable
     protected function getTableHeading(): string|Htmlable|Closure|null
     {
         return view('components.app.filament.resources.table.heading', ['title' => static::$resourceMenuLabel]);
+    }
+
+    /** @throws Exception */
+    protected function getTableHeaderActions(): array
+    {
+        return [
+            CreateAction::make('create')
+                ->url(fn (): string => route('banks.accounts.create'))
+                ->tooltip('Criar ' . static::$resourceLabel)
+                ->icon('heroicon-s-plus')
+                ->label('Criar ' . static::$resourceLabel)
+                ->color(static::$createActionColor ?? 'primary')
+                ->visible(fn (): bool => auth()->user()->can('create', static::$model)),
+        ];
     }
 }
