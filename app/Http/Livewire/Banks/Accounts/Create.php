@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Banks\Accounts;
 
 use App\Actions;
+use App\Models\BankAccount;
 use Exception;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -30,6 +31,8 @@ class Create extends Component implements HasForms
 
     public function render(): View|Factory|Application
     {
+        $this->authorize('create', [BankAccount::class]);
+
         return view('livewire.banks.accounts.create');
     }
 
