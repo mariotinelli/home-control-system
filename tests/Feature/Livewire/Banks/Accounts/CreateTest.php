@@ -56,6 +56,92 @@ it('can display title of page', function () {
 
 })->group('renderForm');
 
+/* ###################################################################### */
+/* RENDER FORM FIELDS */
+/* ###################################################################### */
+it('has a bank name field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('bank_name');
+
+})->group('renderFormFields');
+
+it('has a type field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('type');
+
+})->group('renderFormFields');
+
+it('has a number field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('number');
+
+})->group('renderFormFields');
+
+it('has a digit field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('digit');
+
+})->group('renderFormFields');
+
+it('has a agency number field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('agency_number');
+
+})->group('renderFormFields');
+
+it('has a agency digit field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('agency_digit');
+
+})->group('renderFormFields');
+
+it('has a balance field', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertFormFieldExists('balance');
+
+})->group('renderFormFields');
+
+/* ###################################################################### */
+/* VALIDATE FORM FIELDS */
+/* ###################################################################### */
+//it('can validate category in creating', function () {
+//    // Arrange
+//    CoupleSpendingCategory::factory()->count(5)->create([
+//        'user_id' => $this->user->id,
+//    ]);
+//
+//    // Required
+//    livewire(Couple\Spending\Index::class)
+//        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+//            'couple_spending_category_id' => null,
+//        ])
+//        ->assertHasTableActionErrors(['couple_spending_category_id' => ['required']]);
+//
+//    // Exists
+//    livewire(Couple\Spending\Index::class)
+//        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+//            'couple_spending_category_id' => CoupleSpendingCategory::count() + 1,
+//        ])
+//        ->assertHasTableActionErrors(['couple_spending_category_id' => ['exists']]);
+//
+//    // Belongs to user
+//    $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
+//
+//    livewire(Couple\Spending\Index::class)
+//        ->callTableAction(Tables\Actions\CreateAction::class, data: [
+//            'couple_spending_category_id' => $categoryNotOwner->id,
+//        ])
+//        ->assertForbidden();
+//
+//})->group('creatingDataValidation');
+
 //
 //it('should be able to create a bank account', function () {
 //    // Arrange

@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Banks\Accounts;
 
+use App\Actions;
+use Exception;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -31,24 +33,14 @@ class Create extends Component implements HasForms
         return view('livewire.banks.accounts.create');
     }
 
-//    public function save(): void
-//    {
-//        $this->authorize('create', BankAccount::class);
-//
-//        $this->validate();
-//
-//        auth()->user()->bankAccounts()->save($this->bankAccount);
-//
-//        $this->emit('bank-account::created');
-//    }
+    /** @throws Exception */
+    protected function getFormSchema(): array
+    {
+        return Actions\Banks\Accounts\MakeFormSchema::execute();
+    }
 
     protected function getFormStatePath(): string
     {
         return 'data';
     }
-
-//    protected function rules(): array
-//    {
-//        return (new StoreBankAccountRequest())->rules();
-//    }
 }
