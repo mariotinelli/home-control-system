@@ -112,6 +112,30 @@ it('has a balance field', function () {
 })->group('renderFormFields');
 
 /* ###################################################################### */
+/* RENDER FORM BUTTONS */
+/* ###################################################################### */
+it('can render create button', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertSeeHtml('Criar');
+
+})->group('renderFormButtons');
+
+it('can render create and stay button', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertSeeHtml('Criar e criar novo');
+
+})->group('renderFormButtons');
+
+it('can render cancel button', function () {
+
+    livewire(Banks\Accounts\Create::class)
+        ->assertSeeHtml('Cancelar');
+
+})->group('renderFormButtons');
+
+/* ###################################################################### */
 /* VALIDATE FORM FIELDS */
 /* ###################################################################### */
 it('can validate bank name', function () {
@@ -434,33 +458,3 @@ it('can create a bank accounts and continue in this page', function () {
     ]);
 
 })->group('createBankAccount');
-
-//it('should be able to create a bank account', function () {
-//    // Arrange
-//    $newData = BankAccount::factory()->makeOne();
-//
-//    // Act
-//    livewire(\App\Http\Livewire\Banks\Accounts\Create::class)
-//        ->set('bankAccount.bank_name', $newData->bank_name)
-//        ->set('bankAccount.type', $newData->type)
-//        ->set('bankAccount.number', $newData->number)
-//        ->set('bankAccount.digit', $newData->digit)
-//        ->set('bankAccount.agency_number', $newData->agency_number)
-//        ->set('bankAccount.agency_digit', $newData->agency_digit)
-//        ->set('bankAccount.balance', $newData->balance)
-//        ->call('save')
-//        ->assertEmitted('bank-account::created');
-//
-//    // Assert
-//    assertDatabaseHas('bank_accounts', [
-//        'user_id' => $this->user->id,
-//        'bank_name' => $newData->bank_name,
-//        'type' => $newData->type,
-//        'number' => $newData->number,
-//        'digit' => $newData->digit,
-//        'agency_number' => $newData->agency_number,
-//        'agency_digit' => $newData->agency_digit,
-//        'balance' => $newData->balance,
-//    ]);
-//
-//});

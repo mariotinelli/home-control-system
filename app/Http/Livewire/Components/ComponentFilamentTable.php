@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Components;
 
 use App\Traits\{HasFilamentTables};
 use Filament\Forms;
@@ -11,7 +11,7 @@ use Livewire\Component;
 /**
  * @property Forms\ComponentContainer|View|mixed|null $form
  */
-class ComponentWithFilamentTable extends Component implements HasTable
+class ComponentFilamentTable extends Component implements HasTable
 {
     use HasFilamentTables;
 

@@ -6,12 +6,16 @@
     {{ $this->form }}
 
     <button wire:click="save">
-        Salvar
+        Criar
     </button>
 
     <button wire:click="saveAndStay">
-        Salvar e criar novo
+        Criar e criar novo
     </button>
+
+    <a href="{{ route('banks.accounts.index') }}">
+        Cancelar
+    </a>
 
 </div>
 

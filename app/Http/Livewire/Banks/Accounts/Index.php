@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Banks\Accounts;
 
 use App\Actions;
-use App\Http\Livewire\ComponentWithFilamentTable;
+use App\Http\Livewire\Components\ComponentFilamentTable;
 use App\Models\BankAccount;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Index extends ComponentWithFilamentTable
+class Index extends ComponentFilamentTable
 {
     use AuthorizesRequests;
 
