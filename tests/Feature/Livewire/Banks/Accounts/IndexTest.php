@@ -422,3 +422,58 @@ it('can delete categories', function () {
     assertModelMissing($bankAccount);
 
 })->group('tableActionsCrud');
+
+/* ###################################################################### */
+/* CANNOT HAS PERMISSION */
+/* ###################################################################### */
+it('cannot render page if not has permission', function () {
+
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_read');
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertForbidden();
+
+})->group('cannotHasPermission');
+
+it('cannot render create action button if not has permission', function () {
+
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_create');
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertDontSeeHtml('Criar conta bancária');
+
+})->group('cannotHasPermission');
+
+it('can disable edit action button if not has permission', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne()
+    );
+
+    $this->user->revokePermissionTo('bank_account_update');
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class, $bankAccount);
+
+})->group('cannotHasPermission');
+
+it('can disable delete action button if not has permission', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne()
+    );
+
+    $this->user->revokePermissionTo('bank_account_delete');
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $bankAccount);
+
+})->group('cannotHasPermission');

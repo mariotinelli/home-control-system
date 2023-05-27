@@ -16,6 +16,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\{Builder, Model};
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use PhpParser\Node\Expr\Closure;
 
@@ -23,6 +24,7 @@ class Index extends Component implements HasTable
 {
     use InteractsWithTable;
     use HasLimitColumnWithTooltip;
+    use AuthorizesRequests;
 
     protected static string $defaultSortColumn = 'id';
 
@@ -40,6 +42,8 @@ class Index extends Component implements HasTable
 
     public function render(): View
     {
+        $this->authorize('viewAny', [BankAccount::class]);
+
         return view('livewire.banks.accounts.index');
     }
 
