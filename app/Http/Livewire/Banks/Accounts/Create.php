@@ -2,33 +2,28 @@
 
 namespace App\Http\Livewire\Banks\Accounts;
 
-use App\Http\Requests\BankAccount\StoreBankAccountRequest;
-use App\Models\BankAccount;
+use Filament\Forms\ComponentContainer;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
-class Create extends Component
+/**
+ * @property ComponentContainer|View|mixed|null $form
+ */
+class Create extends Component implements HasForms
 {
     use AuthorizesRequests;
+    use InteractsWithForms;
 
-    public ?BankAccount $bankAccount = null;
-
-    public function save(): void
-    {
-        $this->authorize('create', BankAccount::class);
-
-        $this->validate();
-
-        auth()->user()->bankAccounts()->save($this->bankAccount);
-
-        $this->emit('bank-account::created');
-    }
+    public $data;
 
     public function mount(): void
     {
-        $this->bankAccount = new BankAccount();
+        $this->form->fill();
+        ;
     }
 
     public function render(): View|Factory|Application
@@ -36,8 +31,24 @@ class Create extends Component
         return view('livewire.banks.accounts.create');
     }
 
-    protected function rules(): array
+//    public function save(): void
+//    {
+//        $this->authorize('create', BankAccount::class);
+//
+//        $this->validate();
+//
+//        auth()->user()->bankAccounts()->save($this->bankAccount);
+//
+//        $this->emit('bank-account::created');
+//    }
+
+    protected function getFormStatePath(): string
     {
-        return (new StoreBankAccountRequest())->rules();
+        return 'data';
     }
+
+//    protected function rules(): array
+//    {
+//        return (new StoreBankAccountRequest())->rules();
+//    }
 }
