@@ -4,8 +4,10 @@ namespace Livewire\Banks\Accounts;
 
 use App\Http\Livewire\Banks;
 use App\Models\{BankAccount, User};
+use Filament\Pages\Actions\{CreateAction, EditAction};
+use Filament\Tables;
 
-use function Pest\Laravel\{actingAs, get};
+use function Pest\Laravel\{actingAs, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -372,3 +374,51 @@ it('can search bank accounts from header search', function () {
         ->assertCanNotSeeTableRecords($cannotSeeRecord);
 
 })->group('canHeaderSearchTable');
+
+/* ###################################################################### */
+/* TABLE ACTIONS CRUD */
+/* ###################################################################### */
+it('can render all table row actions', function () {
+
+    $this->user->bankAccounts()->saveMany(
+        BankAccount::factory()->count(5)->make()
+    );
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionExists(Tables\Actions\EditAction::class);
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionExists(Tables\Actions\DeleteAction::class);
+
+})->group('tableActionsCrud');
+
+it('can redirect to create page on click create button', function () {
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionHasUrl(CreateAction::class, route('banks.accounts.create'));
+
+})->group('tableActionsCrud');
+
+it('can redirect to edit page on click edit button', function () {
+
+    $bankAccount = BankAccount::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableActionHasUrl(EditAction::class, route('banks.accounts.edit', $bankAccount), record: $bankAccount);
+
+})->group('tableActionsCrud');
+
+it('can delete categories', function () {
+
+    $bankAccount = BankAccount::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    livewire(Banks\Accounts\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $bankAccount);
+
+    assertModelMissing($bankAccount);
+
+})->group('tableActionsCrud');

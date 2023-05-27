@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
-class Update extends Component
+class Edit extends Component
 {
     use AuthorizesRequests;
 

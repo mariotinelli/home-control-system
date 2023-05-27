@@ -399,25 +399,29 @@ it('cannot render create action button if not has permission', function () {
 
 it('can disable edit action button if not has permission', function () {
     // Arrange
-    $this->user->revokePermissionTo('couple_spending_category_update');
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
-    CoupleSpendingCategory::factory()->count(1)->create();
+    $this->user->revokePermissionTo('couple_spending_category_update');
 
     // Act
     livewire(Couple\Spending\Categories\Index::class)
-        ->assertTableActionDisabled(Tables\Actions\EditAction::class);
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class, $category);
 
 })->group('cannotHasPermission');
 
 it('can disable delete action button if not has permission', function () {
     // Arrange
-    $this->user->revokePermissionTo('couple_spending_category_update');
+    $category = CoupleSpendingCategory::factory()->create([
+        'user_id' => $this->user->id,
+    ]);
 
-    CoupleSpendingCategory::factory()->count(1)->create();
+    $this->user->revokePermissionTo('couple_spending_category_delete');
 
     // Act
     livewire(Couple\Spending\Categories\Index::class)
-        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $category);
 
 })->group('cannotHasPermission');
 

@@ -67,15 +67,11 @@ class MakeTableColumns
                 ->sortable(['balance'])
                 ->searchable(query: function (Builder $query, string $search): Builder {
 
-                    ds($search);
-
                     $search = str($search)->replace('r$', '')
                         ->replace('R$', '')
                         ->replace('.', '')
                         ->replace(',', '.')
                         ->__toString();
-
-                    ds($search);
 
                     return $query
                         ->where('balance', 'like', "%{$search}%");

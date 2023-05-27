@@ -6,14 +6,16 @@ use App\Actions;
 use App\Models\BankAccount;
 use App\Traits\HasLimitColumnWithTooltip;
 use Exception;
+use Filament\Notifications\Notification;
+use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Livewire\Component;
 use PhpParser\Node\Expr\Closure;
 
@@ -33,6 +35,8 @@ class Index extends Component implements HasTable
     protected static ?string $resourceLabel = 'conta bancária';
 
     protected static ?string $createActionColor = 'success';
+
+    protected static string $successDeleteNotification = 'Deleção realizada com sucesso';
 
     public function render(): View
     {
@@ -87,5 +91,43 @@ class Index extends Component implements HasTable
                 ->color(static::$createActionColor ?? 'primary')
                 ->visible(fn (): bool => auth()->user()->can('create', static::$model)),
         ];
+    }
+
+    /** @throws Exception */
+    protected function getTableActions(): array
+    {
+        return [
+
+            Tables\Actions\EditAction::make()
+                ->disabled(fn (Model $record): bool => !auth()->user()->can('update', $record))
+                ->button()
+                ->tooltip('Editar ' . static::$resourceLabel)
+                ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt')
+                ->url(fn (Model $record): string => route('banks.accounts.edit', $record)),
+
+            Tables\Actions\DeleteAction::make()
+                ->disabled(fn (Model $record): bool => !auth()->user()->can('delete', $record))
+                ->button()
+                ->tooltip(function ($action) {
+                    if ($action->isDisabled()) {
+                        $action->icon('heroicon-s-lock-closed');
+                    }
+
+                    return 'Deletar ' . static::$resourceLabel;
+                })
+                ->modalHeading('Deletar ' . static::$resourceLabel)
+                ->successNotification(
+                    Notification::make()
+                        ->title(static::$resourceMenuLabel)
+                        ->body(static::$successDeleteNotification)
+                        ->success()
+                ),
+
+        ];
+    }
+
+    protected function getTableRecordUrlUsing(): \Closure
+    {
+        return fn (Model $record): string => route('banks.accounts.edit', $record);
     }
 }
