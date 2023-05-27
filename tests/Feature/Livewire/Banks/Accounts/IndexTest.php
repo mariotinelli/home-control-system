@@ -328,3 +328,47 @@ it('can sort spending by formatted balance', function () {
         ->assertCanSeeTableRecords($bankAccounts->sortByDesc('balance'), inOrder: true);
 
 })->group('canSortTable');
+
+/* ###################################################################### */
+/* HEADER SEARCH TABLE */
+/* ###################################################################### */
+it('can search bank accounts from header search', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        BankAccount::factory()->count(5)->make()
+    );
+
+    $fakeNumber = fake()->numberBetween(1, 5);
+
+    $search = $fakeNumber % 2 == 0
+        ? $fakeNumber
+        : fake()->sentence(1);
+
+    $canSeeRecord = BankAccount::whereUserId($this->user->id)->where('id', 'LIKE', "%{$search}%")
+        ->orWhere('bank_name', 'LIKE', "%{$search}%")
+        ->orWhere('type', 'LIKE', "%{$search}%")
+        ->orWhere('agency_number', 'LIKE', "%{$search}%")
+        ->orWhere('agency_digit', 'LIKE', "%{$search}%")
+        ->orWhere('number', 'LIKE', "%{$search}%")
+        ->orWhere('digit', 'LIKE', "%{$search}%")
+        ->orWhere('balance', 'LIKE', "%{$search}%")
+        ->get();
+
+    $cannotSeeRecord = BankAccount::whereUserId($this->user->id)->where('id', 'NOT LIKE', "%{$search}%")
+        ->where('bank_name', 'NOT LIKE', "%{$search}%")
+        ->where('type', 'NOT LIKE', "%{$search}%")
+        ->where('agency_number', 'NOT LIKE', "%{$search}%")
+        ->where('agency_digit', 'NOT LIKE', "%{$search}%")
+        ->where('number', 'NOT LIKE', "%{$search}%")
+        ->where('digit', 'NOT LIKE', "%{$search}%")
+        ->where('balance', 'NOT LIKE', "%{$search}%")
+        ->get();
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->searchTable($search)
+        ->assertCanSeeTableRecords($canSeeRecord)
+        ->assertCanNotSeeTableRecords($cannotSeeRecord);
+
+})->group('canHeaderSearchTable');

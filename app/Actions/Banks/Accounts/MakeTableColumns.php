@@ -42,7 +42,11 @@ class MakeTableColumns
                         ->orderBy('agency_number', $direction)
                         ->orderBy('agency_digit', $direction);
                 })
-                ->searchable(),
+                ->searchable(query: function (Builder $query, string $search): Builder {
+                    return $query
+                        ->where('agency_number', 'like', "%{$search}%")
+                        ->orWhere('agency_digit', 'like', "%{$search}%");
+                }),
 
             TextColumn::make('formatted_number')
                 ->label('Número')
@@ -51,13 +55,31 @@ class MakeTableColumns
                         ->orderBy('number', $direction)
                         ->orderBy('digit', $direction);
                 })
-                ->searchable(),
+                ->searchable(query: function (Builder $query, string $search): Builder {
+                    return $query
+                        ->where('number', 'like', "%{$search}%")
+                        ->orWhere('digit', 'like', "%{$search}%");
+                }),
 
             TextColumn::make('formatted_balance')
                 ->prefix('R$ ')
                 ->label('Saldo Atual')
                 ->sortable(['balance'])
-                ->searchable(),
+                ->searchable(query: function (Builder $query, string $search): Builder {
+
+                    ds($search);
+
+                    $search = str($search)->replace('r$', '')
+                        ->replace('R$', '')
+                        ->replace('.', '')
+                        ->replace(',', '.')
+                        ->__toString();
+
+                    ds($search);
+
+                    return $query
+                        ->where('balance', 'like', "%{$search}%");
+                }),
 
         ];
     }
