@@ -110,3 +110,100 @@ it('can render bank account formatted balance in table', function () {
         ->assertCanRenderTableColumn('formatted_balance');
 
 })->group('canRenderTableColumns');
+
+/* ###################################################################### */
+/* RENDER DEFAULT */
+/* ###################################################################### */
+it('can display only my bank accounts in table', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        $myBankAccounts = BankAccount::factory()->count(10)->make()
+    );
+
+    $otherBankAccounts = BankAccount::factory()->count(10)->create();
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanSeeTableRecords($myBankAccounts)
+        ->assertCountTableRecords(BankAccount::whereUserId($this->user->id)->count())
+        ->assertCanNotSeeTableRecords($otherBankAccounts);
+
+})->group('renderDefault');
+
+it('bank accounts are sorted by default in desc order', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->saveMany(
+        $bankAccounts = BankAccount::factory()->count(10)->make()
+    );
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertCanSeeTableRecords($bankAccounts->sortByDesc('id'), inOrder: true);
+
+})->group('renderDefault');
+
+it('bank account number display should be formatted to number-digit', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne()
+    );
+
+    $formattedNumber = $bankAccount->number . '-' . $bankAccount->digit;
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableColumnFormattedStateSet('formatted_number', $formattedNumber, record: $bankAccount);
+
+})->group('renderDefault');
+
+it('bank account agency display should be formatted to agency_number-agency_digit', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne([
+            'agency_digit' => 0,
+        ])
+    );
+
+    $formattedAgency = $bankAccount->agency_number . '-' . $bankAccount->agency_digit;
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableColumnFormattedStateSet('formatted_agency', $formattedAgency, record: $bankAccount);
+
+})->group('renderDefault');
+
+it('bank account agency display should be formatted to agency_number when agency_digit is null', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne([
+            'agency_digit' => null,
+        ])
+    );
+
+    $formattedAgency = $bankAccount->agency_number;
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableColumnFormattedStateSet('formatted_agency', $formattedAgency, record: $bankAccount);
+
+})->group('renderDefault');
+
+it('bank account balance display should be formatted to format R$ 9.999,99', function () {
+
+    // Arrange
+    $this->user->bankAccounts()->save(
+        $bankAccount = BankAccount::factory()->makeOne()
+    );
+
+    $formattedBalance = "R$ " . number_format($bankAccount->balance, 2, ',', '.');
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->assertTableColumnFormattedStateSet('formatted_balance', $formattedBalance, record: $bankAccount);
+
+})->group('renderDefault');
