@@ -33,6 +33,11 @@ class Create extends Component implements HasForms
         return view('livewire.banks.accounts.create');
     }
 
+    public function save(): void
+    {
+        $state = $this->form->getState();
+    }
+
     /** @throws Exception */
     protected function getFormSchema(): array
     {

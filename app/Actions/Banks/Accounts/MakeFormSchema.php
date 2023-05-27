@@ -27,15 +27,23 @@ class MakeFormSchema
                     Select::make('type')
                         ->label('Tipo')
                         ->placeholder('Tipo da conta')
+                        ->options(BankAccountTypeEnum::getValues())
                         ->required()
-                        ->options(BankAccountTypeEnum::getValues()),
+                        ->string()
+                        ->rules([
+                            'in:' . implode(',', BankAccountTypeEnum::toArray()),
+                        ]),
 
                     TextInput::make('number')
                         ->label('Número')
                         ->placeholder('Número da conta')
                         ->required()
                         ->numeric()
-                        ->unique(ignoreRecord: true)
+                        ->unique(
+                            table: 'bank_accounts',
+                            column: 'number',
+                            ignoreRecord: true
+                        )
                         ->rules([
                             'min_digits:5',
                             'max_digits:20',
