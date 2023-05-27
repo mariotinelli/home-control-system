@@ -21,12 +21,12 @@ class BankAccount extends Model
         'formatted_balance',
     ];
 
-    public function getFormattedNumberAttribute(): string
+    public function getFormattedNumberAttribute(): ?string
     {
         return "{$this->number}-{$this->digit}";
     }
 
-    public function getFormattedAgencyAttribute(): string
+    public function getFormattedAgencyAttribute(): ?string
     {
         return !is_null($this->agency_digit) ? "{$this->agency_number}-{$this->agency_digit}" : $this->agency_number;
     }
