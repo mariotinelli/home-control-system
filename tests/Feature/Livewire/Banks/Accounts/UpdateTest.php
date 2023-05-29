@@ -110,6 +110,72 @@ it('has a balance field', function () {
 
 })->group('renderFormFields');
 
+/* ###################################################################### */
+/* CORRECTLY FILL FORM */
+/* ###################################################################### */
+it('can fill bank name field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'bank_name' => $this->bankAcount->bank_name,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill type field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'type' => $this->bankAcount->type,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill number field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'number' => $this->bankAcount->number,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill digit field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'digit' => $this->bankAcount->digit,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill agency number field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'agency_number' => $this->bankAcount->agency_number,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill agency digit field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'agency_digit' => $this->bankAcount->agency_digit,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill balance field correctly', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormSet([
+            'balance' => number_format($this->bankAcount->balance, 2, ',', '.'),
+        ]);
+
+})->group('canFillForm');
+
 ///* ###################################################################### */
 ///* RENDER FORM BUTTONS */
 ///* ###################################################################### */
