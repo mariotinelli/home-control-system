@@ -57,59 +57,59 @@ it('can display title of page', function () {
         ->assertSeeHtml('Editar conta bancária');
 
 })->group('renderForm');
-//
-///* ###################################################################### */
-///* RENDER FORM FIELDS */
-///* ###################################################################### */
-//it('has a bank name field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('bank_name');
-//
-//})->group('renderFormFields');
-//
-//it('has a type field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('type');
-//
-//})->group('renderFormFields');
-//
-//it('has a number field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('number');
-//
-//})->group('renderFormFields');
-//
-//it('has a digit field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('digit');
-//
-//})->group('renderFormFields');
-//
-//it('has a agency number field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('agency_number');
-//
-//})->group('renderFormFields');
-//
-//it('has a agency digit field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('agency_digit');
-//
-//})->group('renderFormFields');
-//
-//it('has a balance field', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormFieldExists('balance');
-//
-//})->group('renderFormFields');
-//
+
+/* ###################################################################### */
+/* RENDER FORM FIELDS */
+/* ###################################################################### */
+it('has a bank name field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('bank_name');
+
+})->group('renderFormFields');
+
+it('has a type field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('type');
+
+})->group('renderFormFields');
+
+it('has a number field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('number');
+
+})->group('renderFormFields');
+
+it('has a digit field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('digit');
+
+})->group('renderFormFields');
+
+it('has a agency number field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('agency_number');
+
+})->group('renderFormFields');
+
+it('has a agency digit field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('agency_digit');
+
+})->group('renderFormFields');
+
+it('has a balance field', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormFieldExists('balance');
+
+})->group('renderFormFields');
+
 ///* ###################################################################### */
 ///* RENDER FORM BUTTONS */
 ///* ###################################################################### */
