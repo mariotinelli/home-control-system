@@ -40,7 +40,7 @@ class Create extends ComponentFilamentForm
         return view('livewire.banks.accounts.create');
     }
 
-    protected static function create(array $data): void
+    protected static function store(array $data): void
     {
         auth()->user()->bankAccounts()->create($data);
     }

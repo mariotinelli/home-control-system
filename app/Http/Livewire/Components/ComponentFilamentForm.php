@@ -25,4 +25,6 @@ class ComponentFilamentForm extends Component implements Forms\Contracts\HasForm
     protected static ?string $baseRouteName = null;
 
     protected static string $successCreateNotification = 'Cadastro realizado com sucesso';
+
+    protected static string $successUpdateNotification = 'Atualização realizada com sucesso';
 }

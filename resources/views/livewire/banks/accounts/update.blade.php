@@ -1,3 +1,4 @@
-<div>
-    {{-- Do your work, then step back. --}}
-</div>
+<x-app.filament.resources.forms.edit
+    title="Editar conta bancária"
+    routeIndex="banks.accounts.index"
+/>

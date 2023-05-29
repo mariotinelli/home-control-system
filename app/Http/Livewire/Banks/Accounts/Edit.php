@@ -2,37 +2,61 @@
 
 namespace App\Http\Livewire\Banks\Accounts;
 
-use App\Http\Requests\BankAccount\UpdateBankAccountRequest;
+use App\Actions;
+use App\Http\Livewire\Components\ComponentFilamentForm;
 use App\Models\BankAccount;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Livewire\Component;
 
-class Edit extends Component
+class Edit extends ComponentFilamentForm
 {
     use AuthorizesRequests;
 
-    public ?BankAccount $bankAccount = null;
+    protected static ?string $model = BankAccount::class;
 
-    public function rules(): array
+    protected static ?string $resourceMenuLabel = 'Contas bancárias';
+
+    protected static ?string $resourceLabel = 'conta bancária';
+
+    protected static ?string $createActionColor = 'success';
+
+    protected static ?string $baseRouteName = 'banks.accounts';
+
+    public BankAccount $record;
+
+    public function mount(BankAccount $record): void
     {
-        return (new UpdateBankAccountRequest($this->bankAccount))->rules();
-    }
+        $this->record = $record;
 
-    public function save(): void
-    {
-        $this->authorize('update', $this->bankAccount);
-
-        $this->validate();
-
-        auth()->user()->bankAccounts()->save($this->bankAccount);
-
-        $this->emit('bank-account::updated');
+        $this->form->fill([
+            'bank_name'     => $record->bank_name,
+            'type'          => $record->type,
+            'number'        => $record->number,
+            'digit'         => $record->digit,
+            'agency_number' => $record->agency_number,
+            'agency_digit'  => $record->agency_digit,
+            'balance'       => $record->balance,
+        ]);
     }
 
     public function render(): View|Factory|Application
     {
+        $this->authorize('update', $this->record);
+
         return view('livewire.banks.accounts.update');
     }
+
+    /** @throws Exception */
+    protected function getFormSchema(): array
+    {
+        return Actions\Banks\Accounts\MakeFormSchema::execute();
+    }
+
+    protected static function update(array $data): void
+    {
+        auth()->user()->bankAccounts()->create($data);
+    }
+
 }

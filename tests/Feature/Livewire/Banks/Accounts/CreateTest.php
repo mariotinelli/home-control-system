@@ -145,7 +145,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['bank_name' => 'required']);
 
     // String
@@ -153,7 +153,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => 123,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['bank_name' => 'string']);
 
     // Min 3
@@ -161,7 +161,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => Str::random(2),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['bank_name' => 'min']);
 
     // Max 100
@@ -169,7 +169,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => Str::random(101),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['bank_name' => 'max']);
 
 })->group('formFieldsValidation');
@@ -181,7 +181,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['type' => 'required']);
 
     // String
@@ -189,7 +189,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => 123,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['type' => 'string']);
 
     // In
@@ -197,7 +197,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => 'invalid',
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['type' => 'in']);
 
 })->group('formFieldsValidation');
@@ -209,7 +209,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['number' => 'required']);
 
     // Numeric
@@ -217,7 +217,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => 'abc',
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['number' => 'numeric']);
 
     // Min digits 5
@@ -225,7 +225,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => (float)str_repeat('1', 4),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['number' => 'min_digits']);
 
     // Max digits 20
@@ -233,7 +233,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => (float)str_repeat('1', 21),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['number' => 'max_digits']);
 
     // Unique
@@ -243,7 +243,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => $bankAccount->number,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['number' => 'unique']);
 
 })->group('formFieldsValidation');
@@ -255,7 +255,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['digit' => 'required']);
 
     // Numeric
@@ -263,7 +263,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => 'abc',
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['digit' => 'numeric']);
 
     // Max digits 1
@@ -271,7 +271,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => 12,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['digit' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -283,7 +283,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_number' => 'required']);
 
     // Numeric
@@ -291,7 +291,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => 'abc',
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_number' => 'numeric']);
 
     // Min digits 4
@@ -299,7 +299,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 3),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_number' => 'min_digits']);
 
     // Max digits 4
@@ -307,7 +307,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 5),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_number' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -319,7 +319,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasNoFormErrors(['agency_digit']);
 
     // Numeric
@@ -327,7 +327,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => 'abc',
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_digit' => 'numeric']);
 
     // Max digits 1
@@ -335,7 +335,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => 12,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['agency_digit' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -347,7 +347,7 @@ it('can validate balance', function () {
         ->fillForm([
             'balance' => null,
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasFormErrors(['balance' => 'required']);
 
 })->group('formFieldsValidation');
@@ -373,7 +373,7 @@ it("cannot able to create a bank account if not has permission", function () {
 
     $this->user->revokePermissionTo('bank_account_create');
 
-    $lw->call('save')
+    $lw->call('create')
         ->assertForbidden();
 
 })->group('cannotHasPermission');
@@ -397,7 +397,7 @@ it('can create a bank accounts', function () {
             'agency_digit'  => $newData->agency_digit,
             'balance'       => number_format($newData->balance, 2, ',', '.'),
         ])
-        ->call('save')
+        ->call('create')
         ->assertHasNoFormErrors()
         ->assertNotified()
         ->assertRedirect(route('banks.accounts.index'));
@@ -432,7 +432,7 @@ it('can create a bank accounts and continue in this page', function () {
             'agency_digit'  => $newData->agency_digit,
             'balance'       => number_format($newData->balance, 2, ',', '.'),
         ])
-        ->call('saveAndStay')
+        ->call('createAndStay')
         ->assertHasNoFormErrors()
         ->assertNotified()
         ->assertFormSet([

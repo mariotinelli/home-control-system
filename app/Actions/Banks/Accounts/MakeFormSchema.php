@@ -12,7 +12,10 @@ class MakeFormSchema
     {
         return [
 
-            Grid::make()
+            Grid::make([
+                'default' => 1,
+                'lg'      => 2,
+            ])
                 ->schema([
 
                     TextInput::make('bank_name')
@@ -22,7 +25,11 @@ class MakeFormSchema
                         ->required()
                         ->string()
                         ->minLength(3)
-                        ->maxLength(100),
+                        ->maxLength(100)
+                        ->columnSpan([
+                            'default' => 1,
+                            'lg'      => 2,
+                        ]),
 
                     Select::make('type')
                         ->label('Tipo')
@@ -34,55 +41,75 @@ class MakeFormSchema
                             'in:' . implode(',', BankAccountTypeEnum::getValues()),
                         ]),
 
-                    TextInput::make('number')
-                        ->label('Número')
-                        ->placeholder('Número da conta')
-                        ->required()
-                        ->numeric()
-                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('00000000000000000000'))
-                        ->unique(
-                            table: 'bank_accounts',
-                            column: 'number',
-                            ignoreRecord: true
-                        )
-                        ->rules([
-                            'min_digits:5',
-                            'max_digits:20',
-                        ]),
-
-                    TextInput::make('digit')
-                        ->label('Dígito')
-                        ->placeholder('Dígito da conta')
-                        ->required()
-                        ->numeric()
-                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
-                        ->rules([
-                            'max_digits:1',
-                        ]),
-
-                    TextInput::make('agency_number')
-                        ->label('Número da agência')
-                        ->placeholder('Número da agência')
-                        ->required()
-                        ->numeric()
-                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0000'))
-                        ->rules([
-                            'min_digits:4',
-                            'max_digits:4',
-                        ]),
-
-                    TextInput::make('agency_digit')
-                        ->label('Dígito da agência')
-                        ->placeholder('Dígito da agência')
-                        ->numeric()
-                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
-                        ->rules([
-                            'max_digits:1',
-                        ]),
-
                     PtbrMoney::make('balance')
                         ->label('Saldo')
                         ->required(),
+
+                    Grid::make([
+                        'default' => 3,
+                        'lg'      => 4,
+                    ])
+                        ->schema([
+                            TextInput::make('number')
+                                ->label('Número')
+                                ->placeholder('Número da conta')
+                                ->required()
+                                ->numeric()
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('00000000000000000000'))
+                                ->unique(
+                                    table: 'bank_accounts',
+                                    column: 'number',
+                                    ignoreRecord: true
+                                )
+                                ->rules([
+                                    'min_digits:5',
+                                    'max_digits:20',
+                                ])
+                                ->columnSpan([
+                                    'default' => 2,
+                                    'lg'      => 3,
+                                ]),
+
+                            TextInput::make('digit')
+                                ->label('Dígito')
+                                ->placeholder('Dígito da conta')
+                                ->required()
+                                ->numeric()
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
+                                ->rules([
+                                    'max_digits:1',
+                                ]),
+                        ])->columnSpan(1),
+
+                    Grid::make([
+                        'default' => 3,
+                        'lg'      => 4,
+                    ])
+                        ->schema([
+                            TextInput::make('agency_number')
+                                ->label('Número da agência')
+                                ->placeholder('Número da agência')
+                                ->required()
+                                ->numeric()
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0000'))
+                                ->rules([
+                                    'min_digits:4',
+                                    'max_digits:4',
+                                ])
+                                ->columnSpan([
+                                    'default' => 2,
+                                    'lg'      => 3,
+                                ]),
+
+                            TextInput::make('agency_digit')
+                                ->label('Dígito')
+                                ->placeholder('Dígito da agência')
+                                ->numeric()
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0'))
+                                ->rules([
+                                    'max_digits:1',
+                                ]),
+                        ])->columnSpan(1),
 
                 ]),
         ];
