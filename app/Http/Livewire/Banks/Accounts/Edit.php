@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+/** @property BankAccount $record */
 class Edit extends ComponentFilamentForm
 {
     use AuthorizesRequests;
@@ -24,20 +25,16 @@ class Edit extends ComponentFilamentForm
 
     protected static ?string $baseRouteName = 'banks.accounts';
 
-    public BankAccount $record;
-
-    public function mount(BankAccount $record): void
+    public function mount(): void
     {
-        $this->record = $record;
-
         $this->form->fill([
-            'bank_name'     => $record->bank_name,
-            'type'          => $record->type,
-            'number'        => $record->number,
-            'digit'         => $record->digit,
-            'agency_number' => $record->agency_number,
-            'agency_digit'  => $record->agency_digit,
-            'balance'       => $record->balance,
+            'bank_name'     => $this->record->bank_name,
+            'type'          => $this->record->type,
+            'number'        => $this->record->number,
+            'digit'         => $this->record->digit,
+            'agency_number' => $this->record->agency_number,
+            'agency_digit'  => $this->record->agency_digit,
+            'balance'       => $this->record->balance,
         ]);
     }
 

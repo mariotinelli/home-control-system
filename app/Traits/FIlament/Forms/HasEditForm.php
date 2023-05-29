@@ -12,6 +12,8 @@ trait HasEditForm
 {
     private static bool $updateMethodExists = true;
 
+    public Model $record;
+
     private function initEdit(): void
     {
         $this->authorize('update', $this->record);

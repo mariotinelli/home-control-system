@@ -1,44 +1,45 @@
 <?php
-//
-//namespace Tests\Feature\Livewire\BankAccounts;
-//
-//use App\Http\Livewire\Banks;
-//use App\Models\{BankAccount, User};
-//use Auth;
-//use Str;
-//use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
-//use function Pest\Livewire\livewire;
-//
-//beforeEach(function () {
-//
-//    $this->user = User::factory()->createOne([
-//        'email' => 'teste@email.com',
-//    ]);
-//
-//    $this->user->givePermissionTo('bank_account_create');
-//
-//    actingAs($this->user);
-//
-//});
-//
-///* ###################################################################### */
-///* RENDER PAGE */
-///* ###################################################################### */
-//it('can render page', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertSuccessful();
-//
-//})->group('renderPage');
-//
-//it('can redirect to login if not authenticated', function () {
-//
-//    Auth::logout();
-//
-//    get(route('banks.accounts.create'))
-//        ->assertRedirect(route('login'));
-//
-//})->group('renderPage');
+
+use App\Http\Livewire\Banks;
+use App\Models\{BankAccount, User};
+
+use function Pest\Laravel\{actingAs, get};
+use function Pest\Livewire\livewire;
+
+beforeEach(function () {
+
+    $this->user = User::factory()->createOne([
+        'email' => 'teste@email.com',
+    ]);
+
+    $this->user->givePermissionTo('bank_account_update');
+
+    $this->user->bankAccounts()->save(
+        $this->bankAcount = BankAccount::factory()->makeOne()
+    );
+
+    actingAs($this->user);
+
+});
+
+/* ###################################################################### */
+/* RENDER PAGE */
+/* ###################################################################### */
+it('can render page', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertSuccessful();
+
+})->group('renderPage');
+
+it('can redirect to login if not authenticated', function () {
+
+    Auth::logout();
+
+    get(route('banks.accounts.edit', $this->bankAcount->id))
+        ->assertRedirect(route('login'));
+
+})->group('renderPage');
 //
 ///* ###################################################################### */
 ///* RENDER FORM */
