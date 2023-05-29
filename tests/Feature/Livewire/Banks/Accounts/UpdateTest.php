@@ -40,23 +40,23 @@ it('can redirect to login if not authenticated', function () {
         ->assertRedirect(route('login'));
 
 })->group('renderPage');
-//
-///* ###################################################################### */
-///* RENDER FORM */
-///* ###################################################################### */
-//it('has a form', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertFormExists();
-//
-//})->group('renderForm');
-//
-//it('can display title of page', function () {
-//
-//    livewire(Banks\Accounts\Create::class)
-//        ->assertSeeHtml('Criar conta bancária');
-//
-//})->group('renderForm');
+
+/* ###################################################################### */
+/* RENDER FORM */
+/* ###################################################################### */
+it('has a form', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertFormExists();
+
+})->group('renderForm');
+
+it('can display title of page', function () {
+
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAcount])
+        ->assertSeeHtml('Editar conta bancária');
+
+})->group('renderForm');
 //
 ///* ###################################################################### */
 ///* RENDER FORM FIELDS */
