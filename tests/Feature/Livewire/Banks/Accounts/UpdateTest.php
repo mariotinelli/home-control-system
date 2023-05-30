@@ -417,33 +417,21 @@ it('can validate balance', function () {
         ->assertHasFormErrors(['balance' => 'required']);
 
 })->group('formFieldsValidation');
-//
-///* ###################################################################### */
-///* CANNOT HAS PERMISSION */
-///* ###################################################################### */
-//it('cannot render page if not has permission', function () {
-//
-//    // Arrange
-//    $this->user->revokePermissionTo('bank_account_create');
-//
-//    // Act
-//    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
-//        ->assertForbidden();
-//
-//})->group('cannotHasPermission');
-//
-//it("cannot able to create a bank account if not has permission", function () {
-//
-//    // Act
-//    $lw = livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount]);
-//
-//    $this->user->revokePermissionTo('bank_account_create');
-//
-//    $lw->call('save')
-//        ->assertForbidden();
-//
-//})->group('cannotHasPermission');
-//
+
+/* ###################################################################### */
+/* CANNOT HAS PERMISSION */
+/* ###################################################################### */
+it('cannot render page if not has permission', function () {
+
+    // Arrange
+    $this->user->revokePermissionTo('bank_account_update');
+
+    // Act
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+        ->assertForbidden();
+
+})->group('cannotHasPermission');
+
 ///* ###################################################################### */
 ///* CREATE BANK ACCOUNT */
 ///* ###################################################################### */
