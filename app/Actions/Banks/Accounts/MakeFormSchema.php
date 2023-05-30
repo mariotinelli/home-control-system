@@ -4,12 +4,15 @@ namespace App\Actions\Banks\Accounts;
 
 use App\Enums\BankAccountTypeEnum;
 use Filament\Forms\Components\{Grid, Select, TextInput};
+use Illuminate\Database\Eloquent\Model;
 use Leandrocfe\FilamentPtbrFormFields\PtbrMoney;
 
+/** @property Model $record */
 class MakeFormSchema
 {
-    public static function execute(): array
-    {
+    public static function execute(
+        Model $record = null,
+    ): array {
         return [
 
             Grid::make([
@@ -50,17 +53,18 @@ class MakeFormSchema
                         'lg'      => 4,
                     ])
                         ->schema([
+
                             TextInput::make('number')
                                 ->label('Número')
                                 ->placeholder('Número da conta')
                                 ->required()
                                 ->numeric()
-                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('00000000000000000000'))
                                 ->unique(
                                     table: 'bank_accounts',
                                     column: 'number',
-                                    ignoreRecord: true
+                                    ignoreRecord: true,
                                 )
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('00000000000000000000'))
                                 ->rules([
                                     'min_digits:5',
                                     'max_digits:20',

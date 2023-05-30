@@ -29,7 +29,7 @@ class Edit extends ComponentFilamentForm
     {
         $this->form->fill([
             'bank_name'     => $this->record->bank_name,
-            'type'          => $this->record->type,
+            'type'          => $this->record->type->value,
             'number'        => $this->record->number,
             'digit'         => $this->record->digit,
             'agency_number' => $this->record->agency_number,
@@ -48,12 +48,13 @@ class Edit extends ComponentFilamentForm
     /** @throws Exception */
     protected function getFormSchema(): array
     {
-        return Actions\Banks\Accounts\MakeFormSchema::execute();
+        return Actions\Banks\Accounts\MakeFormSchema::execute(
+            record: $this->record,
+        );
     }
 
-    protected static function update(array $data): void
+    protected function update(array $data): void
     {
-        auth()->user()->bankAccounts()->create($data);
+        $this->record->update($data);
     }
-
 }

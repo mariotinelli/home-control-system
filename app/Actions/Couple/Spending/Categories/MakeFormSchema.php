@@ -22,12 +22,6 @@ class MakeFormSchema
                     },
                     ignoreRecord: true,
                 )
-//                ->unique(
-//                    table: 'couple_spending_categories',
-//                    column: 'name',
-//                    ignoreRecord: true,
-//                    ignorable: fn($query) => $query->where('user_id', auth()->id())
-//                )
                 ->minLength(3)
                 ->maxLength(255)
                 ->validationAttribute('nome')

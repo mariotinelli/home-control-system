@@ -12,15 +12,13 @@ trait HasEditForm
 {
     private static bool $updateMethodExists = true;
 
-    public Model $record;
-
     private function initEdit(): void
     {
         $this->authorize('update', $this->record);
 
         $state = $this->form->getState();
 
-        static::update($state);
+        $this->update($state);
 
         if (self::$updateMethodExists) {
             Notification::make()
@@ -40,7 +38,7 @@ trait HasEditForm
         }
     }
 
-    protected static function update(array $data): void
+    protected function update(array $data): void
     {
         self::$updateMethodExists = false;
 
