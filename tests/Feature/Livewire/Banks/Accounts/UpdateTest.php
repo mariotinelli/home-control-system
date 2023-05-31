@@ -3,7 +3,7 @@
 use App\Http\Livewire\Banks;
 use App\Models\{BankAccount, User};
 
-use function Pest\Laravel\{actingAs, get};
+use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -203,7 +203,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['bank_name' => 'required']);
 
     // String
@@ -211,7 +211,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => 123,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['bank_name' => 'string']);
 
     // Min 3
@@ -219,7 +219,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => Str::random(2),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['bank_name' => 'min']);
 
     // Max 100
@@ -227,7 +227,7 @@ it('can validate bank name', function () {
         ->fillForm([
             'bank_name' => Str::random(101),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['bank_name' => 'max']);
 
 })->group('formFieldsValidation');
@@ -239,7 +239,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['type' => 'required']);
 
     // String
@@ -247,7 +247,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => 123,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['type' => 'string']);
 
     // In
@@ -255,7 +255,7 @@ it('can validate type', function () {
         ->fillForm([
             'type' => 'invalid',
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['type' => 'in']);
 
 })->group('formFieldsValidation');
@@ -267,7 +267,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['number' => 'required']);
 
     // Numeric
@@ -275,7 +275,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => 'abc',
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['number' => 'numeric']);
 
     // Min digits 5
@@ -283,7 +283,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => (float)str_repeat('1', 4),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['number' => 'min_digits']);
 
     // Max digits 20
@@ -291,7 +291,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => (float)str_repeat('1', 21),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['number' => 'max_digits']);
 
     // Unique
@@ -301,7 +301,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => $newBankAccount->number,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['number' => 'unique']);
 
     // Unique ignore
@@ -309,7 +309,7 @@ it('can validate number', function () {
         ->fillForm([
             'number' => $this->bankAccount->number,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasNoFormErrors(['number' => 'unique']);
 
 })->group('formFieldsValidation');
@@ -321,7 +321,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['digit' => 'required']);
 
     // Numeric
@@ -329,7 +329,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => 'abc',
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['digit' => 'numeric']);
 
     // Max digits 1
@@ -337,7 +337,7 @@ it('can validate digit', function () {
         ->fillForm([
             'digit' => 12,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['digit' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -349,7 +349,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_number' => 'required']);
 
     // Numeric
@@ -357,7 +357,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => 'abc',
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_number' => 'numeric']);
 
     // Min digits 4
@@ -365,7 +365,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 3),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_number' => 'min_digits']);
 
     // Max digits 4
@@ -373,7 +373,7 @@ it('can validate agency number', function () {
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 5),
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_number' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -385,7 +385,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasNoFormErrors(['agency_digit']);
 
     // Numeric
@@ -393,7 +393,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => 'abc',
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_digit' => 'numeric']);
 
     // Max digits 1
@@ -401,7 +401,7 @@ it('can validate agency digit', function () {
         ->fillForm([
             'agency_digit' => 12,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['agency_digit' => 'max_digits']);
 
 })->group('formFieldsValidation');
@@ -413,7 +413,7 @@ it('can validate balance', function () {
         ->fillForm([
             'balance' => null,
         ])
-        ->call('edit')
+        ->call('update')
         ->assertHasFormErrors(['balance' => 'required']);
 
 })->group('formFieldsValidation');
@@ -432,83 +432,41 @@ it('cannot render page if not has permission', function () {
 
 })->group('cannotHasPermission');
 
-///* ###################################################################### */
-///* CREATE BANK ACCOUNT */
-///* ###################################################################### */
-//it('can create a bank accounts', function () {
-//
-//    // Arrange
-//    $newData = BankAccount::factory()->makeOne();
-//
-//    // Act
-//    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
-//        ->fillForm([
-//            'bank_name' => $newData->bank_name,
-//            'type' => $newData->type->value,
-//            'number' => $newData->number,
-//            'digit' => $newData->digit,
-//            'agency_number' => $newData->agency_number,
-//            'agency_digit' => $newData->agency_digit,
-//            'balance' => number_format($newData->balance, 2, ',', '.'),
-//        ])
-//        ->call('edit')
-//        ->assertHasNoFormErrors()
-//        ->assertNotified()
-//        ->assertRedirect(route('banks.accounts.index'));
-//
-//    // Assert
-//    assertDatabaseHas('bank_accounts', [
-//        'user_id' => $this->user->id,
-//        'bank_name' => $newData->bank_name,
-//        'type' => $newData->type,
-//        'number' => $newData->number,
-//        'digit' => $newData->digit,
-//        'agency_number' => $newData->agency_number,
-//        'agency_digit' => $newData->agency_digit,
-//        'balance' => $newData->balance,
-//    ]);
-//
-//})->group('createBankAccount');
-//
-//it('can create a bank accounts and continue in this page', function () {
-//
-//    // Arrange
-//    $newData = BankAccount::factory()->makeOne();
-//
-//    // Act
-//    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
-//        ->fillForm([
-//            'bank_name' => $newData->bank_name,
-//            'type' => $newData->type->value,
-//            'number' => $newData->number,
-//            'digit' => $newData->digit,
-//            'agency_number' => $newData->agency_number,
-//            'agency_digit' => $newData->agency_digit,
-//            'balance' => number_format($newData->balance, 2, ',', '.'),
-//        ])
-//        ->call('saveAndStay')
-//        ->assertHasNoFormErrors()
-//        ->assertNotified()
-//        ->assertFormSet([
-//            'bank_name' => null,
-//            'type' => null,
-//            'number' => null,
-//            'digit' => null,
-//            'agency_number' => null,
-//            'agency_digit' => null,
-//            'balance' => '0,00',
-//        ]);
-//
-//    // Assert
-//    assertDatabaseHas('bank_accounts', [
-//        'user_id' => $this->user->id,
-//        'bank_name' => $newData->bank_name,
-//        'type' => $newData->type,
-//        'number' => $newData->number,
-//        'digit' => $newData->digit,
-//        'agency_number' => $newData->agency_number,
-//        'agency_digit' => $newData->agency_digit,
-//        'balance' => $newData->balance,
-//    ]);
-//
-//})->group('createBankAccount');
+/* ###################################################################### */
+/* UPDATE BANK ACCOUNT */
+/* ###################################################################### */
+it('can update bank accounts', function () {
+
+    // Arrange
+    $newData = BankAccount::factory()->makeOne();
+
+    // Act
+    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+        ->fillForm([
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
+            'agency_number' => $newData->agency_number,
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
+        ])
+        ->call('update')
+        ->assertHasNoFormErrors()
+        ->assertNotified()
+        ->assertRedirect(route('banks.accounts.index'));
+
+    // Assert
+    assertDatabaseHas('bank_accounts', [
+        'id'            => $this->bankAccount->id,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
+        'agency_number' => $newData->agency_number,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
+    ]);
+
+})->group('createBankAccount');

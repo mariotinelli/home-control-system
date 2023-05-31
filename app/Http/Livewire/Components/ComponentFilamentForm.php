@@ -15,24 +15,24 @@ class ComponentFilamentForm extends Component implements Forms\Contracts\HasForm
 {
     use HasFilamentForms;
 
-    public ?Model $record = null;
-
     protected static ?string $model = null;
 
-    protected static ?string $resourceMenuLabel = null;
+    protected static ?string $resourcePluralName = null;
 
-    protected static ?string $resourceLabel = null;
+    protected static ?string $resourceName = null;
 
-    protected static ?string $createActionColor = null;
+    protected static string $submitButtonColor = 'success';
 
     protected static ?string $baseRouteName = null;
 
-    protected static string $successCreateNotification = 'Cadastro realizado com sucesso';
+    protected static ?string $notificationTitle = null;
 
-    protected static string $successUpdateNotification = 'Atualização realizada com sucesso';
+    protected static ?string $notificationBody = null;
+
+    protected static bool $sendNotification = true;
 
     protected function getFormModel(): Model|string|null
     {
-        return $this->record;
+        return $this->record ?? static::$model;
     }
 }

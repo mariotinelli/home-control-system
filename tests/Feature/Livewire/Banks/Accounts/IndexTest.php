@@ -7,7 +7,7 @@ use App\Models\{BankAccount, User};
 use Filament\Pages\Actions\{CreateAction, EditAction};
 use Filament\Tables;
 
-use function Pest\Laravel\{actingAs, assertModelMissing, get};
+use function Pest\Laravel\{actingAs, assertDatabaseMissing, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
 beforeEach(function () {
@@ -410,7 +410,7 @@ it('can redirect to edit page on click edit button', function () {
 
 })->group('tableActionsCrud');
 
-it('can delete categories', function () {
+it('can delete bank accounts', function () {
 
     $bankAccount = BankAccount::factory()->createOne([
         'user_id' => $this->user->id,
@@ -422,6 +422,57 @@ it('can delete categories', function () {
     assertModelMissing($bankAccount);
 
 })->group('tableActionsCrud');
+
+it('can delete bank accounts and delete all entries and withdrawals', function () {
+    // Arrange
+    $bankAccount = BankAccount::factory()->createOne([
+        'user_id' => $this->user->id,
+    ]);
+
+    $bankAccount->entries()->createMany([
+        [
+            'description' => 'Teste 1',
+            'value'       => 100,
+            'date'        => now(),
+        ],
+        [
+            'description' => 'Teste 2',
+            'value'       => 100,
+            'date'        => now(),
+        ],
+    ]);
+
+    $bankAccount->withdrawals()->createMany([
+        [
+            'description' => 'Teste 1',
+            'value'       => 100,
+            'date'        => now(),
+        ],
+        [
+            'description' => 'Teste 2',
+            'value'       => 100,
+            'date'        => now(),
+        ],
+    ]);
+
+    expect($bankAccount->entries()->count())->toBe(2)
+        ->and($bankAccount->withdrawals()->count())->toBe(2);
+
+    // Act
+    livewire(Banks\Accounts\Index::class)
+        ->callTableAction(Tables\Actions\DeleteAction::class, $bankAccount);
+
+    // Assert
+    assertModelMissing($bankAccount);
+
+    assertDatabaseMissing('bank_account_entries', [
+        'bank_account_id' => $bankAccount->id,
+    ]);
+
+    assertDatabaseMissing('bank_account_withdraws', [
+        'bank_account_id' => $bankAccount->id,
+    ]);
+});
 
 /* ###################################################################### */
 /* CANNOT HAS PERMISSION */

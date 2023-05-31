@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
+use App\Traits\FIlament\Tables\HasDeleteAction;
 use Closure;
 use Exception;
-use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -15,6 +15,7 @@ trait HasFilamentTables
 {
     use InteractsWithTable;
     use HasLimitColumnWithTooltip;
+    use HasDeleteAction;
 
     protected function getDefaultTableSortColumn(): ?string
     {
@@ -62,23 +63,7 @@ trait HasFilamentTables
                 ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt')
                 ->url(fn (Model $record): string => route(static::$baseRouteName . '.edit', $record)),
 
-            Tables\Actions\DeleteAction::make()
-                ->disabled(fn (Model $record): bool => !auth()->user()->can('delete', $record))
-                ->button()
-                ->tooltip(function ($action) {
-                    if ($action->isDisabled()) {
-                        $action->icon('heroicon-s-lock-closed');
-                    }
-
-                    return 'Deletar ' . static::$resourceLabel;
-                })
-                ->modalHeading('Deletar ' . static::$resourceLabel)
-                ->successNotification(
-                    Notification::make()
-                        ->title(static::$resourceMenuLabel)
-                        ->body(static::$successDeleteNotification)
-                        ->success()
-                ),
+            static::getTableDeleteAction(),
 
         ];
     }

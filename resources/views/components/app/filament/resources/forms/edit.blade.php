@@ -14,7 +14,7 @@
         <x-forms::button
             class="w-full sm:w-fit"
             color="success"
-            wire:click="edit"
+            wire:click="update"
         >
             Salvar
         </x-forms::button>

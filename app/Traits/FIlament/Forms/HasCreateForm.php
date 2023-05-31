@@ -2,55 +2,67 @@
 
 namespace App\Traits\FIlament\Forms;
 
-use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Livewire\Redirector;
 
 trait HasCreateForm
 {
-    private static bool $createMethodExists = true;
+    public function store(): Redirector|RedirectResponse
+    {
+        $record = $this->storeSteps();
 
-    private function initCreate(): void
+        $redirectUrl = static::getRedirectUrl(
+            record: $record
+        );
+
+        if (!blank($redirectUrl)) {
+            return redirect()->to($redirectUrl);
+        }
+
+        return redirect()->route(static::$baseRouteName . '.index');
+    }
+
+    public function storeAndStay(): void
+    {
+        $this->storeSteps();
+
+        $this->form->fill();
+    }
+
+    private function storeSteps(): Model
     {
         $this->authorize('create', [static::$model]);
 
         $state = $this->form->getState();
 
-        static::store($state);
+        $state = static::beforeCreate(
+            state: $state
+        );
 
-        if (self::$createMethodExists) {
-            Notification::make()
-                ->title(static::$resourceMenuLabel)
-                ->body(static::$successCreateNotification)
-                ->success()
-                ->send();
+        $record = static::$model::create($state);
+
+        $record = static::afterCreate(
+            record: $record
+        );
+
+        if (static::$sendNotification) {
+            static::getNotification(
+                record: $record
+            );
         }
+
+        return $record;
     }
 
-    public function create(): void
+    public static function beforeCreate(array $state): array
     {
-        self::initCreate();
-
-        if (self::$createMethodExists) {
-            redirect()->route(static::$baseRouteName . '.index');
-        }
+        return $state;
     }
 
-    public function createAndStay(): void
+    public static function afterCreate(Model $record): Model
     {
-        self::initCreate();
-
-        if (self::$createMethodExists) {
-            $this->form->fill();
-        }
-    }
-
-    protected static function store(array $data): void
-    {
-        self::$createMethodExists = false;
-
-        Notification::make()
-            ->body('É necessário criar o método store.')
-            ->warning()
-            ->send();
+        return $record;
     }
 
 }

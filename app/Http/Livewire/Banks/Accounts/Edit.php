@@ -10,20 +10,19 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-/** @property BankAccount $record */
 class Edit extends ComponentFilamentForm
 {
     use AuthorizesRequests;
 
     protected static ?string $model = BankAccount::class;
 
-    protected static ?string $resourceMenuLabel = 'Contas bancárias';
+    protected static ?string $resourcePluralName = 'Contas bancárias';
 
-    protected static ?string $resourceLabel = 'conta bancária';
-
-    protected static ?string $createActionColor = 'success';
+    protected static ?string $resourceName = 'conta bancária';
 
     protected static ?string $baseRouteName = 'banks.accounts';
+
+    public ?BankAccount $record = null;
 
     public function mount(): void
     {
@@ -53,8 +52,4 @@ class Edit extends ComponentFilamentForm
         );
     }
 
-    protected function update(array $data): void
-    {
-        $this->record->update($data);
-    }
 }

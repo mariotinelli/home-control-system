@@ -20,11 +20,9 @@ class Create extends ComponentFilamentForm
 
     protected static ?string $model = BankAccount::class;
 
-    protected static ?string $resourceMenuLabel = 'Contas bancárias';
+    protected static ?string $resourcePluralName = 'Contas bancárias';
 
-    protected static ?string $resourceLabel = 'conta bancária';
-
-    protected static ?string $createActionColor = 'success';
+    protected static ?string $resourceName = 'conta bancária';
 
     protected static ?string $baseRouteName = 'banks.accounts';
 
@@ -40,14 +38,16 @@ class Create extends ComponentFilamentForm
         return view('livewire.banks.accounts.create');
     }
 
-    protected static function store(array $data): void
-    {
-        auth()->user()->bankAccounts()->create($data);
-    }
-
     /** @throws Exception */
     protected function getFormSchema(): array
     {
         return Actions\Banks\Accounts\MakeFormSchema::execute();
+    }
+
+    public static function beforeCreate(array $state): array
+    {
+        $state['user_id'] = auth()->id();
+
+        return $state;
     }
 }

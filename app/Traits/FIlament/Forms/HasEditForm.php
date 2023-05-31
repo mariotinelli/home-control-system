@@ -4,48 +4,69 @@ namespace App\Traits\FIlament\Forms;
 
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Livewire\Redirector;
 
 /**
  * @property Model $record
  */
 trait HasEditForm
 {
-    private static bool $updateMethodExists = true;
-
-    private function initEdit(): void
+    public function update(): Redirector|RedirectResponse
     {
-        $this->authorize('update', $this->record);
+        $record = $this->record;
 
-        $state = $this->form->getState();
+        $this->authorize('update', $record);
 
-        $this->update($state);
+        $record = static::beforeUpdate(
+            record: $record
+        );
 
-        if (self::$updateMethodExists) {
-            Notification::make()
-                ->title(static::$resourceMenuLabel)
-                ->body(static::$successUpdateNotification)
-                ->success()
-                ->send();
+        $record->update($this->form->getState());
+
+        $record = static::afterUpdate(
+            record: $record
+        );
+
+        if (static::$sendNotification) {
+            static::getNotification(
+                record: $record
+            );
         }
+
+        $redirectUrl = static::getRedirectUrl(
+            record: $record
+        );
+
+        if (!blank($redirectUrl)) {
+            return redirect()->to($redirectUrl);
+        }
+
+        return redirect()->route(static::$baseRouteName . '.index');
     }
 
-    public function edit(): void
+    public static function beforeUpdate(Model $record): Model
     {
-        self::initEdit();
-
-        if (self::$updateMethodExists) {
-            redirect()->route(static::$baseRouteName . '.index');
-        }
+        return $record;
     }
 
-    protected function update(array $data): void
+    public static function afterUpdate(Model $record): Model
     {
-        self::$updateMethodExists = false;
+        return $record;
+    }
 
-        Notification::make()
-            ->body('É necessário criar o método update.')
-            ->warning()
+    public static function getNotification(Model $record): ?Notification
+    {
+        return Notification::make()
+            ->title(static::$notificationTitle ?: 'Atualização')
+            ->body(static::$notificationBody ?: 'O registro foi atualizado com sucesso')
+            ->success()
             ->send();
+    }
+
+    public static function getRedirectUrl(Model $record): ?string
+    {
+        return null;
     }
 
 }

@@ -8,7 +8,7 @@ use App\Models\BankAccount;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends ComponentFilamentTable
@@ -57,5 +57,12 @@ class Index extends ComponentFilamentTable
         return Actions\Banks\Accounts\MakeTableColumns::execute(
             closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
         );
+    }
+
+    public static function beforeDelete(Model $record): void
+    {
+        /** @var BankAccount $record */
+        $record->entries()->delete();
+        $record->withdrawals()->delete();
     }
 }

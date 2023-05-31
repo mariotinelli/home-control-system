@@ -14,7 +14,7 @@
         <x-forms::button
             class="w-full sm:w-fit"
             color="success"
-            wire:click="create"
+            wire:click="store"
         >
             Criar
         </x-forms::button>
@@ -22,7 +22,7 @@
         <x-forms::button
             class="w-full sm:w-fit"
             color="secondary"
-            wire:click="createAndStay"
+            wire:click="storeAndStay"
         >
             Criar e criar novo
         </x-forms::button>
