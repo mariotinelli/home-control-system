@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Components;
 
-use App\Traits\{HasFilamentForms};
+use App\Traits\{FIlament\Resources\Page\HasResourceForm};
 use Filament\Forms;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ use Livewire\Component;
  */
 class ComponentFilamentForm extends Component implements Forms\Contracts\HasForms
 {
-    use HasFilamentForms;
+    use HasResourceForm;
 
     protected static ?string $model = null;
 

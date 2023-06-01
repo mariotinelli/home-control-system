@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\FIlament\Tables;
+namespace App\Traits\FIlament\Resources\Page\Tables\Actions;
 
 use Exception;
 use Filament\Notifications\Notification;
@@ -14,11 +14,11 @@ trait HasDeleteAction
     {
         return DeleteAction::make()
             ->button()
-            ->disabled(fn (Model $record): bool => static::getDisableDeleteAction($record))
-            ->action(fn (Model $record) => static::getDeleteAction($record))
-            ->tooltip(fn ($action) => static::getTooltipDeleteAction($action))
-            ->modalHeading(fn () => static::getModalHeadingDeleteAction())
-            ->successNotification(fn () => static::getSuccessNotificationDeleteAction());
+            ->disabled(fn(Model $record): bool => static::getDisableDeleteAction($record))
+            ->action(fn(Model $record) => static::getDeleteAction($record))
+            ->tooltip(fn($action) => static::getTooltipDeleteAction($action))
+            ->modalHeading(fn() => static::getModalHeadingDeleteAction())
+            ->successNotification(fn() => static::getSuccessNotificationDeleteAction());
     }
 
     public static function beforeDelete(Model $record): void

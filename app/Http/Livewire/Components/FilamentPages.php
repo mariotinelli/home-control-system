@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Components;
 
-use App\Traits\{HasFilamentTables};
+use App\Traits\{FIlament\Resources\Page\HasResourceTable};
 use Filament\Forms;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\View\View;
@@ -11,9 +11,9 @@ use Livewire\Component;
 /**
  * @property Forms\ComponentContainer|View|mixed|null $form
  */
-class ComponentFilamentTable extends Component implements HasTable
+class FilamentPages extends Component implements HasTable
 {
-    use HasFilamentTables;
+    use HasResourceTable;
 
     protected static ?string $model = null;
 

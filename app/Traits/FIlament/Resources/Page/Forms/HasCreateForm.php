@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\FIlament\Forms;
+namespace App\Traits\FIlament\Resources\Page\Forms;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;

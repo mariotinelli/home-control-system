@@ -3,18 +3,15 @@
 namespace App\Http\Livewire\Banks\Accounts;
 
 use App\Actions;
-use App\Http\Livewire\Components\ComponentFilamentTable;
+use App\Http\Livewire\Components\FilamentPages;
 use App\Models\BankAccount;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\{Builder, Model};
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Index extends ComponentFilamentTable
+class Index extends FilamentPages
 {
-    use AuthorizesRequests;
-
     protected static ?string $model = BankAccount::class;
 
     protected static ?string $baseRouteName = 'banks.accounts';
