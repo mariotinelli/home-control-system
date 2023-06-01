@@ -13,9 +13,9 @@ trait HasDeleteAction
     public static function getTableDeleteAction(): Action
     {
         return DeleteAction::make()
+            ->button()
             ->disabled(fn (Model $record): bool => static::getDisableDeleteAction($record))
             ->action(fn (Model $record) => static::getDeleteAction($record))
-            ->button()
             ->tooltip(fn ($action) => static::getTooltipDeleteAction($action))
             ->modalHeading(fn () => static::getModalHeadingDeleteAction())
             ->successNotification(fn () => static::getSuccessNotificationDeleteAction());

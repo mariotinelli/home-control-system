@@ -2,10 +2,9 @@
 
 namespace App\Traits;
 
-use App\Traits\FIlament\Tables\HasDeleteAction;
+use App\Traits\FIlament\Tables\{HasDeleteAction, HasEditAction};
 use Closure;
 use Exception;
-use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Support\Htmlable;
@@ -16,6 +15,7 @@ trait HasFilamentTables
     use InteractsWithTable;
     use HasLimitColumnWithTooltip;
     use HasDeleteAction;
+    use HasEditAction;
 
     protected function getDefaultTableSortColumn(): ?string
     {
@@ -55,16 +55,8 @@ trait HasFilamentTables
     protected function getTableActions(): array
     {
         return [
-
-            Tables\Actions\EditAction::make()
-                ->disabled(fn (Model $record): bool => !auth()->user()->can('update', $record))
-                ->button()
-                ->tooltip('Editar ' . static::$resourceLabel)
-                ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt')
-                ->url(fn (Model $record): string => route(static::$baseRouteName . '.edit', $record)),
-
+            static::getTableEditAction(),
             static::getTableDeleteAction(),
-
         ];
     }
 
