@@ -8,10 +8,12 @@ use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasFilamentModalTables
 {
     use InteractsWithTable;
+    use HasLimitColumnWithTooltip;
 
     private static bool $createMethodExists = true;
 
@@ -57,7 +59,7 @@ trait HasFilamentModalTables
         return [
 
             Tables\Actions\EditAction::make()
-                ->disabled(fn ($record): bool => !auth()->user()->can('update', $record))
+                ->disabled(fn (Model $record): bool => !auth()->user()->can('update', $record))
                 ->button()
                 ->tooltip('Editar ' . static::$resourceLabel)
                 ->modalHeading(view('components.app.filament.resources.modal.heading', ['title' => 'Editar ' . static::$resourceLabel]))
@@ -71,7 +73,7 @@ trait HasFilamentModalTables
                 ),
 
             Tables\Actions\DeleteAction::make()
-                ->disabled(fn ($record): bool => !auth()->user()->can('delete', $record))
+                ->disabled(fn (Model $record): bool => !auth()->user()->can('delete', $record))
                 ->button()
                 ->tooltip(function ($action) {
                     if ($action->isDisabled()) {
@@ -112,16 +114,5 @@ trait HasFilamentModalTables
             ->body('É necessário criar o método create.')
             ->warning()
             ->send();
-    }
-
-    protected function closureTooltip(Tables\Columns\TextColumn $column): ?string
-    {
-        $state = $column->getState();
-
-        if (strlen($state) <= $column->getLimit()) {
-            return null;
-        }
-
-        return $state;
     }
 }

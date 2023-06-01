@@ -5,7 +5,7 @@ namespace App\Actions\Couple\Spending;
 use App\Actions\Couple;
 use App\Rules\CoupleSpendingCategoryOwnerRule;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{DatePicker, Grid, Select, TextInput};
+use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Select, TextInput};
 use Illuminate\Database\Eloquent\Builder;
 use Leandrocfe\FilamentPtbrFormFields\PtbrMoney;
 
@@ -65,6 +65,7 @@ class MakeFormSchema
                         ->placeholder('Selecione uma data')
                         ->required()
                         ->displayFormat('d/m/Y'),
+
                 ]),
         ];
     }

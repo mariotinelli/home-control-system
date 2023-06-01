@@ -15,6 +15,27 @@ class BankAccount extends Model
         'type' => BankAccountTypeEnum::class,
     ];
 
+    protected $appends = [
+        'formatted_number',
+        'formatted_agency',
+        'formatted_balance',
+    ];
+
+    public function getFormattedNumberAttribute(): ?string
+    {
+        return "{$this->number}-{$this->digit}";
+    }
+
+    public function getFormattedAgencyAttribute(): ?string
+    {
+        return !is_null($this->agency_digit) ? "{$this->agency_number}-{$this->agency_digit}" : $this->agency_number;
+    }
+
+    public function getFormattedBalanceAttribute(): string
+    {
+        return number_format($this->balance, 2, ',', '.');
+    }
+
     public function entries(): HasMany
     {
         return $this->hasMany(BankAccountEntry::class);

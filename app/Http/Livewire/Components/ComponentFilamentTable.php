@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Components;
 
-use App\Traits\{HasFilamentModalForms, HasFilamentModalTables};
+use App\Traits\{HasFilamentTables};
 use Filament\Forms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
@@ -12,10 +11,9 @@ use Livewire\Component;
 /**
  * @property Forms\ComponentContainer|View|mixed|null $form
  */
-class ComponentWithFilamentModal extends Component implements HasForms, HasTable
+class ComponentFilamentTable extends Component implements HasTable
 {
-    use HasFilamentModalForms;
-    use HasFilamentModalTables;
+    use HasFilamentTables;
 
     protected static ?string $model = null;
 
@@ -25,11 +23,9 @@ class ComponentWithFilamentModal extends Component implements HasForms, HasTable
 
     protected static ?string $createActionColor = null;
 
+    protected static ?string $baseRouteName = null;
+
     protected static string $actionsColumnLabel = 'Ações';
-
-    protected static string $successCreateNotification = 'Cadastro realizada com sucesso';
-
-    protected static string $successUpdateNotification = 'Atualização realizada com sucesso';
 
     protected static string $successDeleteNotification = 'Deleção realizada com sucesso';
 
@@ -44,16 +40,4 @@ class ComponentWithFilamentModal extends Component implements HasForms, HasTable
         'tableSearchQuery' => ['except' => ''],
         'tableColumnSearchQueries',
     ];
-
-    public $data;
-
-    public function mount(): void
-    {
-        $this->form->fill();
-    }
-
-    protected function getFormStatePath(): string
-    {
-        return 'data';
-    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Couple\Spending;
 
 use App\Actions\Couple;
-use App\Http\Livewire\ComponentWithFilamentModal;
+use App\Http\Livewire\Components\ComponentFilamentSimple;
 use App\Models\{CoupleSpending};
 use Exception;
 use Filament\Tables\Columns\{TextColumn};
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Index extends ComponentWithFilamentModal
+class Index extends ComponentFilamentSimple
 {
     use AuthorizesRequests;
 
