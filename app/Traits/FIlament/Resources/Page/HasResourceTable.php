@@ -2,9 +2,7 @@
 
 namespace App\Traits\FIlament\Resources\Page;
 
-use App\Traits\FIlament\Resources\Page\Tables\Actions\HasCreateAction;
-use App\Traits\FIlament\Resources\Page\Tables\Actions\HasDeleteAction;
-use App\Traits\FIlament\Resources\Page\Tables\Actions\HasEditAction;
+use App\Traits\FIlament\Resources\Page\Tables\Actions\{HasCreateAction, HasDeleteAction, HasEditAction};
 use App\Traits\HasLimitColumnWithTooltip;
 use Closure;
 use Exception;
@@ -34,7 +32,7 @@ trait HasResourceTable
 
     protected function getTableRecordUrlUsing(): \Closure
     {
-        return fn(Model $record): string => route(static::$baseRouteName . '.edit', $record);
+        return fn (Model $record): string => route(static::$baseRouteName . '.edit', $record);
     }
 
     protected function getTableHeading(): string|Htmlable|Closure|null

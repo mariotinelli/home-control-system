@@ -2,8 +2,7 @@
 
 namespace App\Traits\FIlament\Resources\Page;
 
-use App\Traits\FIlament\Resources\Page\Forms\HasCreateForm;
-use App\Traits\FIlament\Resources\Page\Forms\HasEditForm;
+use App\Traits\FIlament\Resources\Page\Forms\{HasCreateForm, HasEditForm};
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
