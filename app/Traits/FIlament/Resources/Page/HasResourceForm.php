@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\FIlament\Resources\Page;
 
-use App\Traits\FIlament\Forms\{HasCreateForm, HasEditForm};
+use App\Traits\FIlament\Resources\Page\Forms\{HasCreateForm, HasEditForm};
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-trait HasFilamentForms
+trait HasResourceForm
 {
     use InteractsWithForms;
     use AuthorizesRequests;

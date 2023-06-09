@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\FIlament\Tables;
+namespace App\Traits\FIlament\Resources\Page\Tables\Actions;
 
 use Exception;
 use Filament\Tables\Actions\{Action, EditAction};
@@ -13,10 +13,10 @@ trait HasEditAction
     {
         return EditAction::make()
             ->button()
-            ->disabled(fn (Model $record): bool => static::getDisableEditAction($record))
             ->tooltip(fn ($action) => static::getTooltipEditAction($action))
-            ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt')
-            ->url(fn (Model $record): string => static::getEditPageUrl($record));
+            ->url(fn (Model $record): string => static::getEditPageUrl($record))
+            ->disabled(fn (Model $record): bool => static::getDisableEditAction($record))
+            ->icon(fn ($action) => $action->isDisabled() ? 'heroicon-s-lock-closed' : 'heroicon-s-pencil-alt');
     }
 
     public static function getDisableEditAction(Model $record): bool

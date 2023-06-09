@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Couple\Spending;
 
 use App\Actions\Couple;
-use App\Http\Livewire\Components\ComponentFilamentSimple;
+use App\Http\Livewire\Components\FilamentModals;
 use App\Models\{CoupleSpending};
 use Exception;
 use Filament\Tables\Columns\{TextColumn};
@@ -12,17 +12,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Index extends ComponentFilamentSimple
+class Index extends FilamentModals
 {
     use AuthorizesRequests;
 
     protected static ?string $model = CoupleSpending::class;
 
-    protected static ?string $resourceMenuLabel = 'Gastos';
+    protected static ?string $resourcePluralName = 'Gastos';
 
-    protected static ?string $resourceLabel = 'gasto';
+    protected static ?string $resourceName = 'gasto';
 
-    protected static ?string $createActionColor = 'success';
+    protected static ?string $baseRouteName = 'couple.spending';
 
     public function render(): View
     {
@@ -31,9 +31,11 @@ class Index extends ComponentFilamentSimple
         return view('livewire.couple.spending.index');
     }
 
-    protected static function create(array $data): void
+    public static function beforeCreate(array $state): array
     {
-        Couple\Spending\CreateFromAuthUser::execute($data);
+        $state['user_id'] = auth()->id();
+
+        return $state;
     }
 
     /** @throws Exception */

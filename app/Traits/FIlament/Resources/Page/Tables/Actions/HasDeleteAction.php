@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\FIlament\Tables;
+namespace App\Traits\FIlament\Resources\Page\Tables\Actions;
 
 use Exception;
 use Filament\Notifications\Notification;

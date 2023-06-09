@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\FIlament\Forms;
+namespace App\Traits\FIlament\Resources\Page\Forms;
 
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
