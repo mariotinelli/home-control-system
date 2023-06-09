@@ -3,25 +3,26 @@
 namespace App\Http\Livewire\Couple\Spending\Categories;
 
 use App\Actions\Couple;
-use App\Http\Livewire\Components\ComponentFilamentSimple;
+use App\Http\Livewire\Components\FilamentModals;
 use App\Models\CoupleSpendingCategory;
+use Exception;
 use Filament\{Tables\Columns\TextColumn};
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class Index extends ComponentFilamentSimple
+class Index extends FilamentModals
 {
     use AuthorizesRequests;
 
     protected static ?string $model = CoupleSpendingCategory::class;
 
-    protected static ?string $resourceMenuLabel = 'Categorias de Gastos';
+    protected static ?string $resourcePluralName = 'Categorias de Gastos';
 
-    protected static ?string $resourceLabel = 'categoria';
+    protected static ?string $resourceName = 'categoria de gasto';
 
-    protected static ?string $createActionColor = 'success';
+    protected static ?string $baseRouteName = 'couple.spending.categories';
 
     public function render(): View
     {
@@ -30,20 +31,23 @@ class Index extends ComponentFilamentSimple
         return view('livewire.couple.spending.categories.index');
     }
 
-    protected static function create(array $data): void
+    public static function beforeCreate(array $state): array
     {
-        Couple\Spending\Categories\CreateFromAuthUser::execute($data);
-    }
+        $state['user_id'] = auth()->id();
 
-    protected function getFormSchema(): array
-    {
-        return Couple\Spending\Categories\MakeFormSchema::execute();
+        return $state;
     }
 
     protected function getTableQuery(): Builder|Relation
     {
         return CoupleSpendingCategory::query()
             ->where('user_id', auth()->id());
+    }
+
+    /** @throws Exception */
+    protected function getFormSchema(): array
+    {
+        return Couple\Spending\Categories\MakeFormSchema::execute();
     }
 
     protected function getTableColumns(): array
