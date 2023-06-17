@@ -41,7 +41,7 @@ class Edit extends ComponentFilamentForm
     {
         $this->authorize('update', $this->record);
 
-        return view('livewire.banks.accounts.update');
+        return view('livewire.banks.accounts.edit');
     }
 
     /** @throws Exception */

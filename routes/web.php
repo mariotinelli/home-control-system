@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Stock, Trips};
+use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Trips};
 use Illuminate\Support\Facades\Route;
 
 /*

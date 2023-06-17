@@ -1,0 +1,4 @@
+<x-app.filament.resources.forms.edit
+    title="Editar $LOWER_SINGULAR_NAME$"
+    routeIndex=""
+/>
