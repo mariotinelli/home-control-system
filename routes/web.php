@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\Filament;
 use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Trips};
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('couple/spending/categories', Couple\Spending\Categories\Index::class)->name('couple.spending.categories.index');
 
     // Couple Spending
-    Route::get('couple/spending', Couple\Spending\Index::class)->name('couple.spending.index');
+    Route::get('couple/spending', Filament\CoupleSpendingResource\Index::class)->name('couple.spending.index');
 
     // ######### End Couple ######### //
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire\Couple\Spending;
+namespace App\Http\Livewire\Filament\CoupleSpendingResource;
 
 use App\Actions\Couple;
 use App\Http\Livewire\Components\FilamentModals;
-use App\Models\{CoupleSpending};
+use App\Models\CoupleSpending;
 use Exception;
-use Filament\Tables\Columns\{TextColumn};
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends FilamentModals
 {
+
     use AuthorizesRequests;
 
     protected static ?string $model = CoupleSpending::class;
@@ -28,14 +29,7 @@ class Index extends FilamentModals
     {
         $this->authorize('viewAny', [CoupleSpending::class]);
 
-        return view('livewire.couple.spending.index');
-    }
-
-    public static function beforeCreate(array $state): array
-    {
-        $state['user_id'] = auth()->id();
-
-        return $state;
+        return view('livewire.filament.spending-resource.index');
     }
 
     /** @throws Exception */
@@ -53,7 +47,15 @@ class Index extends FilamentModals
     protected function getTableColumns(): array
     {
         return Couple\Spending\MakeTableColumns::execute(
-            closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
+            closureTooltip: fn(TextColumn $column): ?string => $this->closureTooltip($column),
         );
     }
+
+    public static function beforeCreate(array $state): array
+    {
+        $state['user_id'] = auth()->id();
+
+        return $state;
+    }
+
 }
