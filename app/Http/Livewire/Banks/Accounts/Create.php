@@ -2,42 +2,52 @@
 
 namespace App\Http\Livewire\Banks\Accounts;
 
-use App\Http\Requests\BankAccount\StoreBankAccountRequest;
+use App\Actions;
+use App\Http\Livewire\Components\ComponentFilamentForm;
 use App\Models\BankAccount;
+use Exception;
+use Filament\Forms\ComponentContainer;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Livewire\Component;
 
-class Create extends Component
+/**
+ * @property ComponentContainer|View|mixed|null $form
+ */
+class Create extends ComponentFilamentForm
 {
     use AuthorizesRequests;
 
-    public ?BankAccount $bankAccount = null;
+    protected static ?string $model = BankAccount::class;
 
-    public function save(): void
-    {
-        $this->authorize('create', BankAccount::class);
+    protected static ?string $resourcePluralName = 'Contas bancárias';
 
-        $this->validate();
+    protected static ?string $resourceName = 'conta bancária';
 
-        auth()->user()->bankAccounts()->save($this->bankAccount);
-
-        $this->emit('bank-account::created');
-    }
+    protected static ?string $baseRouteName = 'banks.accounts';
 
     public function mount(): void
     {
-        $this->bankAccount = new BankAccount();
+        $this->form->fill();
     }
 
     public function render(): View|Factory|Application
     {
+        $this->authorize('create', [BankAccount::class]);
+
         return view('livewire.banks.accounts.create');
     }
 
-    protected function rules(): array
+    /** @throws Exception */
+    protected function getFormSchema(): array
     {
-        return (new StoreBankAccountRequest())->rules();
+        return Actions\Banks\Accounts\MakeFormSchema::execute();
+    }
+
+    public static function beforeCreate(array $state): array
+    {
+        $state['user_id'] = auth()->id();
+
+        return $state;
     }
 }

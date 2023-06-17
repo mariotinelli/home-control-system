@@ -5,7 +5,7 @@ namespace App\Actions\Couple\Spending;
 use App\Actions\Couple;
 use App\Rules\CoupleSpendingCategoryOwnerRule;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{DatePicker, Grid, Select, TextInput};
+use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Select, TextInput};
 use Illuminate\Database\Eloquent\Builder;
 use Leandrocfe\FilamentPtbrFormFields\PtbrMoney;
 
@@ -27,10 +27,16 @@ class MakeFormSchema
                         ->exists('couple_spending_categories', 'id')
                         ->rule(new CoupleSpendingCategoryOwnerRule())
                         ->columnSpan(2)
-                        ->createOptionForm(Couple\Spending\Categories\MakeFormSchema::execute())
+                        ->createOptionForm(
+                            auth()->user()->can('couple_spending_category_create')
+                                ? Couple\Spending\Categories\MakeFormSchema::execute()
+                                : null
+                        )
                         ->createOptionAction(function (Action $action) {
                             return $action
-                                ->action(fn (array $data) => Couple\Spending\Categories\CreateFromAuthUser::execute($data))
+                                ->action(
+                                    fn (array $data) => Couple\Spending\Categories\CreateFromAuthUser::execute($data)
+                                )
                                 ->modalHeading(
                                     view('components.app.filament.resources.modal.heading', [
                                         'title' => 'Criar categoria',
@@ -38,6 +44,7 @@ class MakeFormSchema
                                 )
                                 ->modalButton('Criar')
                                 ->color('success')
+                                ->tooltip('Criar categoria')
                                 ->modalWidth('lg');
                         }),
 
@@ -58,6 +65,7 @@ class MakeFormSchema
                         ->placeholder('Selecione uma data')
                         ->required()
                         ->displayFormat('d/m/Y'),
+
                 ]),
         ];
     }

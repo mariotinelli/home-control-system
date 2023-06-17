@@ -1,0 +1,50 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Exception;
+use App\Models\$MODEL_NAME$;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Livewire\Components\FilamentModals;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+class $CLASS_NAME$ extends FilamentModals
+{
+
+    use AuthorizesRequests;
+
+    protected static ?string $model = $MODEL_NAME$::class;
+
+    protected static ?string $resourcePluralName = '$RESOURCE_PLURAL_NAME$';
+
+    protected static ?string $resourceName = '$RESOURCE_SINGULAR_NAME$';
+
+    // Make route and insert base route here. Ex: 'admin.users'
+    protected static ?string $baseRouteName = null;
+
+    public function render(): View
+    {
+        $this->authorize('viewAny', [$MODEL_NAME$::class]);
+
+        return view('$VIEW_PATH$');
+    }
+
+    /** @throws Exception */
+    protected function getFormSchema(): array
+    {
+        return [];
+    }
+
+    protected function getTableQuery(): Builder|Relation
+    {
+        return $MODEL_NAME$::query();
+    }
+
+    protected function getTableColumns(): array
+    {
+        return [];
+    }
+
+}

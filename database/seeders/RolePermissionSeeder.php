@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoleEnum;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
@@ -10,20 +11,22 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Admin
-        $adminRole = \App\Models\Role::query()->create(['name' => 'Administrador']);
+        $adminRole = \App\Models\Role::query()->create(['name' => RoleEnum::AD->value]);
 
-        foreach (getAdminPermissions() as $permission) {
+        // Manager
+        $managerRole = \App\Models\Role::query()->create(['name' => RoleEnum::M->value]);
+
+        foreach (getManagerPermissions() as $permission) {
 
             $createdPermission = Permission::query()->firstOrCreate(['name' => $permission]);
 
-            $adminRole->givePermissionTo($createdPermission);
+            $managerRole->givePermissionTo($createdPermission);
 
-            $createdPermission->assignRole($adminRole);
-
+            $createdPermission->assignRole($managerRole);
         }
 
         // User Gold
-        $userGoldRole = \App\Models\Role::query()->create(['name' => 'Usuário Ouro']);
+        $userGoldRole = \App\Models\Role::query()->create(['name' => RoleEnum::UO->value]);
 
         foreach (getUserGoldPermissions() as $permission) {
 
@@ -36,7 +39,7 @@ class RolePermissionSeeder extends Seeder
         }
 
         // User Silver
-        $userSilverRole = \App\Models\Role::query()->create(['name' => 'Usuário Prata']);
+        $userSilverRole = \App\Models\Role::query()->create(['name' => RoleEnum::UP->value]);
 
         foreach (getUserSilverPermissions() as $permission) {
 
@@ -49,7 +52,7 @@ class RolePermissionSeeder extends Seeder
         }
 
         // User
-        $userRole = \App\Models\Role::query()->create(['name' => 'Usuário']);
+        $userRole = \App\Models\Role::query()->create(['name' => RoleEnum::U->value]);
 
         foreach (getUserPermissions() as $permission) {
 

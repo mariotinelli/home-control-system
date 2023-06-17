@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\{Pages, RelationManagers};
+use App\Filament\Resources\UserResource\{Pages};
 use App\Models\User;
 use Filament\Resources\{Form, Resource, Table};
 use Filament\Tables\Filters\SelectFilter;

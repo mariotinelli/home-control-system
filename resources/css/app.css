@@ -13,15 +13,18 @@
     gap: 10px !important;
 }
 
-.filament-tables-table tbody tr .filament-tables-actions-container button span {
+.filament-tables-table tbody tr .filament-tables-actions-container button span,
+.filament-tables-table tbody tr .filament-tables-actions-container a span {
     display: none;
 }
 
-.filament-tables-table tbody tr .filament-tables-actions-container button svg {
+.filament-tables-table tbody tr .filament-tables-actions-container button svg,
+.filament-tables-table tbody tr .filament-tables-actions-container a svg {
     margin: 0 !important;
 }
 
-.filament-tables-table tbody tr .filament-tables-actions-container button {
+.filament-tables-table tbody tr .filament-tables-actions-container button,
+.filament-tables-table tbody tr .filament-tables-actions-container a {
     padding: 0;
     width: 36px;
     height: 36px;

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             //            PermissionSeeder::class,
             RolePermissionSeeder::class,
             AdminSeeder::class,
+            PermissionTestUserSeeder::class,
             //            UserSeeder::class,
             RegionSeeder::class,
             StateSeeder::class,

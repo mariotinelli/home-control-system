@@ -12,7 +12,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->admin->givePermissionTo(getAdminPermissions());
+    $this->admin->givePermissionTo(getManagerPermissions());
 
     actingAs($this->admin);
 
@@ -86,6 +86,15 @@ it('can update a user', function () {
         ->and($roles)->each(function ($role) use ($user) {
             expect($user->refresh()->roles()->pluck('id'))->toContain($role->value);
         });
+
+    foreach ($roles as $role) {
+
+        foreach (Role::find($role)->permissions as $permission) {
+            expect($user->hasPermissionTo($permission->name))
+                ->toBeTrue();
+        }
+
+    }
 
 });
 

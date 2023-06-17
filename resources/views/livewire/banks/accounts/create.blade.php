@@ -1,3 +1,5 @@
-<div>
-    {{-- In work, do what you enjoy. --}}
-</div>
+<x-app.filament.resources.forms.create
+    title="Criar conta bancária"
+    routeIndex="banks.accounts.index"
+/>
+

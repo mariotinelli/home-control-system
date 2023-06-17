@@ -13,7 +13,7 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
-    $this->admin->givePermissionTo(getAdminPermissions());
+    $this->admin->givePermissionTo(getManagerPermissions());
 
     actingAs($this->admin);
 

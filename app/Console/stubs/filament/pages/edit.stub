@@ -1,0 +1,45 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Exception;
+use App\Actions;
+use App\Models\$MODEL_NAME$;
+use Illuminate\Contracts\View\View;
+use App\Http\Livewire\Components\ComponentFilamentForm;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+class Edit extends ComponentFilamentForm
+{
+    use AuthorizesRequests;
+
+    protected static ?string $model = $MODEL_NAME$::class;
+
+    protected static ?string $resourcePluralName = '$RESOURCE_PLURAL_NAME$';
+
+    protected static ?string $resourceName = '$RESOURCE_SINGULAR_NAME$';
+
+    // Make route and insert base route here. Ex: 'admin.users'
+    protected static ?string $baseRouteName = null;
+
+    public ?$MODEL_NAME$ $record = null;
+
+    public function mount(): void
+    {
+        $this->form->fill();
+    }
+
+    public function render(): View
+    {
+        $this->authorize('update', $this->record);
+
+        return view('$VIEW_PATH$');
+    }
+
+    /** @throws Exception */
+    protected function getFormSchema(): array
+    {
+        return [];
+    }
+
+}

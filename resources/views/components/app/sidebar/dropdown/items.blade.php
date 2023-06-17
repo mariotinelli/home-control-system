@@ -13,9 +13,23 @@
 
     @foreach($dropdown as $item)
 
-        <x-app.sidebar.dropdown.item-link
-            :item="$item"
-        />
+        @if(isset($item->can))
+
+            @can($item->can)
+
+                <x-app.sidebar.dropdown.item-link
+                    :item="$item"
+                />
+
+            @endcan
+
+        @else
+
+            <x-app.sidebar.dropdown.item-link
+                :item="$item"
+            />
+
+        @endif
 
     @endforeach
 

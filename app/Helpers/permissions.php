@@ -1,6 +1,6 @@
 <?php
 
-function getAdminPermissions(): array
+function getManagerPermissions(): array
 {
     return array_merge(getUserGoldPermissions(), [
         'access_admin',

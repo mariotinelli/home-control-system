@@ -9,7 +9,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
 
-        foreach (getAdminPermissions() as $permission) {
+        foreach (getManagerPermissions() as $permission) {
             \App\Models\Permission::query()->create([
                 'name'       => $permission,
                 'guard_name' => 'web',

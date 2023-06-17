@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Stock, Trips};
-use App\Models\User;
+use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Trips};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $user = User::factory()->create();
-
-    Auth::login($user);
+    Auth::loginUsingId(3);
 
     return redirect()->route('dashboard');
 });
@@ -52,6 +49,8 @@ Route::middleware('auth')->group(function () {
 
     // Bank Accounts
     Route::get('banks/accounts', Banks\Accounts\Index::class)->name('banks.accounts.index');
+    Route::get('banks/accounts/create', Banks\Accounts\Create::class)->name('banks.accounts.create');
+    Route::get('banks/accounts/{record}/edit', Banks\Accounts\Edit::class)->name('banks.accounts.edit');
 
     // Credit Cards
     Route::get('banks/credit-cards', Banks\CreditCards\Index::class)->name('banks.credit-cards.index');

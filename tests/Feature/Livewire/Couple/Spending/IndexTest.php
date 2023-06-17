@@ -129,7 +129,7 @@ it('can render spending amount column in table', function () {
 
 })->group('canRenderTableColumns');
 
-it('can render spending amount date in table', function () {
+it('can render spending date in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
         'user_id'                     => $this->user->id,
@@ -787,22 +787,36 @@ it('cannot render create action button if not has permission', function () {
 })->group('cannotHasPermission');
 
 it('can disable edit action button if not has permission', function () {
+
     // Arrange
+    $this->user->coupleSpendings()->save(
+        $spending = CoupleSpending::factory()->makeOne([
+            'couple_spending_category_id' => $this->category->id,
+        ])
+    );
+
     $this->user->revokePermissionTo('couple_spending_update');
 
     // Act
     livewire(Couple\Spending\Index::class)
-        ->assertTableActionDisabled(Tables\Actions\EditAction::class);
+        ->assertTableActionDisabled(Tables\Actions\EditAction::class, $spending);
 
 })->group('cannotHasPermission');
 
 it('can disable delete action button if not has permission', function () {
+
     // Arrange
-    $this->user->revokePermissionTo('couple_spending_update');
+    $this->user->coupleSpendings()->save(
+        $spending = CoupleSpending::factory()->makeOne([
+            'couple_spending_category_id' => $this->category->id,
+        ])
+    );
+
+    $this->user->revokePermissionTo('couple_spending_delete');
 
     // Act
     livewire(Couple\Spending\Index::class)
-        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class);
+        ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $spending);
 
 })->group('cannotHasPermission');
 
