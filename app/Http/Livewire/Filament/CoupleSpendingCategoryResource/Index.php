@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire\Couple\Spending\Categories;
+namespace App\Http\Livewire\Filament\CoupleSpendingCategoryResource;
 
 use App\Actions\Couple;
 use App\Http\Livewire\Components\FilamentModals;
 use App\Models\CoupleSpendingCategory;
 use Exception;
-use Filament\{Tables\Columns\TextColumn};
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends FilamentModals
 {
+
     use AuthorizesRequests;
 
     protected static ?string $model = CoupleSpendingCategory::class;
@@ -26,16 +27,9 @@ class Index extends FilamentModals
 
     public function render(): View
     {
-        $this->authorize('viewAny', CoupleSpendingCategory::class);
+        $this->authorize('viewAny', [CoupleSpendingCategory::class]);
 
-        return view('livewire.couple.spending.categories.index');
-    }
-
-    public static function beforeCreate(array $state): array
-    {
-        $state['user_id'] = auth()->id();
-
-        return $state;
+        return view('livewire.filament.couple-spending-category-resource.index');
     }
 
     protected function getTableQuery(): Builder|Relation
@@ -53,8 +47,15 @@ class Index extends FilamentModals
     protected function getTableColumns(): array
     {
         return Couple\Spending\Categories\MakeTableColumns::execute(
-            closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
+            closureTooltip: fn(TextColumn $column): ?string => $this->closureTooltip($column),
         );
+    }
+
+    public static function beforeCreate(array $state): array
+    {
+        $state['user_id'] = auth()->id();
+
+        return $state;
     }
 
 }

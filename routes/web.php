@@ -35,11 +35,11 @@ Route::middleware('auth')->group(function () {
 
     // ######### Start Couple ######### //
 
-    // Couple Spending Categories
-    Route::get('couple/spending/categories', Couple\Spending\Categories\Index::class)->name('couple.spending.categories.index');
-
     // Couple Spending
     Route::get('couple/spending', Filament\CoupleSpendingResource\Index::class)->name('couple.spending.index');
+
+    // Couple Spending Categories
+    Route::get('couple/spending/categories', Filament\CoupleSpendingCategoryResource\Index::class)->name('couple.spending.categories.index');
 
     // ######### End Couple ######### //
 

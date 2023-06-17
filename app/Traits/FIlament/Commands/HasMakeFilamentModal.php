@@ -22,12 +22,11 @@ trait HasMakeFilamentModal
         $contents = $this->getSourceModalViewFile();
 
         $this->makeFile($path, $contents);
-        ;
     }
 
     public function getSourceModalViewPath(): string
     {
-        return base_path('resources/views/livewire/filament/' . $this->getResourceSingularName($this->argument('model')) . '-resource' . '/index.blade.php');
+        return base_path('resources/views/livewire/filament/' . str($this->argument('model'))->kebab()->toString() . '-resource' . '/index.blade.php');
     }
 
     public function getSourceModalViewFile(): string|array|bool

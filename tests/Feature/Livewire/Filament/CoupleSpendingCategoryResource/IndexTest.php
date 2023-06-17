@@ -2,12 +2,12 @@
 
 namespace Livewire\Couple\Spending\Categories;
 
-use App\Http\Livewire\Couple;
+use App\Http\Livewire\Filament;
 use App\Models\{CoupleSpendingCategory, User};
 use Filament\Tables;
-
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing, get};
 use function Pest\Livewire\livewire;
+
 
 beforeEach(function () {
 
@@ -29,7 +29,7 @@ beforeEach(function () {
 
 it('can render page', function () {
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertSuccessful();
 
 })->group('canRenderPage');
@@ -52,7 +52,7 @@ it('can display all my categories in the table', function () {
 
     $otherCategories = CoupleSpendingCategory::factory()->count(10)->create();
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertCanSeeTableRecords($myCategories)
         ->assertCountTableRecords(CoupleSpendingCategory::where('user_id', $this->user->id)->count())
         ->assertCanNotSeeTableRecords($otherCategories);
@@ -63,7 +63,7 @@ it('can render table heading', function () {
 
     CoupleSpendingCategory::factory()->count(1)->create();
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertSeeHtml('Categorias de Gastos');
 
 })->group('canRenderTableHeader');
@@ -72,7 +72,7 @@ it('can render create action button', function () {
 
     CoupleSpendingCategory::factory()->count(1)->create();
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionExists('create');
 
 })->group('canRenderTableHeader');
@@ -81,7 +81,7 @@ it('can render category id table column', function () {
 
     CoupleSpendingCategory::factory()->count(1)->create();
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertCanRenderTableColumn('id');
 
 })->group('canRenderTableColumn');
@@ -90,7 +90,7 @@ it('can render category name table column', function () {
 
     CoupleSpendingCategory::factory()->count(1)->create();
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertCanRenderTableColumn('name');
 
 })->group('canRenderTableColumn');
@@ -100,7 +100,7 @@ it('categories are sorted by default in desc order', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertCanSeeTableRecords($categories->sortByDesc('id'), inOrder: true);
 });
 
@@ -109,7 +109,7 @@ it('can sort categories by id', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->sortTable('id')
         ->assertCanSeeTableRecords($categories->sortBy('id'), inOrder: true)
         ->sortTable('id', 'desc')
@@ -122,7 +122,7 @@ it('can sort categories by name', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->sortTable('name')
         ->assertCanSeeTableRecords($categories->sortBy('name'), inOrder: true)
         ->sortTable('name', 'desc')
@@ -145,7 +145,7 @@ it('can search categories by id', function () {
         return false === stripos($item->id, $id);
     });
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->searchTable($id)
         ->assertCanSeeTableRecords($canSeeCategories)
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
@@ -166,7 +166,7 @@ it('can search categories by name', function () {
         return false === stripos($item->name, $name);
     });
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->searchTable($name)
         ->assertCanSeeTableRecords($canSeeCategories)
         ->assertCanNotSeeTableRecords($cannotSeeCategories);
@@ -174,14 +174,14 @@ it('can search categories by name', function () {
 
 it('has a form', function () {
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertFormExists();
 
 })->group('renderForm');
 
 it('has a name field', function () {
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertFormFieldExists('name');
 
 })->group('renderFormFields');
@@ -189,28 +189,28 @@ it('has a name field', function () {
 it('can validate category name in creating', function () {
 
     // Required
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => null,
         ])
         ->assertHasTableActionErrors(['name' => ['required']]);
 
     // String
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => 12,
         ])
         ->assertHasTableActionErrors(['name' => ['string']]);
 
     // Min
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => 'a',
         ])
         ->assertHasTableActionErrors(['name' => ['min']]);
 
     // Max
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => str_repeat('a', 256),
         ])
@@ -221,7 +221,7 @@ it('can validate category name in creating', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => $category->name,
         ])
@@ -232,7 +232,7 @@ it('can validate category name in creating', function () {
         'user_id' => User::factory()->create()->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => $category->name,
         ])
@@ -247,28 +247,28 @@ it('can validate category name in updating', function () {
     ]);
 
     // Required
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => null,
         ])
         ->assertHasTableActionErrors(['name' => ['required']]);
 
     // String
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => 12,
         ])
         ->assertHasTableActionErrors(['name' => ['string']]);
 
     // Min
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => 'a',
         ])
         ->assertHasTableActionErrors(['name' => ['min']]);
 
     // Max
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => str_repeat('a', 256),
         ])
@@ -279,14 +279,14 @@ it('can validate category name in updating', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => $category2->name,
         ])
         ->assertHasTableActionErrors(['name' => ['unique']]);
 
     // Ignore unique rule for current category
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => $category->name,
         ])
@@ -297,7 +297,7 @@ it('can validate category name in updating', function () {
         'user_id' => User::factory()->create()->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => $category3->name,
         ])
@@ -307,7 +307,7 @@ it('can validate category name in updating', function () {
 
 it('can create categories', function () {
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'name' => $name = fake()->words(asText: true),
         ])
@@ -315,7 +315,7 @@ it('can create categories', function () {
 
     assertDatabaseHas('couple_spending_categories', [
         'user_id' => $this->user->id,
-        'name'    => $name,
+        'name' => $name,
     ]);
 
 })->group('tableActions');
@@ -326,7 +326,7 @@ it('can edit categories', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $category, data: [
             'name' => $name = fake()->words(asText: true),
         ])
@@ -343,7 +343,7 @@ it('can delete categories', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->callTableAction(Tables\Actions\DeleteAction::class, $category);
 
     assertModelMissing($category);
@@ -356,10 +356,10 @@ it('can render all table row actions', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionExists(Tables\Actions\EditAction::class);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionExists(Tables\Actions\DeleteAction::class);
 
 })->group('tableActions');
@@ -369,7 +369,7 @@ it('can display correctly category information in edit action', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->mountTableAction(Tables\Actions\EditAction::class, $category)
         ->assertTableActionDataSet([
             'name' => $category->name,
@@ -380,7 +380,7 @@ it('cannot render page if not has permission', function () {
 
     $this->user->revokePermissionTo('couple_spending_category_read');
 
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertForbidden();
 
 })->group('cannotHasPermission');
@@ -392,7 +392,7 @@ it('cannot render create action button if not has permission', function () {
     CoupleSpendingCategory::factory()->count(1)->create();
 
     // Act
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertDontSeeHtml('Criar categoria');
 
 })->group('cannotHasPermission');
@@ -406,7 +406,7 @@ it('can disable edit action button if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_category_update');
 
     // Act
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\EditAction::class, $category);
 
 })->group('cannotHasPermission');
@@ -420,7 +420,7 @@ it('can disable delete action button if not has permission', function () {
     $this->user->revokePermissionTo('couple_spending_category_delete');
 
     // Act
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $category);
 
 })->group('cannotHasPermission');
@@ -431,7 +431,7 @@ it('can disable edit action button if not is owner', function () {
     $category = CoupleSpendingCategory::factory()->create();
 
     // Act
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\EditAction::class, $category);
 
 })->group('cannotOwner');
@@ -442,7 +442,7 @@ it('can disable delete action button if not is owner', function () {
     $category = CoupleSpendingCategory::factory()->create();
 
     // Act
-    livewire(Couple\Spending\Categories\Index::class)
+    livewire(Filament\CoupleSpendingCategoryResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $category);
 
 })->group('cannotOwner');
