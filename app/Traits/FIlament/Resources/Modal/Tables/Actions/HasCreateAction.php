@@ -53,7 +53,7 @@ trait HasCreateAction
             $action->icon('heroicon-s-lock-closed');
         }
 
-        return 'Editar ' . static::$resourceName;
+        return 'Criar ' . static::$resourceName;
     }
 
 }

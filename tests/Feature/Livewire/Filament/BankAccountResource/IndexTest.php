@@ -2,11 +2,10 @@
 
 namespace Livewire\Banks\Accounts;
 
-use App\Http\Livewire\Banks;
+use App\Http\Livewire\Filament;
 use App\Models\{BankAccount, User};
 use Filament\Pages\Actions\{CreateAction, EditAction};
 use Filament\Tables;
-
 use function Pest\Laravel\{actingAs, assertDatabaseMissing, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
@@ -33,7 +32,7 @@ beforeEach(function () {
 /* ###################################################################### */
 it('can render page', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertSuccessful();
 
 })->group('renderPage');
@@ -52,14 +51,14 @@ it('can redirect to login if not authenticated', function () {
 /* ###################################################################### */
 it('can render table heading', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertSeeHtml('Contas Bancárias');
 
 })->group('canRenderTableHeader');
 
 it('can render create action button', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionExists('create');
 
 })->group('canRenderTableHeader');
@@ -69,42 +68,42 @@ it('can render create action button', function () {
 /* ###################################################################### */
 it('can render bank account id column in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('id');
 
 })->group('canRenderTableColumns');
 
 it('can render bank account name column in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('bank_name');
 
 })->group('canRenderTableColumns');
 
 it('can render bank account type column in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('type');
 
 })->group('canRenderTableColumns');
 
 it('can render bank account formatted agency column in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('formatted_agency');
 
 })->group('canRenderTableColumns');
 
 it('can render bank account formatted number in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('formatted_number');
 
 })->group('canRenderTableColumns');
 
 it('can render bank account formatted balance in table', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanRenderTableColumn('formatted_balance');
 
 })->group('canRenderTableColumns');
@@ -122,7 +121,7 @@ it('can display only my bank accounts in table', function () {
     $otherBankAccounts = BankAccount::factory()->count(10)->create();
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanSeeTableRecords($myBankAccounts)
         ->assertCountTableRecords(BankAccount::whereUserId($this->user->id)->count())
         ->assertCanNotSeeTableRecords($otherBankAccounts);
@@ -137,7 +136,7 @@ it('bank accounts are sorted by default in desc order', function () {
     );
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertCanSeeTableRecords($bankAccounts->sortByDesc('id'), inOrder: true);
 
 })->group('renderDefault');
@@ -152,7 +151,7 @@ it('bank account number display in format number-digit', function () {
     $formattedNumber = $bankAccount->number . '-' . $bankAccount->digit;
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableColumnFormattedStateSet('formatted_number', $formattedNumber, record: $bankAccount);
 
 })->group('renderDefault');
@@ -169,7 +168,7 @@ it('bank account agency display in format agency_number-agency_digit', function 
     $formattedAgency = $bankAccount->agency_number . '-' . $bankAccount->agency_digit;
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableColumnFormattedStateSet('formatted_agency', $formattedAgency, record: $bankAccount);
 
 })->group('renderDefault');
@@ -186,7 +185,7 @@ it('bank account agency display in format agency_number when agency_digit is nul
     $formattedAgency = $bankAccount->agency_number;
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableColumnFormattedStateSet('formatted_agency', $formattedAgency, record: $bankAccount);
 
 })->group('renderDefault');
@@ -201,7 +200,7 @@ it('bank account balance display in format R$ 9.999,99', function () {
     $formattedBalance = "R$ " . number_format($bankAccount->balance, 2, ',', '.');
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableColumnFormattedStateSet('formatted_balance', $formattedBalance, record: $bankAccount);
 
 })->group('renderDefault');
@@ -216,7 +215,7 @@ it('can sort spending by id', function () {
         $bankAccounts = BankAccount::factory()->count(3)->make()
     );
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('id')
         ->assertCanSeeTableRecords($bankAccounts->sortBy('id'), inOrder: true)
         ->sortTable('id', 'desc')
@@ -231,7 +230,7 @@ it('can sort spending by bank name', function () {
         $bankAccounts = BankAccount::factory()->count(5)->make()
     );
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('bank_name')
         ->assertCanSeeTableRecords($bankAccounts->sortBy('bank_name'), inOrder: true)
         ->sortTable('bank_name', 'desc')
@@ -255,7 +254,7 @@ it('can sort spending by type', function () {
         ->get();
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('type')
         ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
         ->sortTable('type', 'desc')
@@ -281,7 +280,7 @@ it('can sort spending by formatted agency', function () {
         ->get();
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('formatted_agency')
         ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
         ->sortTable('formatted_agency', 'desc')
@@ -307,7 +306,7 @@ it('can sort spending by formatted number', function () {
         ->get();
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('formatted_number')
         ->assertCanSeeTableRecords($bankAccountsAsc, inOrder: true)
         ->sortTable('formatted_number', 'desc')
@@ -323,7 +322,7 @@ it('can sort spending by formatted balance', function () {
     );
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->sortTable('formatted_balance')
         ->assertCanSeeTableRecords($bankAccounts->sortBy('balance'), inOrder: true)
         ->sortTable('formatted_balance', 'desc')
@@ -368,7 +367,7 @@ it('can search bank accounts from header search', function () {
         ->get();
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->searchTable($search)
         ->assertCanSeeTableRecords($canSeeRecord)
         ->assertCanNotSeeTableRecords($cannotSeeRecord);
@@ -384,17 +383,17 @@ it('can render all table row actions', function () {
         BankAccount::factory()->count(5)->make()
     );
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionExists(Tables\Actions\EditAction::class);
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionExists(Tables\Actions\DeleteAction::class);
 
 })->group('tableActionsCrud');
 
 it('can redirect to create page on click create button', function () {
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionHasUrl(CreateAction::class, route('banks.accounts.create'));
 
 })->group('tableActionsCrud');
@@ -405,7 +404,7 @@ it('can redirect to edit page on click edit button', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionHasUrl(EditAction::class, route('banks.accounts.edit', $bankAccount), record: $bankAccount);
 
 })->group('tableActionsCrud');
@@ -416,7 +415,7 @@ it('can delete bank accounts', function () {
         'user_id' => $this->user->id,
     ]);
 
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->callTableAction(Tables\Actions\DeleteAction::class, $bankAccount);
 
     assertModelMissing($bankAccount);
@@ -432,26 +431,26 @@ it('can delete bank accounts and delete all entries and withdrawals', function (
     $bankAccount->entries()->createMany([
         [
             'description' => 'Teste 1',
-            'value'       => 100,
-            'date'        => now(),
+            'value' => 100,
+            'date' => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value'       => 100,
-            'date'        => now(),
+            'value' => 100,
+            'date' => now(),
         ],
     ]);
 
     $bankAccount->withdrawals()->createMany([
         [
             'description' => 'Teste 1',
-            'value'       => 100,
-            'date'        => now(),
+            'value' => 100,
+            'date' => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value'       => 100,
-            'date'        => now(),
+            'value' => 100,
+            'date' => now(),
         ],
     ]);
 
@@ -459,7 +458,7 @@ it('can delete bank accounts and delete all entries and withdrawals', function (
         ->and($bankAccount->withdrawals()->count())->toBe(2);
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->callTableAction(Tables\Actions\DeleteAction::class, $bankAccount);
 
     // Assert
@@ -483,7 +482,7 @@ it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('bank_account_read');
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertForbidden();
 
 })->group('cannotHasPermission');
@@ -494,7 +493,7 @@ it('cannot render create action button if not has permission', function () {
     $this->user->revokePermissionTo('bank_account_create');
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertDontSeeHtml('Criar conta bancária');
 
 })->group('cannotHasPermission');
@@ -509,7 +508,7 @@ it('can disable edit action button if not has permission', function () {
     $this->user->revokePermissionTo('bank_account_update');
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\EditAction::class, $bankAccount);
 
 })->group('cannotHasPermission');
@@ -524,7 +523,7 @@ it('can disable delete action button if not has permission', function () {
     $this->user->revokePermissionTo('bank_account_delete');
 
     // Act
-    livewire(Banks\Accounts\Index::class)
+    livewire(Filament\BankAccountResource\Index::class)
         ->assertTableActionDisabled(Tables\Actions\DeleteAction::class, $bankAccount);
 
 })->group('cannotHasPermission');

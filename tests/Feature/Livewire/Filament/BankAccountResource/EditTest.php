@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Livewire\Banks;
+use App\Http\Livewire\Filament;
 use App\Models\{BankAccount, User};
-
 use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
 
@@ -27,7 +26,7 @@ beforeEach(function () {
 /* ###################################################################### */
 it('can render page', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertSuccessful();
 
 })->group('renderPage');
@@ -46,14 +45,14 @@ it('can redirect to login if not authenticated', function () {
 /* ###################################################################### */
 it('has a form', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormExists();
 
 })->group('renderForm');
 
 it('can display title of page', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertSeeHtml('Editar conta bancária');
 
 })->group('renderForm');
@@ -63,49 +62,49 @@ it('can display title of page', function () {
 /* ###################################################################### */
 it('has a bank name field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('bank_name');
 
 })->group('renderFormFields');
 
 it('has a type field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('type');
 
 })->group('renderFormFields');
 
 it('has a number field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('number');
 
 })->group('renderFormFields');
 
 it('has a digit field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('digit');
 
 })->group('renderFormFields');
 
 it('has a agency number field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('agency_number');
 
 })->group('renderFormFields');
 
 it('has a agency digit field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('agency_digit');
 
 })->group('renderFormFields');
 
 it('has a balance field', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormFieldExists('balance');
 
 })->group('renderFormFields');
@@ -115,7 +114,7 @@ it('has a balance field', function () {
 /* ###################################################################### */
 it('can fill bank name field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'bank_name' => $this->bankAccount->bank_name,
         ]);
@@ -124,7 +123,7 @@ it('can fill bank name field correctly', function () {
 
 it('can fill type field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'type' => $this->bankAccount->type->value,
         ]);
@@ -133,7 +132,7 @@ it('can fill type field correctly', function () {
 
 it('can fill number field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'number' => $this->bankAccount->number,
         ]);
@@ -142,7 +141,7 @@ it('can fill number field correctly', function () {
 
 it('can fill digit field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'digit' => $this->bankAccount->digit,
         ]);
@@ -151,7 +150,7 @@ it('can fill digit field correctly', function () {
 
 it('can fill agency number field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'agency_number' => $this->bankAccount->agency_number,
         ]);
@@ -160,7 +159,7 @@ it('can fill agency number field correctly', function () {
 
 it('can fill agency digit field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'agency_digit' => $this->bankAccount->agency_digit,
         ]);
@@ -169,7 +168,7 @@ it('can fill agency digit field correctly', function () {
 
 it('can fill balance field correctly', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertFormSet([
             'balance' => number_format($this->bankAccount->balance, 2, ',', '.'),
         ]);
@@ -181,14 +180,14 @@ it('can fill balance field correctly', function () {
 /* ###################################################################### */
 it('can render save button', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertSeeHtml('Salvar');
 
 })->group('renderFormButtons');
 
 it('can render cancel button', function () {
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertSeeHtml('Cancelar');
 
 })->group('renderFormButtons');
@@ -199,7 +198,7 @@ it('can render cancel button', function () {
 it('can validate bank name', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'bank_name' => null,
         ])
@@ -207,7 +206,7 @@ it('can validate bank name', function () {
         ->assertHasFormErrors(['bank_name' => 'required']);
 
     // String
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'bank_name' => 123,
         ])
@@ -215,7 +214,7 @@ it('can validate bank name', function () {
         ->assertHasFormErrors(['bank_name' => 'string']);
 
     // Min 3
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'bank_name' => Str::random(2),
         ])
@@ -223,7 +222,7 @@ it('can validate bank name', function () {
         ->assertHasFormErrors(['bank_name' => 'min']);
 
     // Max 100
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'bank_name' => Str::random(101),
         ])
@@ -235,7 +234,7 @@ it('can validate bank name', function () {
 it('can validate type', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'type' => null,
         ])
@@ -243,7 +242,7 @@ it('can validate type', function () {
         ->assertHasFormErrors(['type' => 'required']);
 
     // String
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'type' => 123,
         ])
@@ -251,7 +250,7 @@ it('can validate type', function () {
         ->assertHasFormErrors(['type' => 'string']);
 
     // In
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'type' => 'invalid',
         ])
@@ -263,7 +262,7 @@ it('can validate type', function () {
 it('can validate number', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => null,
         ])
@@ -271,7 +270,7 @@ it('can validate number', function () {
         ->assertHasFormErrors(['number' => 'required']);
 
     // Numeric
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => 'abc',
         ])
@@ -279,7 +278,7 @@ it('can validate number', function () {
         ->assertHasFormErrors(['number' => 'numeric']);
 
     // Min digits 5
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => (float)str_repeat('1', 4),
         ])
@@ -287,7 +286,7 @@ it('can validate number', function () {
         ->assertHasFormErrors(['number' => 'min_digits']);
 
     // Max digits 20
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => (float)str_repeat('1', 21),
         ])
@@ -297,7 +296,7 @@ it('can validate number', function () {
     // Unique
     $newBankAccount = BankAccount::factory()->createOne();
 
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => $newBankAccount->number,
         ])
@@ -305,7 +304,7 @@ it('can validate number', function () {
         ->assertHasFormErrors(['number' => 'unique']);
 
     // Unique ignore
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'number' => $this->bankAccount->number,
         ])
@@ -317,7 +316,7 @@ it('can validate number', function () {
 it('can validate digit', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'digit' => null,
         ])
@@ -325,7 +324,7 @@ it('can validate digit', function () {
         ->assertHasFormErrors(['digit' => 'required']);
 
     // Numeric
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'digit' => 'abc',
         ])
@@ -333,7 +332,7 @@ it('can validate digit', function () {
         ->assertHasFormErrors(['digit' => 'numeric']);
 
     // Max digits 1
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'digit' => 12,
         ])
@@ -345,7 +344,7 @@ it('can validate digit', function () {
 it('can validate agency number', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_number' => null,
         ])
@@ -353,7 +352,7 @@ it('can validate agency number', function () {
         ->assertHasFormErrors(['agency_number' => 'required']);
 
     // Numeric
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_number' => 'abc',
         ])
@@ -361,7 +360,7 @@ it('can validate agency number', function () {
         ->assertHasFormErrors(['agency_number' => 'numeric']);
 
     // Min digits 4
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 3),
         ])
@@ -369,7 +368,7 @@ it('can validate agency number', function () {
         ->assertHasFormErrors(['agency_number' => 'min_digits']);
 
     // Max digits 4
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_number' => (float)str_repeat('1', 5),
         ])
@@ -381,7 +380,7 @@ it('can validate agency number', function () {
 it('can validate agency digit', function () {
 
     // Nullable
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_digit' => null,
         ])
@@ -389,7 +388,7 @@ it('can validate agency digit', function () {
         ->assertHasNoFormErrors(['agency_digit']);
 
     // Numeric
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_digit' => 'abc',
         ])
@@ -397,7 +396,7 @@ it('can validate agency digit', function () {
         ->assertHasFormErrors(['agency_digit' => 'numeric']);
 
     // Max digits 1
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'agency_digit' => 12,
         ])
@@ -409,7 +408,7 @@ it('can validate agency digit', function () {
 it('can validate balance', function () {
 
     // Required
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
             'balance' => null,
         ])
@@ -427,7 +426,7 @@ it('cannot render page if not has permission', function () {
     $this->user->revokePermissionTo('bank_account_update');
 
     // Act
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->assertForbidden();
 
 })->group('cannotHasPermission');
@@ -441,15 +440,15 @@ it('can update bank accounts', function () {
     $newData = BankAccount::factory()->makeOne();
 
     // Act
-    livewire(Banks\Accounts\Edit::class, ['record' => $this->bankAccount])
+    livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
-            'bank_name'     => $newData->bank_name,
-            'type'          => $newData->type->value,
-            'number'        => $newData->number,
-            'digit'         => $newData->digit,
+            'bank_name' => $newData->bank_name,
+            'type' => $newData->type->value,
+            'number' => $newData->number,
+            'digit' => $newData->digit,
             'agency_number' => $newData->agency_number,
-            'agency_digit'  => $newData->agency_digit,
-            'balance'       => number_format($newData->balance, 2, ',', '.'),
+            'agency_digit' => $newData->agency_digit,
+            'balance' => number_format($newData->balance, 2, ',', '.'),
         ])
         ->call('update')
         ->assertHasNoFormErrors()
@@ -458,15 +457,15 @@ it('can update bank accounts', function () {
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'id'            => $this->bankAccount->id,
-        'user_id'       => $this->user->id,
-        'bank_name'     => $newData->bank_name,
-        'type'          => $newData->type,
-        'number'        => $newData->number,
-        'digit'         => $newData->digit,
+        'id' => $this->bankAccount->id,
+        'user_id' => $this->user->id,
+        'bank_name' => $newData->bank_name,
+        'type' => $newData->type,
+        'number' => $newData->number,
+        'digit' => $newData->digit,
         'agency_number' => $newData->agency_number,
-        'agency_digit'  => $newData->agency_digit,
-        'balance'       => $newData->balance,
+        'agency_digit' => $newData->agency_digit,
+        'balance' => $newData->balance,
     ]);
 
 })->group('createBankAccount');

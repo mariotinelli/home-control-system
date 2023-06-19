@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
     // ######### Start Banks ######### //
 
     // Bank Accounts
-    Route::get('banks/accounts', Banks\Accounts\Index::class)->name('banks.accounts.index');
-    Route::get('banks/accounts/create', Banks\Accounts\Create::class)->name('banks.accounts.create');
-    Route::get('banks/accounts/{record}/edit', Banks\Accounts\Edit::class)->name('banks.accounts.edit');
+    Route::get('banks/accounts', Filament\BankAccountResource\Index::class)->name('banks.accounts.index');
+    Route::get('banks/accounts/create', Filament\BankAccountResource\Create::class)->name('banks.accounts.create');
+    Route::get('banks/accounts/{record}/edit', Filament\BankAccountResource\Edit::class)->name('banks.accounts.edit');
 
     // Credit Cards
     Route::get('banks/credit-cards', Banks\CreditCards\Index::class)->name('banks.credit-cards.index');

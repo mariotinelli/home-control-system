@@ -17,9 +17,9 @@ class FilamentPages extends Component implements HasTable
 
     protected static ?string $model = null;
 
-    protected static ?string $resourceMenuLabel = null;
+    protected static ?string $resourcePluralName = null;
 
-    protected static ?string $resourceLabel = null;
+    protected static ?string $resourceName = null;
 
     protected static ?string $createActionColor = null;
 

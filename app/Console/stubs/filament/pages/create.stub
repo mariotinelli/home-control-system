@@ -3,7 +3,6 @@
 namespace $NAMESPACE$;
 
 use Exception;
-use App\Actions;
 use App\Models\$MODEL_NAME$;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\ComponentContainer;
@@ -35,7 +34,10 @@ class Create extends ComponentFilamentForm
     {
         $this->authorize('create', [$MODEL_NAME$::class]);
 
-        return view('$VIEW_PATH$');
+        return view('$VIEW_PATH$', [
+             'resourceName' => static::$resourceName,
+             'route' => static::$baseRouteName . '.edit',
+        ]);
     }
 
     /** @throws Exception */

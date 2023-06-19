@@ -79,16 +79,16 @@ trait HasMakeFilamentModal
             'CLASS_NAME'             => 'Index',
             'NAMESPACE'              => $this->namespace,
             'MODEL_NAME'             => $this->argument('model'),
-            'VIEW_PATH'              => $this->getModalViewPath($this->argument('model')),
+            'VIEW_PATH'              => $this->getModalViewPath($this->argument('model'), 'index'),
             'RESOURCE_PLURAL_NAME'   => $this->getResourcePluralName($this->argument('model')),
             'RESOURCE_SINGULAR_NAME' => $this->getResourceSingularName($this->argument('model')),
         ];
     }
 
-    public function getModalViewPath(string $name): string
+    public function getModalViewPath(string $name, string $view): string
     {
         // livewire.{resourceName}-resource.index
-        return 'livewire.filament.' . $this->getResourceSingularName($name) . '-resource' . '.index';
+        return 'livewire.filament.' . str($name)->kebab()->toString() . '-resource' . '.' . $view;
     }
 
 }
