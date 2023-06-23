@@ -6,6 +6,7 @@ use App\Http\Livewire\Filament;
 use App\Models\{BankAccount, User};
 use Filament\Pages\Actions\{CreateAction, EditAction};
 use Filament\Tables;
+
 use function Pest\Laravel\{actingAs, assertDatabaseMissing, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
@@ -431,26 +432,26 @@ it('can delete bank accounts and delete all entries and withdrawals', function (
     $bankAccount->entries()->createMany([
         [
             'description' => 'Teste 1',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
     ]);
 
     $bankAccount->withdrawals()->createMany([
         [
             'description' => 'Teste 1',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
         [
             'description' => 'Teste 2',
-            'value' => 100,
-            'date' => now(),
+            'value'       => 100,
+            'date'        => now(),
         ],
     ]);
 

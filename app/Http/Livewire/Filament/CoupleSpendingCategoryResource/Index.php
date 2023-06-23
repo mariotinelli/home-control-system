@@ -14,7 +14,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends FilamentModals
 {
-
     use AuthorizesRequests;
 
     protected static ?string $model = CoupleSpendingCategory::class;
@@ -47,7 +46,7 @@ class Index extends FilamentModals
     protected function getTableColumns(): array
     {
         return Couple\Spending\Categories\MakeTableColumns::execute(
-            closureTooltip: fn(TextColumn $column): ?string => $this->closureTooltip($column),
+            closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
         );
     }
 

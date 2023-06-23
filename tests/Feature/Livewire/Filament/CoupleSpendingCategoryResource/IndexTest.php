@@ -5,9 +5,9 @@ namespace Livewire\Couple\Spending\Categories;
 use App\Http\Livewire\Filament;
 use App\Models\{CoupleSpendingCategory, User};
 use Filament\Tables;
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing, get};
 use function Pest\Livewire\livewire;
-
 
 beforeEach(function () {
 
@@ -315,7 +315,7 @@ it('can create categories', function () {
 
     assertDatabaseHas('couple_spending_categories', [
         'user_id' => $this->user->id,
-        'name' => $name,
+        'name'    => $name,
     ]);
 
 })->group('tableActions');

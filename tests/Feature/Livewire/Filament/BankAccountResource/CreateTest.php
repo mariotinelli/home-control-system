@@ -5,9 +5,11 @@ namespace Tests\Feature\Livewire\BankAccountResource;
 use App\Http\Livewire\Filament;
 use App\Models\{BankAccount, User};
 use Auth;
-use Str;
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
+
+use Str;
 
 beforeEach(function () {
 
@@ -387,13 +389,13 @@ it('can create a bank accounts', function () {
     // Act
     livewire(Filament\BankAccountResource\Create::class)
         ->fillForm([
-            'bank_name' => $newData->bank_name,
-            'type' => $newData->type->value,
-            'number' => $newData->number,
-            'digit' => $newData->digit,
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
             'agency_number' => $newData->agency_number,
-            'agency_digit' => $newData->agency_digit,
-            'balance' => number_format($newData->balance, 2, ',', '.'),
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
         ])
         ->call('store')
         ->assertHasNoFormErrors()
@@ -402,14 +404,14 @@ it('can create a bank accounts', function () {
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
         'agency_number' => $newData->agency_number,
-        'agency_digit' => $newData->agency_digit,
-        'balance' => $newData->balance,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
     ]);
 
 })->group('createBankAccount');
@@ -422,37 +424,37 @@ it('can create a bank accounts and continue in this page', function () {
     // Act
     livewire(Filament\BankAccountResource\Create::class)
         ->fillForm([
-            'bank_name' => $newData->bank_name,
-            'type' => $newData->type->value,
-            'number' => $newData->number,
-            'digit' => $newData->digit,
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
             'agency_number' => $newData->agency_number,
-            'agency_digit' => $newData->agency_digit,
-            'balance' => number_format($newData->balance, 2, ',', '.'),
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
         ])
         ->call('storeAndStay')
         ->assertHasNoFormErrors()
         ->assertNotified()
         ->assertFormSet([
-            'bank_name' => null,
-            'type' => null,
-            'number' => null,
-            'digit' => null,
+            'bank_name'     => null,
+            'type'          => null,
+            'number'        => null,
+            'digit'         => null,
             'agency_number' => null,
-            'agency_digit' => null,
-            'balance' => '0,00',
+            'agency_digit'  => null,
+            'balance'       => '0,00',
         ]);
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
         'agency_number' => $newData->agency_number,
-        'agency_digit' => $newData->agency_digit,
-        'balance' => $newData->balance,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
     ]);
 
 })->group('createBankAccount');

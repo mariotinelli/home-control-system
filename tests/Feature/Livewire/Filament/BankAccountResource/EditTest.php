@@ -2,6 +2,7 @@
 
 use App\Http\Livewire\Filament;
 use App\Models\{BankAccount, User};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, get};
 use function Pest\Livewire\livewire;
 
@@ -442,13 +443,13 @@ it('can update bank accounts', function () {
     // Act
     livewire(Filament\BankAccountResource\Edit::class, ['record' => $this->bankAccount])
         ->fillForm([
-            'bank_name' => $newData->bank_name,
-            'type' => $newData->type->value,
-            'number' => $newData->number,
-            'digit' => $newData->digit,
+            'bank_name'     => $newData->bank_name,
+            'type'          => $newData->type->value,
+            'number'        => $newData->number,
+            'digit'         => $newData->digit,
             'agency_number' => $newData->agency_number,
-            'agency_digit' => $newData->agency_digit,
-            'balance' => number_format($newData->balance, 2, ',', '.'),
+            'agency_digit'  => $newData->agency_digit,
+            'balance'       => number_format($newData->balance, 2, ',', '.'),
         ])
         ->call('update')
         ->assertHasNoFormErrors()
@@ -457,15 +458,15 @@ it('can update bank accounts', function () {
 
     // Assert
     assertDatabaseHas('bank_accounts', [
-        'id' => $this->bankAccount->id,
-        'user_id' => $this->user->id,
-        'bank_name' => $newData->bank_name,
-        'type' => $newData->type,
-        'number' => $newData->number,
-        'digit' => $newData->digit,
+        'id'            => $this->bankAccount->id,
+        'user_id'       => $this->user->id,
+        'bank_name'     => $newData->bank_name,
+        'type'          => $newData->type,
+        'number'        => $newData->number,
+        'digit'         => $newData->digit,
         'agency_number' => $newData->agency_number,
-        'agency_digit' => $newData->agency_digit,
-        'balance' => $newData->balance,
+        'agency_digit'  => $newData->agency_digit,
+        'balance'       => $newData->balance,
     ]);
 
 })->group('createBankAccount');

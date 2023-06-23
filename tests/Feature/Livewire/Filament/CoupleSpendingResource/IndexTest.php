@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Livewire\Couple;
-use App\Http\Livewire\Filament;
+use App\Http\Livewire\{Couple, Filament};
 use App\Models\{CoupleSpending, CoupleSpendingCategory, User};
 use Carbon\Carbon;
 use Filament\{Tables};
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, assertModelMissing, get};
 use function Pest\Livewire\livewire;
 
@@ -55,7 +55,7 @@ it('can redirect to login if not authenticated', function () {
 it('can render table heading', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -67,7 +67,7 @@ it('can render table heading', function () {
 it('can render create action button', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -82,7 +82,7 @@ it('can render create action button', function () {
 it('can render spending id column in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -94,7 +94,7 @@ it('can render spending id column in table', function () {
 it('can render spending category name column in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -106,7 +106,7 @@ it('can render spending category name column in table', function () {
 it('can render spending description column in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -118,7 +118,7 @@ it('can render spending description column in table', function () {
 it('can render spending amount column in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -130,7 +130,7 @@ it('can render spending amount column in table', function () {
 it('can render spending date in table', function () {
 
     CoupleSpending::factory()->count(1)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -146,7 +146,7 @@ it('can display all my spending in table', function () {
 
     // Arrange
     $mySpending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -164,7 +164,7 @@ it('spending are sorted by default in desc order', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -180,7 +180,7 @@ it('can sort spending by id', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -200,7 +200,7 @@ it('can sort spending by category name', function () {
     ]);
 
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $categories->random()->id,
     ]);
 
@@ -217,7 +217,7 @@ it('can sort spending by description', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -233,7 +233,7 @@ it('can sort spending by amount', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -249,7 +249,7 @@ it('can sort spending by date', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(10)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -268,10 +268,10 @@ it('can search spending by id', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(5)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
-        'amount' => 3333,
-        'date' => '2023-03-03',
+        'amount'                      => 3333,
+        'date'                        => '2023-03-03',
     ]);
 
     $search = $spending->first()->id;
@@ -299,9 +299,9 @@ it('can search spending by category name', function () {
     ]);
 
     $spending = CoupleSpending::factory()->count(5)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $categories->random()->id,
-        'description' => 'description',
+        'description'                 => 'description',
     ]);
 
     $search = $spending->first()->category()->first()->name;
@@ -326,11 +326,11 @@ it('can search spending by description', function () {
     // Arrange
     $category = CoupleSpendingCategory::factory()->createOne([
         'user_id' => $this->user->id,
-        'name' => 'couple_spending_category_id',
+        'name'    => 'couple_spending_category_id',
     ]);
 
     $spending = CoupleSpending::factory()->count(5)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $category->id,
     ]);
 
@@ -355,7 +355,7 @@ it('can search spending by amount', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(5)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -380,7 +380,7 @@ it('can search spending by date in format d/m/Y', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->count(5)->create([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -543,7 +543,7 @@ it('can validate date in creating', function () {
 it('can validate category in updating', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -579,7 +579,7 @@ it('can validate category in updating', function () {
 it('can validate description in updating', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -616,7 +616,7 @@ it('can validate description in updating', function () {
 it('can validate amount in updating', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -632,7 +632,7 @@ it('can validate amount in updating', function () {
 it('can validate date in updating', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -673,7 +673,7 @@ it('can display correctly spending information in edit action', function () {
 
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -682,8 +682,8 @@ it('can display correctly spending information in edit action', function () {
         ->mountTableAction(Tables\Actions\EditAction::class, $spending)
         ->assertTableActionDataSet([
             'couple_spending_category_id' => $spending->category->id,
-            'description' => $spending->description,
-            'amount' => number_format($spending->amount, 2, ',', '.'), // 1.000,00
+            'description'                 => $spending->description,
+            'amount'                      => number_format($spending->amount, 2, ',', '.'), // 1.000,00
             //            'date' => $spending->date . ' ' . now()->format('H:i:s'), Bug in filament
         ]);
 
@@ -698,18 +698,18 @@ it('can create spending', function () {
     livewire(Filament\CoupleSpendingResource\Index::class)
         ->callTableAction(Tables\Actions\CreateAction::class, data: [
             'couple_spending_category_id' => $this->category->id,
-            'description' => $spending->description,
-            'amount' => $spending->amount,
-            'date' => $spending->date,
+            'description'                 => $spending->description,
+            'amount'                      => $spending->amount,
+            'date'                        => $spending->date,
         ])
         ->assertHasNoTableActionErrors();
 
     assertDatabaseHas('couple_spendings', [
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
-        'description' => $spending->description,
-        'amount' => $spending->amount,
-        'date' => $spending->date,
+        'description'                 => $spending->description,
+        'amount'                      => $spending->amount,
+        'date'                        => $spending->date,
     ]);
 
 })->group('tableActionsCrud');
@@ -717,7 +717,7 @@ it('can create spending', function () {
 it('can edit spending', function () {
     // Arrange
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
@@ -733,18 +733,18 @@ it('can edit spending', function () {
     livewire(Filament\CoupleSpendingResource\Index::class)
         ->callTableAction(Tables\Actions\EditAction::class, $spending, data: [
             'couple_spending_category_id' => $newCategory->id,
-            'description' => $newData->description,
-            'amount' => $newData->amount,
-            'date' => $newData->date,
+            'description'                 => $newData->description,
+            'amount'                      => $newData->amount,
+            'date'                        => $newData->date,
         ])
         ->assertHasNoTableActionErrors();
 
     assertDatabaseHas('couple_spendings', [
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $newCategory->id,
-        'description' => $newData->description,
-        'amount' => $newData->amount,
-        'date' => $newData->date,
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
     ]);
 
 })->group('tableActionsCrud');
@@ -752,7 +752,7 @@ it('can edit spending', function () {
 it('can delete categories', function () {
 
     $spending = CoupleSpending::factory()->createOne([
-        'user_id' => $this->user->id,
+        'user_id'                     => $this->user->id,
         'couple_spending_category_id' => $this->category->id,
     ]);
 
