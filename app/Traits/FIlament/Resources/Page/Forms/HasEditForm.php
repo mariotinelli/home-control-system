@@ -14,18 +14,19 @@ trait HasEditForm
 {
     public function update(): Redirector|RedirectResponse
     {
-        $record = $this->record;
+        $state = $this->form->getState();
 
-        $this->authorize('update', $record);
+        $this->authorize('update', $this->record);
 
-        $record = static::beforeUpdate(
-            record: $record
+        $state = static::beforeUpdate(
+            state: $state,
+            record: $this->record
         );
 
-        $record->update($this->form->getState());
+        $this->record->update($state);
 
         $record = static::afterUpdate(
-            record: $record
+            record: $this->record->refresh()
         );
 
         if (static::$sendNotification) {
@@ -45,9 +46,9 @@ trait HasEditForm
         return redirect()->route(static::$baseRouteName . '.index');
     }
 
-    public static function beforeUpdate(Model $record): Model
+    public static function beforeUpdate(array $state, Model $record): array
     {
-        return $record;
+        return $state;
     }
 
     public static function afterUpdate(Model $record): Model
