@@ -65,11 +65,11 @@ Route::middleware('auth')->group(function () {
 
     // ######### Start Stock ######### //
 
+    // Markets
+    Route::get('markets', Filament\MarketResource\Index::class)->name('markets.index');
+
     // Market Stock
     Route::get('markets/stocks', \App\Http\Livewire\Markets\Stock\Index::class)->name('markets.stocks.index');
-
-    // Markets
-    Route::get('markets', \App\Http\Livewire\Markets\Index::class)->name('markets.index');
 
     // Market Items
     Route::get('markets/items', \App\Http\Livewire\Markets\Items\Index::class)->name('markets.items.index');

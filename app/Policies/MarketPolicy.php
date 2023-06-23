@@ -19,7 +19,8 @@ class MarketPolicy
      */
     public function view(User $user, Market $market): bool
     {
-        return $user->hasPermissionTo('market_read');
+        return $user->hasPermissionTo('market_read')
+            && $user->id === $market->user_id;
     }
 
     /**
@@ -35,7 +36,8 @@ class MarketPolicy
      */
     public function update(User $user, Market $market): bool
     {
-        return $user->hasPermissionTo('market_update');
+        return $user->hasPermissionTo('market_update')
+            && $user->id === $market->user_id;
     }
 
     /**
@@ -43,6 +45,7 @@ class MarketPolicy
      */
     public function delete(User $user, Market $market): bool
     {
-        return $user->hasPermissionTo('market_delete');
+        return $user->hasPermissionTo('market_delete')
+            && $user->id === $market->user_id;
     }
 }
