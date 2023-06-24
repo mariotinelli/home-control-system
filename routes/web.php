@@ -68,14 +68,14 @@ Route::middleware('auth')->group(function () {
     // Markets
     Route::get('markets', Filament\MarketResource\Index::class)->name('markets.index');
 
-    // Market Stock
-    Route::get('markets/stocks', \App\Http\Livewire\Markets\Stock\Index::class)->name('markets.stocks.index');
-
-    // Market Items
-    Route::get('markets/items', \App\Http\Livewire\Markets\Items\Index::class)->name('markets.items.index');
-
     // Market Items Categories
     Route::get('markets/items/categories', \App\Http\Livewire\Markets\Items\Categories\Index::class)->name('markets.items.categories.index');
+
+    // Market Items
+    Route::get('markets/items', Filament\MarketItemResource\Index::class)->name('markets.items.index');
+
+    // Market Stock
+    Route::get('markets/stocks', \App\Http\Livewire\Markets\Stock\Index::class)->name('markets.stocks.index');
 
     // ######### End Stock ######### //
 
