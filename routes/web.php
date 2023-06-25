@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\Filament;
 use App\Http\Livewire\{Banks, Couple, Goals, Investments, Settings, Trips};
 use Illuminate\Support\Facades\Route;
 
@@ -34,11 +35,11 @@ Route::middleware('auth')->group(function () {
 
     // ######### Start Couple ######### //
 
-    // Couple Spending Categories
-    Route::get('couple/spending/categories', Couple\Spending\Categories\Index::class)->name('couple.spending.categories.index');
-
     // Couple Spending
-    Route::get('couple/spending', Couple\Spending\Index::class)->name('couple.spending.index');
+    Route::get('couple/spending', Filament\CoupleSpendingResource\Index::class)->name('couple.spending.index');
+
+    // Couple Spending Categories
+    Route::get('couple/spending/categories', Filament\CoupleSpendingCategoryResource\Index::class)->name('couple.spending.categories.index');
 
     // ######### End Couple ######### //
 
@@ -48,12 +49,14 @@ Route::middleware('auth')->group(function () {
     // ######### Start Banks ######### //
 
     // Bank Accounts
-    Route::get('banks/accounts', Banks\Accounts\Index::class)->name('banks.accounts.index');
-    Route::get('banks/accounts/create', Banks\Accounts\Create::class)->name('banks.accounts.create');
-    Route::get('banks/accounts/{record}/edit', Banks\Accounts\Edit::class)->name('banks.accounts.edit');
+    Route::get('banks/accounts', Filament\BankAccountResource\Index::class)->name('banks.accounts.index');
+    Route::get('banks/accounts/create', Filament\BankAccountResource\Create::class)->name('banks.accounts.create');
+    Route::get('banks/accounts/{record}/edit', Filament\BankAccountResource\Edit::class)->name('banks.accounts.edit');
 
     // Credit Cards
-    Route::get('banks/credit-cards', Banks\CreditCards\Index::class)->name('banks.credit-cards.index');
+    Route::get('banks/credit-cards', Filament\CreditCardResource\Index::class)->name('banks.credit-cards.index');
+    Route::get('banks/credit-cards/create', Filament\CreditCardResource\Create::class)->name('banks.credit-cards.create');
+    Route::get('banks/credit-cards/{record}/edit', Filament\CreditCardResource\Edit::class)->name('banks.credit-cards.edit');
 
     // ######### End Banks ######### //
 
@@ -62,17 +65,17 @@ Route::middleware('auth')->group(function () {
 
     // ######### Start Stock ######### //
 
-    // Market Stock
-    Route::get('markets/stocks', \App\Http\Livewire\Markets\Stock\Index::class)->name('markets.stocks.index');
-
     // Markets
-    Route::get('markets', \App\Http\Livewire\Markets\Index::class)->name('markets.index');
-
-    // Market Items
-    Route::get('markets/items', \App\Http\Livewire\Markets\Items\Index::class)->name('markets.items.index');
+    Route::get('markets', Filament\MarketResource\Index::class)->name('markets.index');
 
     // Market Items Categories
-    Route::get('markets/items/categories', \App\Http\Livewire\Markets\Items\Categories\Index::class)->name('markets.items.categories.index');
+    Route::get('markets/items/categories', Filament\MarketItemCategoryResource\Index::class)->name('markets.items.categories.index');
+
+    // Market Items
+    Route::get('markets/items', Filament\MarketItemResource\Index::class)->name('markets.items.index');
+
+    // Market Stock
+    Route::get('markets/stocks', \App\Http\Livewire\Markets\Stock\Index::class)->name('markets.stocks.index');
 
     // ######### End Stock ######### //
 

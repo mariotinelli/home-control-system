@@ -44,18 +44,18 @@ trait HasDeleteAction
             $action->icon('heroicon-s-lock-closed');
         }
 
-        return 'Deletar ' . static::$resourceLabel;
+        return 'Deletar ' . static::$resourceName;
     }
 
     public static function getModalHeadingDeleteAction(): string
     {
-        return 'Deletar ' . static::$resourceLabel;
+        return 'Deletar ' . static::$resourceName;
     }
 
     public static function getSuccessNotificationDeleteAction(): Notification
     {
         return Notification::make()
-            ->title(static::$resourceMenuLabel)
+            ->title(static::$resourcePluralName)
             ->body(static::$successDeleteNotification)
             ->success();
     }

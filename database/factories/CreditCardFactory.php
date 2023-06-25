@@ -21,8 +21,8 @@ class CreditCardFactory extends Factory
         return [
             'user_id'         => User::factory(),
             'bank'            => $this->faker->sentence(2),
-            'number'          => (int) str_repeat('' . $this->faker->numberBetween(1, 9), 16),
-            'expiration'      => Carbon::createFromFormat('m/y', $this->faker->creditCardExpirationDateString)->format('m/Y'),
+            'number'          => (int)str_repeat('' . $this->faker->numberBetween(1, 9), 16),
+            'expiration'      => Carbon::createFromFormat('m/y', $this->faker->creditCardExpirationDateString)->format('m/y'),
             'cvv'             => $this->faker->numberBetween(100, 999),
             'limit'           => $limit = $this->faker->numberBetween(100, 10000),
             'remaining_limit' => $limit,

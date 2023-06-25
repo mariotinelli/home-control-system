@@ -45,7 +45,7 @@ trait HasMakeFilamentPages
 
     public function getSourcePageViewPath(string $view): string
     {
-        return base_path("resources/views/livewire/filament/{$this->getResourceSingularName($this->argument('model'))}-resource/{$view}.blade.php");
+        return base_path("resources/views/livewire/filament/" . str($this->argument('model'))->kebab()->toString() . "-resource/{$view}.blade.php");
     }
 
     public function getSourcePageViewFile(string $view): string|array|bool
@@ -60,9 +60,7 @@ trait HasMakeFilamentPages
 
     public function getPageViewStubVariables(): array
     {
-        return [
-            'LOWER_SINGULAR_NAME' => $this->getResourceSingularName($this->argument('model')),
-        ];
+        return [];
     }
 
     /**
@@ -106,7 +104,7 @@ trait HasMakeFilamentPages
             'CLASS_NAME'             => $view,
             'NAMESPACE'              => $this->namespace,
             'MODEL_NAME'             => $this->argument('model'),
-            'VIEW_PATH'              => $this->getModalViewPath($this->argument('model')),
+            'VIEW_PATH'              => $this->getModalViewPath($this->argument('model'), $view),
             'RESOURCE_PLURAL_NAME'   => $this->getResourcePluralName($this->argument('model')),
             'RESOURCE_SINGULAR_NAME' => $this->getResourceSingularName($this->argument('model')),
         ];

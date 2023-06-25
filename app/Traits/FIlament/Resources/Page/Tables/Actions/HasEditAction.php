@@ -35,7 +35,7 @@ trait HasEditAction
             $action->icon('heroicon-s-lock-closed');
         }
 
-        return 'Editar ' . static::$resourceLabel;
+        return 'Editar ' . static::$resourceName;
     }
 
 }

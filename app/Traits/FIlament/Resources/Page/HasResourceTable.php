@@ -37,7 +37,7 @@ trait HasResourceTable
 
     protected function getTableHeading(): string|Htmlable|Closure|null
     {
-        return view('components.app.filament.resources.table.heading', ['title' => static::$resourceMenuLabel]);
+        return view('components.app.filament.resources.table.heading', ['title' => static::$resourcePluralName]);
     }
 
     /** @throws Exception */

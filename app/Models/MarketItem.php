@@ -12,7 +12,7 @@ class MarketItem extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(MarketItemCategory::class);
+        return $this->belongsTo(MarketItemCategory::class, 'market_item_category_id');
     }
 
     public function marketStock(): HasOne

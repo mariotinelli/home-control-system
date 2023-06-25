@@ -16,9 +16,9 @@ class Index extends FilamentPages
 
     protected static ?string $baseRouteName = 'banks.accounts';
 
-    protected static ?string $resourceMenuLabel = 'Contas Bancárias';
+    protected static ?string $resourcePluralName = 'Contas Bancárias';
 
-    protected static ?string $resourceLabel = 'conta bancária';
+    protected static ?string $resourceName = 'conta bancária';
 
     protected static ?string $createActionColor = 'success';
 

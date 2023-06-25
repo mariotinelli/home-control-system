@@ -3,7 +3,6 @@
 namespace $NAMESPACE$;
 
 use Exception;
-use App\Actions;
 use App\Models\$MODEL_NAME$;
 use Illuminate\Contracts\View\View;
 use App\Http\Livewire\Components\ComponentFilamentForm;
@@ -33,7 +32,10 @@ class Edit extends ComponentFilamentForm
     {
         $this->authorize('update', $this->record);
 
-        return view('$VIEW_PATH$');
+        return view('$VIEW_PATH$', [
+          'resourceName' => static::$resourceName,
+          'route' => static::$baseRouteName . '.create',
+        ]);
     }
 
     /** @throws Exception */

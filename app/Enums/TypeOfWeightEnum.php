@@ -2,20 +2,21 @@
 
 namespace App\Enums;
 
-class TypeOfWeightEnum
+enum TypeOfWeightEnum: string
 {
-    public const GRAM = 'gramas';
+    case GRAM = 'Gramas';
 
-    public const KILOGRAM = 'quilogramas';
+    case KILOGRAM = 'Quilogramas';
 
-    public const TON = 'toneladas';
+    case TON = 'Toneladas';
 
     public static function getValues(): array
     {
-        return [
-            self::GRAM,
-            self::KILOGRAM,
-            self::TON,
-        ];
+        return array_column(self::cases(), 'value');
+    }
+
+    public static function toArray(): array
+    {
+        return array_column(self::cases(), 'value', 'value');
     }
 }

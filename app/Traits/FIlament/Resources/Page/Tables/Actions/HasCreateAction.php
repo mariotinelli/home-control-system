@@ -32,7 +32,7 @@ trait HasCreateAction
 
     public static function getLabelCreateAction(): string
     {
-        return 'Criar ' . static::$resourceLabel;
+        return 'Criar ' . static::$resourceName;
     }
 
     public static function getColorCreateAction(): string
@@ -46,7 +46,7 @@ trait HasCreateAction
             $action->icon('heroicon-s-lock-closed');
         }
 
-        return 'Editar ' . static::$resourceLabel;
+        return 'Criar ' . static::$resourceName;
     }
 
 }

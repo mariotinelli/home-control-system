@@ -19,7 +19,8 @@ class MarketItemPolicy
      */
     public function view(User $user, MarketItem $marketItem): bool
     {
-        return $user->hasPermissionTo('market_item_read');
+        return $user->hasPermissionTo('market_item_read')
+            && $user->id === $marketItem->user_id;
     }
 
     /**
@@ -35,7 +36,8 @@ class MarketItemPolicy
      */
     public function update(User $user, MarketItem $marketItem): bool
     {
-        return $user->hasPermissionTo('market_item_update');
+        return $user->hasPermissionTo('market_item_update')
+            && $user->id === $marketItem->user_id;
     }
 
     /**
@@ -43,7 +45,8 @@ class MarketItemPolicy
      */
     public function delete(User $user, MarketItem $marketItem): bool
     {
-        return $user->hasPermissionTo('market_item_delete');
+        return $user->hasPermissionTo('market_item_delete')
+            && $user->id === $marketItem->user_id;
     }
 
 }

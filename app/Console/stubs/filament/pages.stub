@@ -2,8 +2,6 @@
 
 namespace $NAMESPACE$;
 
-
-use Exception;
 use App\Models\$MODEL_NAME$;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,12 +28,6 @@ class $CLASS_NAME$ extends FilamentPages
         $this->authorize('viewAny', [$MODEL_NAME$::class]);
 
         return view('$VIEW_PATH$');
-    }
-
-    /** @throws Exception */
-    protected function getFormSchema(): array
-    {
-        return [];
     }
 
     protected function getTableQuery(): Builder|Relation
