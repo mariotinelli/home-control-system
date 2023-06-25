@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Livewire\Filament\MarketItemResource;
+namespace App\Http\Livewire\Filament\MarketItemCategoryResource;
 
 use App\Actions\Markets;
 use App\Http\Livewire\Components\FilamentModals;
-use App\Models\MarketItem;
+use App\Models\MarketItemCategory;
 use Exception;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
@@ -16,36 +16,36 @@ class Index extends FilamentModals
 {
     use AuthorizesRequests;
 
-    protected static ?string $model = MarketItem::class;
+    protected static ?string $model = MarketItemCategory::class;
 
-    protected static ?string $resourcePluralName = 'Itens de Mercado';
+    protected static ?string $resourcePluralName = 'Categorias';
 
-    protected static ?string $resourceName = 'item de mercado';
+    protected static ?string $resourceName = 'categoria';
 
-    protected static ?string $baseRouteName = 'markets.items';
+    protected static ?string $baseRouteName = 'markets.items.categories';
 
     public function render(): View
     {
-        $this->authorize('viewAny', [MarketItem::class]);
+        $this->authorize('viewAny', [MarketItemCategory::class]);
 
-        return view('livewire.filament.market-item-resource.index');
+        return view('livewire.filament.market-item-category-resource.index');
     }
 
     /** @throws Exception */
     protected function getFormSchema(): array
     {
-        return Markets\Items\MakeFormSchema::execute();
+        return Markets\Items\Categories\MakeFormSchema::execute();
     }
 
     protected function getTableQuery(): Builder|Relation
     {
-        return MarketItem::query()
+        return MarketItemCategory::query()
             ->whereUserId(auth()->id());
     }
 
     protected function getTableColumns(): array
     {
-        return Markets\Items\MakeTableColumns::execute(
+        return Markets\Items\Categories\MakeTableColumns::execute(
             closureTooltip: fn (TextColumn $column): ?string => $this->closureTooltip($column),
         );
     }

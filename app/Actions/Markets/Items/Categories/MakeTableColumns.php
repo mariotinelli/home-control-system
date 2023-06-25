@@ -2,9 +2,8 @@
 
 namespace App\Actions\Markets\Items\Categories;
 
-use App\Enums\TypeOfWeightEnum;
 use Closure;
-use Filament\Tables\Columns\{BadgeColumn, TextColumn};
+use Filament\Tables\Columns\{TextColumn};
 
 class MakeTableColumns
 {
@@ -18,30 +17,7 @@ class MakeTableColumns
                 ->searchable(),
 
             TextColumn::make('name')
-                ->label('Nome do Mercado')
-                ->sortable()
-                ->searchable()
-                ->limit(50)
-                ->tooltip($closureTooltip),
-
-            TextColumn::make('category.name')
-                ->label('Categoria')
-                ->sortable()
-                ->searchable()->limit(50)
-                ->tooltip($closureTooltip),
-
-            BadgeColumn::make('type_weight')
-                ->label('Tipo de Peso')
-                ->sortable()
-                ->searchable()
-                ->colors([
-                    'success' => TypeOfWeightEnum::GRAM->value,
-                    'warning' => TypeOfWeightEnum::KILOGRAM->value,
-                    'danger'  => TypeOfWeightEnum::TON->value,
-                ]),
-
-            TextColumn::make('weight')
-                ->label('Peso')
+                ->label('Nome')
                 ->sortable()
                 ->searchable()
                 ->limit(50)

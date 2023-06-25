@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('markets', Filament\MarketResource\Index::class)->name('markets.index');
 
     // Market Items Categories
-    Route::get('markets/items/categories', \App\Http\Livewire\Markets\Items\Categories\Index::class)->name('markets.items.categories.index');
+    Route::get('markets/items/categories', Filament\MarketItemCategoryResource\Index::class)->name('markets.items.categories.index');
 
     // Market Items
     Route::get('markets/items', Filament\MarketItemResource\Index::class)->name('markets.items.index');

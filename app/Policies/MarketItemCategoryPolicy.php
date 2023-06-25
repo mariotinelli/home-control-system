@@ -16,7 +16,8 @@ class MarketItemCategoryPolicy
 
     public function view(User $user, MarketItemCategory $marketItemCategory): bool
     {
-        return $user->hasPermissionTo('market_item_category_read');
+        return $user->hasPermissionTo('market_item_category_read')
+            && $user->id === $marketItemCategory->user_id;
     }
 
     public function create(User $user): bool
@@ -26,12 +27,15 @@ class MarketItemCategoryPolicy
 
     public function update(User $user, MarketItemCategory $marketItemCategory): bool
     {
-        return $user->hasPermissionTo('market_item_category_update');
+        return $user->hasPermissionTo('market_item_category_update')
+            && $user->id === $marketItemCategory->user_id;
     }
 
     public function delete(User $user, MarketItemCategory $marketItemCategory): bool
     {
-        return $user->hasPermissionTo('market_item_category_delete') && $marketItemCategory->marketItems()->count() === 0;
+        return $user->hasPermissionTo('market_item_category_delete')
+            && $marketItemCategory->marketItems()->count() === 0
+            && $user->id === $marketItemCategory->user_id;
     }
 
 }
