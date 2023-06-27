@@ -13,7 +13,7 @@ class CoupleSpendingCategoryFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'name'    => $this->faker->sentence(5),
+            'name'    => $this->faker->sentence(1),
         ];
     }
 }

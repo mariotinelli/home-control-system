@@ -1,3 +1,9 @@
-<div>
-    {{-- The best athlete wants his opponent at his best. --}}
-</div>
+<form>
+
+    {{ $this->form }}
+
+    <button wire:click="store"
+            class="btn btn-primary">Save
+    </button>
+
+</form>

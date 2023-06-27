@@ -83,6 +83,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return $this->hasMany(CoupleSpendingCategory::class);
     }
 
+    public function coupleSpendingPlaces(): HasMany
+    {
+        return $this->hasMany(CoupleSpendingPlace::class);
+    }
+
     public function coupleSpendings(): HasMany
     {
         return $this->hasMany(CoupleSpending::class);
