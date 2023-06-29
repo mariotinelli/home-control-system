@@ -13,6 +13,10 @@ beforeEach(function () {
         'email' => 'teste@email.com',
     ]);
 
+    $this->user->coupleSpendings()->save(
+        $this->coupleSpending = CoupleSpending::factory()->make()
+    );
+
     $this->user->givePermissionTo('couple_spending_read');
     $this->user->givePermissionTo('couple_spending_create');
     $this->user->givePermissionTo('couple_spending_update');
@@ -27,7 +31,7 @@ beforeEach(function () {
 /* ###################################################################### */
 it('can render a form', function () {
 
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormExists();
 
 })->group('form');
@@ -38,162 +42,210 @@ it('can render a form', function () {
 it('can render all form fields', function () {
 
     // Category
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormFieldExists('couple_spending_category_id');
 
     // Place Name
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormFieldExists('couple_spending_place_id');
 
     // Description
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormFieldExists('description');
 
     // Amount
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormFieldExists('amount');
 
     // Date
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->assertFormFieldExists('date');
 
 })->group('form');
 
 /* ###################################################################### */
+/* CORRECTLY FILL FORM */
+/* ###################################################################### */
+it('can fill category field correctly', function () {
+
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
+        ->assertFormSet([
+            'couple_spending_category_id' => $this->coupleSpending->couple_spending_category_id,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill place field correctly', function () {
+
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
+        ->assertFormSet([
+            'couple_spending_place_id' => $this->coupleSpending->couple_spending_place_id,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill description field correctly', function () {
+
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
+        ->assertFormSet([
+            'description' => $this->coupleSpending->description,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill amount field correctly', function () {
+
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
+        ->assertFormSet([
+            'amount' => $this->coupleSpending->amount,
+        ]);
+
+})->group('canFillForm');
+
+it('can fill date field correctly', function () {
+
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
+        ->assertFormSet([
+            'date' => $this->coupleSpending->date,
+        ]);
+
+})->group('canFillForm');
+
+/* ###################################################################### */
 /* VALIDATE FORM FIELDS */
 /* ###################################################################### */
-it('can validate category', function () {
+todo('can validate category', function () {
 
     // Required
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_category_id' => null,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['couple_spending_category_id' => 'required']);
 
     // Exists
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_category_id' => CoupleSpendingCategory::count() + 1,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['couple_spending_category_id' => 'exists']);
 
     // Belongs to user
     $categoryNotOwner = CoupleSpendingCategory::factory()->createOne();
 
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_category_id' => $categoryNotOwner->id,
         ])
-        ->call('store')
+        ->call('update')
         ->assertForbidden();
 
 })->group('form');
 
-it('can validate place', function () {
+todo('can validate place', function () {
 
     // Required
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_place_id' => null,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['couple_spending_place_id' => 'required']);
 
     // Exists
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_place_id' => CoupleSpendingPlace::query()->count() + 1,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['couple_spending_place_id' => 'exists']);
 
     // Belongs to user
     $placeNotOwner = CoupleSpendingPlace::factory()->createOne();
 
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_place_id' => $placeNotOwner->id,
         ])
-        ->call('store')
+        ->call('update')
         ->assertForbidden();
 
 })->group('form');
 
-it('can validate description', function () {
+todo('can validate description', function () {
 
     // Required
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'description' => null,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['description' => 'required']);
 
     // String
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'description' => 123,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['description' => 'string']);
 
     // Min 3
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'description' => 'aa',
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['description' => 'min']);
 
     // Max 255
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'description' => str_repeat('a', 256),
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['description' => 'max']);
 
 })->group('form');
 
-it('can validate amount', function () {
+todo('can validate amount', function () {
 
     // Required
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'amount' => null,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['amount' => 'required']);
 
 })->group('form');
 
-it('can validate date', function () {
+todo('can validate date', function () {
 
     // Required
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'date' => null,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['date' => 'required']);
 
     // Date
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'date' => 'abc',
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasFormErrors(['date' => 'date']);
 
 })->group('form');
 
 /* ###################################################################### */
-/* CREATE */
+/* UPDATE */
 /* ###################################################################### */
-it('can create spending', function () {
+it('can update spending', function () {
 
     // Arrange
     $newData = CoupleSpending::factory()->makeOne([
@@ -206,7 +258,7 @@ it('can create spending', function () {
         ])->id,
     ]);
 
-    livewire(Couple\Spending\Create::class)
+    livewire(Couple\Spending\Edit::class, ['coupleSpending' => $this->coupleSpending])
         ->fillForm([
             'couple_spending_category_id' => $newData->couple_spending_category_id,
             'couple_spending_place_id'    => $newData->couple_spending_place_id,
@@ -214,13 +266,13 @@ it('can create spending', function () {
             'amount'                      => $newData->amount,
             'date'                        => $newData->date,
         ])
-        ->call('store')
+        ->call('update')
         ->assertHasNoFormErrors()
-        ->assertEmitted('couple::spending::created')
+        ->assertEmitted('couple::spending::updated')
         ->assertNotified(
             Notification::make()
                 ->success()
-                ->body('Gasto criado com sucesso.'),
+                ->body('Gasto atualizado com sucesso.'),
         );
 
     assertDatabaseHas('couple_spendings', [
@@ -232,4 +284,4 @@ it('can create spending', function () {
         'date'                        => $newData->date,
     ]);
 
-})->group('create');
+})->group('update');

@@ -11,6 +11,10 @@ class CoupleSpending extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function amount(): Attribute
     {
         return new Attribute(
