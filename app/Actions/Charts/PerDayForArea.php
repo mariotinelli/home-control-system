@@ -9,14 +9,9 @@ class PerDayForArea
         return $arr;
     }
 
-    public static function makeDatasets(array $values): array
+    public static function makeData(array $values): array
     {
-        return [
-            'data'        => $values,
-            'borderWidth' => 2,
-            'fill'        => 'start',
-            'tension'     => 0.5,
-        ];
+        return $values;
     }
 
 }

@@ -43,10 +43,10 @@ it('can get correctly labels', function () {
 
 });
 
-it('can get correctly datasets', function () {
+it('can get correctly data', function () {
 
     // Arrange
-    $canSeeDatasets = [];
+    $canSeeData = [];
 
     for ($i = 1; $i <= 31; $i++) {
         $spending = CoupleSpending::factory()->count(2)->create([
@@ -54,7 +54,7 @@ it('can get correctly datasets', function () {
             'date'    => Carbon::create(2023, 01, $i),
         ]);
 
-        $canSeeDatasets[] = $spending->sum(function ($item) {
+        $canSeeData[] = $spending->sum(function ($item) {
             return (float)$item->amount;
         });
     }
@@ -63,11 +63,8 @@ it('can get correctly datasets', function () {
     $lw = livewire(Couple\Spending\Charts\TotalMonth::class);
 
     // Assert
-    expect($lw->datasets)
-        ->toHaveCount(4)
-        ->toHaveKeys(['data', 'borderWidth', 'fill', 'tension'])
-        ->and($lw->datasets['data'])
+    expect($lw->data)
         ->toHaveCount(31)
-        ->toBe($canSeeDatasets);
+        ->toBe($canSeeData);
 
 });

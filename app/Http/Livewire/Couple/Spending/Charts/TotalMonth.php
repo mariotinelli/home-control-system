@@ -12,12 +12,12 @@ class TotalMonth extends Component
 {
     public array $labels = [];
 
-    public array $datasets = [];
+    public array $data = [];
 
     public function mount(): void
     {
-        $this->labels   = $this->getLabels();
-        $this->datasets = $this->getDatasets();
+        $this->labels = $this->getLabels();
+        $this->data   = $this->getData();
     }
 
     public function render(): View
@@ -29,6 +29,7 @@ class TotalMonth extends Component
     {
         return Charts\PerDayForArea::makeLabels(
             arr: CoupleSpending::query()
+                ->whereUserId(auth()->id())
                 ->select(\DB::raw("DAY(date) AS days"))
                 ->orderByRaw('DAY(date)')
                 ->groupByRaw("DAY(date)")
@@ -38,10 +39,11 @@ class TotalMonth extends Component
         );
     }
 
-    public function getDatasets(): array
+    public function getData(): array
     {
-        return Charts\PerDayForArea::makeDatasets(
+        return Charts\PerDayForArea::makeData(
             values: CoupleSpending::query()
+                ->whereUserId(auth()->id())
                 ->select([
                     \DB::raw("DAY(date) AS days"),
                     \DB::raw("SUM(amount) AS total"),

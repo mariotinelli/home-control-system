@@ -1,3 +1,9 @@
-<div>
-    {{-- Because she competes with no one, no one can compete with her. --}}
-</div>
+<x-app.charts.bar
+    id="by-month-by-place"
+    title="Por mês e local"
+    :labels="$labels"
+    :datasets="$datasets"
+    width="500"
+    height="250"
+/>
+
