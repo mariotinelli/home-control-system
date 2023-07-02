@@ -45,7 +45,7 @@
 
         <livewire:app.navbar/>
 
-        <div class="p-6 w-full h-[calc(100vh-64px)] overflow-y-auto">
+        <div class="p-14 w-full h-[calc(100vh-64px)] overflow-y-auto">
             {{ $slot }}
         </div>
 

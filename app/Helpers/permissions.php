@@ -108,6 +108,12 @@ function getUserSilverPermissions(): array
         'couple_spending_category_update',
         'couple_spending_category_delete',
 
+        // Couple Spending Place Permissions
+        'couple_spending_place_create',
+        'couple_spending_place_read',
+        'couple_spending_place_update',
+        'couple_spending_place_delete',
+
         // Couple Spending Permissions
         'couple_spending_create',
         'couple_spending_read',

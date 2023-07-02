@@ -50,7 +50,7 @@ class MakeFormSchema
                         }),
 
                     Select::make('couple_spending_place_id')
-                        ->label('Categoria')
+                        ->label('Local')
                         ->preload()
                         ->relationship('place', 'name', function (Builder $query): void {
                             $query->where('user_id', auth()->id());
@@ -82,6 +82,7 @@ class MakeFormSchema
 
                     TextInput::make('description')
                         ->label('Descrição')
+                        ->placeholder("Descrição do gasto")
                         ->required()
                         ->string()
                         ->minLength(3)

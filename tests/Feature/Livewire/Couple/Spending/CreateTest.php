@@ -217,11 +217,68 @@ it('can create spending', function () {
         ->call('store')
         ->assertHasNoFormErrors()
         ->assertEmitted('couple::spending::created')
+        ->assertDispatchedBrowserEvent('close-modal', ['id' => 'couple-spending-create'])
         ->assertNotified(
             Notification::make()
                 ->success()
                 ->body('Gasto criado com sucesso.'),
-        );
+        )
+        ->assertFormSet([
+            'couple_spending_category_id' => null,
+            'couple_spending_place_id'    => null,
+            'description'                 => null,
+            'amount'                      => '0,00',
+            'date'                        => null,
+        ]);
+
+    assertDatabaseHas('couple_spendings', [
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => $newData->couple_spending_category_id,
+        'couple_spending_place_id'    => $newData->couple_spending_place_id,
+        'description'                 => $newData->description,
+        'amount'                      => $newData->amount,
+        'date'                        => $newData->date,
+    ]);
+
+})->group('create');
+
+it('can create spending and stay', function () {
+
+    // Arrange
+    $newData = CoupleSpending::factory()->makeOne([
+        'user_id'                     => $this->user->id,
+        'couple_spending_category_id' => CoupleSpendingCategory::factory()->createOne([
+            'user_id' => $this->user->id,
+        ])->id,
+        'couple_spending_place_id' => CoupleSpendingPlace::factory()->createOne([
+            'user_id' => $this->user->id,
+        ])->id,
+    ]);
+
+    livewire(Couple\Spending\Create::class)
+        ->fillForm([
+            'couple_spending_category_id' => $newData->couple_spending_category_id,
+            'couple_spending_place_id'    => $newData->couple_spending_place_id,
+            'description'                 => $newData->description,
+            'amount'                      => $newData->amount,
+            'date'                        => $newData->date,
+        ])
+        ->call('storeAndStay')
+        ->assertHasNoFormErrors()
+        ->assertEmitted('couple::spending::created')
+        ->assertNotDispatchedBrowserEvent('close-modal')
+        ->assertNotified(
+            Notification::make()
+                ->success()
+                ->body('Gasto criado com sucesso.'),
+        )
+        ->assertFormSet([
+            'couple_spending_category_id' => null,
+            'couple_spending_place_id'    => null,
+            'description'                 => null,
+            'amount'                      => '0,00',
+            'date'                        => null,
+        ]);
 
     assertDatabaseHas('couple_spendings', [
         'user_id'                     => $this->user->id,

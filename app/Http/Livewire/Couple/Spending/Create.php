@@ -31,11 +31,25 @@ class Create extends Component implements HasForms
 
     public function store(): void
     {
+        $this->save();
+
+        $this->dispatchBrowserEvent('close-modal', ['id' => 'couple-spending-create']);
+    }
+
+    public function storeAndStay(): void
+    {
+        $this->save();
+    }
+
+    private function save(): void
+    {
         $data = $this->form->getState();
 
         auth()->user()->coupleSpendings()->create($data);
 
         $this->emit('couple::spending::created');
+
+        $this->form->fill();
 
         Notification::make()
             ->success()

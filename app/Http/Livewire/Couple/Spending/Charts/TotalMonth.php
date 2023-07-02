@@ -14,10 +14,19 @@ class TotalMonth extends Component
 
     public array $data = [];
 
+    public ?string $total = null;
+
     public function mount(): void
     {
         $this->labels = $this->getLabels();
         $this->data   = $this->getData();
+
+        $this->total = "R$ " . number_format(
+            array_sum($this->data),
+            2,
+            ',',
+            '.'
+        );
     }
 
     public function render(): View

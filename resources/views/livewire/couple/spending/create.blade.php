@@ -1,9 +1,16 @@
-<form>
+<div>
 
-    {{ $this->form }}
+    <x-app-modal-form
+        modal-id="couple-spending-create"
+        button-text="Novo gasto"
+        header-title="Novo gasto"
+        type="create"
+    >
 
-    <button wire:click="store"
-            class="btn btn-primary">Save
-    </button>
+        <x-slot name="form">
+            {{ $this->form }}
+        </x-slot>
 
-</form>
+    </x-app-modal-form>
+
+</div>
