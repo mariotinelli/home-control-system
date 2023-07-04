@@ -81,6 +81,7 @@ class RolesRelationManager extends RelationManager
                 Tables\Actions\DetachBulkAction::make()
                     ->after(function (Tables\Actions\DetachBulkAction $action, RelationManager $livewire) {
                         foreach ($action->getRecords() as $record) {
+                            /** @var Role $record */
                             $record->revokePermissionTo($livewire->ownerRecord);
                         }
                     }),

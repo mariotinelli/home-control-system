@@ -8,7 +8,6 @@
     'headerTitle',
     'form',
     'footer',
-    'type' => 'create',
 ])
 
 <x-forms::button
@@ -53,21 +52,10 @@
             <div class="flex gap-x-4">
 
                 <x-forms::button
-                    wire:click="store"
+                    wire:click="update"
                 >
-                    {{ $type == 'create' ? 'Salvar' : 'Atualizar' }}
+                    Salvar
                 </x-forms::button>
-
-                @if($type == 'create')
-
-                    <x-forms::button
-                        color="secondary"
-                        wire:click="store"
-                    >
-                        Salvar e continuar
-                    </x-forms::button>
-
-                @endif
 
                 <x-forms::button
                     color="secondary"
@@ -81,6 +69,5 @@
         </x-slot>
 
     @endif
-
 
 </x-forms::modal>

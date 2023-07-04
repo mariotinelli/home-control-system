@@ -8,7 +8,7 @@ class CreateFromAuthUser
     {
         auth()
             ->user()
-            ->coupleSpendings()
+            ->coupleSpendingPlaces()
             ->create($data);
     }
 

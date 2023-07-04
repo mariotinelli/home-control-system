@@ -10,7 +10,7 @@
 
     </div>
 
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-3 gap-8">
 
         <livewire:couple.spending.charts.total-month/>
 
@@ -30,7 +30,7 @@
 
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
 
         <livewire:couple.spending.charts.by-month-by-category/>
 

@@ -241,7 +241,7 @@ it('can sort spending by place name', function () {
         'user_id' => $this->user->id,
     ]);
 
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $spending = CoupleSpending::factory()->count(5)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_place_id'    => $places->random()->id,
         'couple_spending_category_id' => $this->category->id,
@@ -263,7 +263,7 @@ it('can sort spending by category name', function () {
         'user_id' => $this->user->id,
     ]);
 
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $spending = CoupleSpending::factory()->count(5)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_place_id'    => $this->place->id,
         'couple_spending_category_id' => $categories->random()->id,
@@ -281,7 +281,7 @@ it('can sort spending by category name', function () {
 it('can sort spending by description', function () {
 
     // Arrange
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $spending = CoupleSpending::factory()->count(5)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_place_id'    => $this->place->id,
         'couple_spending_category_id' => $this->category->id,
@@ -298,7 +298,7 @@ it('can sort spending by description', function () {
 it('can sort spending by amount', function () {
 
     // Arrange
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $spending = CoupleSpending::factory()->count(5)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_place_id'    => $this->place->id,
         'couple_spending_category_id' => $this->category->id,
@@ -315,7 +315,7 @@ it('can sort spending by amount', function () {
 it('can sort spending by date', function () {
 
     // Arrange
-    $spending = CoupleSpending::factory()->count(10)->create([
+    $spending = CoupleSpending::factory()->count(5)->create([
         'user_id'                     => $this->user->id,
         'couple_spending_place_id'    => $this->place->id,
         'couple_spending_category_id' => $this->category->id,

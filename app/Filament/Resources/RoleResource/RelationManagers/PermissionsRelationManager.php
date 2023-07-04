@@ -91,6 +91,7 @@ class PermissionsRelationManager extends RelationManager
                         $ownerRecord = $livewire->ownerRecord;
 
                         foreach ($action->getRecords() as $record) {
+                            /** @var Permission $record */
                             $ownerRecord->revokePermissionTo($record->name);
                         }
                     }),

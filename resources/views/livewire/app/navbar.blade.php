@@ -1,5 +1,5 @@
 <div
-    class="min-h-full z-50"
+    class="h-16 z-50"
     x-data="{ sidebarCollapse: true }"
 >
 

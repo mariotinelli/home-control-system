@@ -109,4 +109,9 @@ class Index extends Component implements HasTable
     {
         return 'desc';
     }
+
+    public function getDefaultTableRecordsPerPageSelectOption(): int
+    {
+        return 5;
+    }
 }
