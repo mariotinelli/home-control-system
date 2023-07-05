@@ -12,10 +12,11 @@ class MakeTableColumns
     {
         return [
 
-            TextColumn::make('id')
-                ->label('ID')
+            TextColumn::make('place.name')
+                ->label('Local')
                 ->sortable()
-                ->searchable(),
+                ->searchable()->limit(50)
+                ->tooltip($closureTooltip),
 
             TextColumn::make('category.name')
                 ->label('Categoria')

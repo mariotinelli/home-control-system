@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             StateSeeder::class,
             CitySeeder::class,
+
+            CoupleSpendingSeeder::class,
         ]);
 
     }
